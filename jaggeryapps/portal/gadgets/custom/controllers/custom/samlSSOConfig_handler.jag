@@ -1,0 +1,45 @@
+<%
+var log = new Log();
+var cookie = request.getParameter("cookie") ;
+var user = request.getParameter("user");
+var applicationName = request.getParameter("spName");
+var action = request.getParameter("clientAction");
+handle(action);
+function handle(action){
+
+    session.put('auth-cookie', cookie);
+    session.put('user', user);
+
+
+    try{
+        var ssoClient = require('samlSSOConfigServiceClient.jag');
+        if(action=='getServiceProviders') {
+            var serviceProviders = ssoClient.getServiceProviders();
+            print(serviceProviders);
+        }else if(action=='getClaimURIs'){
+            var claimURIs = ssoClient.getClaimURIs();
+            print(claimURIs);
+        }else if(action=='getCertAlias'){
+            var certAliases = ssoClient.getCertAliasOfPrimaryKeyStore();
+            print(certAliases);
+        }else if(action=='getSigningAlgorithmUris'){
+            var signingAlgos = ssoClient.getSigningAlgorithmUris();
+            print(signingAlgos);
+        }else if(action=='getDigestAlgorithmURIs'){
+            var digestAlgos = ssoClient.getDigestAlgorithmURIs();
+            print(digestAlgos);
+        }else if(action=='getSigningAlgorithmUriByConfig'){
+            var signingAlgo = ssoClient.getSigningAlgorithmUriByConfig();
+            print(signingAlgo);
+        }else if(action=='getDigestAlgorithmURIByConfig'){
+            var digestAlgo = ssoClient.getDigestAlgorithmURIByConfig();
+            print(digestAlgo);
+        }
+    }catch(e){
+        print(e);
+        log.error(e);
+    }
+
+}
+
+%>

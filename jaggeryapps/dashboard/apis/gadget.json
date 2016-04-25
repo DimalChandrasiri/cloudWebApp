@@ -1,45 +1,45 @@
-{"title":"User Portal", "widgets":[
+{"title":"Service Providers", "widgets":[
     {
         "wid":"39",
         "x":"5",
         "y":"2",
-        "title":"Change Password",
+        "title":"Salesforce",
         "width":"2",
         "height":"1",
         "prefs":"{}",
         "wclass":"",
-        "url":"/portal/gadgets/pwd_change/gadget.xml",
+        "url":"/portal/gadgets/salesforce/gadget.xml",
         "permissions":["/permission/admin/login"],
         "authorized":"true",
-	"id" : "pwd_change"
+        "id" : "salesforce_sp"
     },
     {
         "wid":"40",
         "x":"3",
         "y":"2",
-        "title":"Account Recovery",
+        "title":"Google",
         "width":"2",
         "height":"1",
         "prefs":"{}",
         "wclass":"",
-        "url":"/portal/gadgets/account-recovery/gadget.xml",
+        "url":"/portal/gadgets/google/gadget.xml",
         "permissions":["/permission/admin/login"],
         "authorized":"true",
-	"id" : "account_recovery"
+        "id" : "google_sp"
     },
     {
         "wid":"41",
         "x":"1",
         "y":"3",
-        "title":"Associated Accounts",
+        "title":"Concur",
         "width":"2",
         "height":"1",
         "prefs":"{}",
         "wclass":"",
-        "url":"/portal/gadgets/connected_accounts/gadget.xml",
+        "url":"/portal/gadgets/concur/gadget.xml",
         "permissions":["/permission/admin/login"],
         "authorized":"true",
-	"id" : "manage_accounts"
+        "id" : "concur_sp"
     },
     {
         "wid":"43",
@@ -53,21 +53,21 @@
         "url":"/portal/gadgets/user_auth_apps/gadget.xml",
         "permissions":["/permission/admin/login"],
         "authorized":"true",
-	"id" : "user_auth_apps"
+        "id" : "user_auth_apps"
     },
     {
         "wid":"44",
         "x":"1",
         "y":"2",
-        "title":"My Profile",
+        "title":"Custom Service Provider",
         "width":"2",
         "height":"1",
         "prefs":"{}",
         "wclass":"",
-        "url":"/portal/gadgets/user_profile/gadget.xml",
+        "url":"/portal/gadgets/custom/gadget.xml",
         "permissions":["/permission/admin/login"],
         "authorized":"true",
-	"id" : "user_profile"
+        "id" : "custom_sp"
     },
     {
         "wid":"45",
