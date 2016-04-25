@@ -6,16 +6,16 @@ function drawList(){
         "                        <input type=\"button\" onclick=\"drawAddSP();\" class=\"btn btn-primary\" value=\"Add Service Provider\"/>\n" +
         "                    </div>\n" +
         "                </div>"+
-                        "<fieldset>" +
-                        "              <table class=\"table table-bordered\">\n" +
-                        "                  <thead>\n" +
-                        "                      <tr>\n" +
-                        "                          <th class='txtAlnCen width30'>Service Providers</th>\n" +
-                        "                          <th class='txtAlnCen width30p'>Description</th>\n" +
-                        "                          <th class='txtAlnCen'>Actions</th>\n" +
-                        "                      </tr>\n" +
-                        "                  </thead>\n" +
-                        "                  <tbody>\n" ;
+        "<fieldset>" +
+        "              <table class=\"table table-bordered\">\n" +
+        "                  <thead>\n" +
+        "                      <tr>\n" +
+        "                          <th class='txtAlnCen width30'>Service Providers</th>\n" +
+        "                          <th class='txtAlnCen width30p'>Description</th>\n" +
+        "                          <th class='txtAlnCen'>Actions</th>\n" +
+        "                      </tr>\n" +
+        "                  </thead>\n" +
+        "                  <tbody>\n" ;
     var middle="";
     if (json != null) {
         for (var i in json.return) {
@@ -147,6 +147,7 @@ function drawUpdatePage(){
 }
 
 function drawSAMLConfigPage(issuer,isEditSP, tableTitle) {
+
     var tablehead = " <div class=\"col-lg-12 content-section\">\n" +
         "<fieldset>\n" +
         "              <table class=\"table table-bordered\">\n" +
@@ -166,9 +167,9 @@ function drawSAMLConfigPage(issuer,isEditSP, tableTitle) {
         issuerRow = issuerRow + "disabled=\"disabled\"";
     }
     issuerRow = issuerRow + "/>\n"+
-    "    <input type=\"hidden\" id=\"hiddenIssuer\" name=\"hiddenIssuer\" value=\"" + issuer + "\"\n"+
-    "</td>\n"+
-    "                     </tr>\n";
+        "    <input type=\"hidden\" id=\"hiddenIssuer\" name=\"hiddenIssuer\" value=\"" + issuer + "\"\n"+
+        "</td>\n"+
+        "                     </tr>\n";
     tableBody = tableBody + issuerRow;
 
     var assertionConsumerURLInputRow = "<tr id=\"assertionConsumerURLInputRow\">\n" +
@@ -179,15 +180,15 @@ function drawSAMLConfigPage(issuer,isEditSP, tableTitle) {
         "</td>\n" +
         "</tr>\n";
     tableBody = tableBody + assertionConsumerURLInputRow;
-    if(isEditSP && provider.assertionConsumerUrls != null){
-    var assertionConsumerURLTblRow = "<tr id=\"assertionConsumerURLTblRow\">\n" +
+    if(isEditSP && provider!=null && provider.assertionConsumerUrls != null){
+        var assertionConsumerURLTblRow = "<tr id=\"assertionConsumerURLTblRow\">\n" +
             "<td></td>\n" +
             "<td>\n"+
             "<table id=\"assertionConsumerURLsTable\" style=\"width: 40%; margin-bottom: 3px;\" class=\"styledInner\">"+
             "<tbody id=\"assertionConsumerURLsTableBody\">";
 
-            var assertionConsumerURLsBuilder = "";
-            var acsColumnId = 0;
+        var assertionConsumerURLsBuilder = "";
+        var acsColumnId = 0;
 
         for (var i in provider.assertionConsumerUrls) {
             var assertionConsumerURL = provider.assertionConsumerUrls[i];
@@ -214,21 +215,21 @@ function drawSAMLConfigPage(issuer,isEditSP, tableTitle) {
         }
         var assertionConsumerURL = assertionConsumerURLsBuilder.length > 0 ? assertionConsumerURLsBuilder : "";
         assertionConsumerURLTblRow = assertionConsumerURLTblRow + "</tbody>\n"+
-        "</table>\n"+
-        "<input type=\"hidden\" id=\"assertionConsumerURLs\" name=\"assertionConsumerURLs\" value=\""+assertionConsumerURL+"\">\n"+
-        "<input type=\"hidden\" id=\"currentColumnId\" value=\""+acsColumnId+"\">"+
-        "    </td>\n"+
+            "</table>\n"+
+            "<input type=\"hidden\" id=\"assertionConsumerURLs\" name=\"assertionConsumerURLs\" value=\""+assertionConsumerURL+"\">\n"+
+            "<input type=\"hidden\" id=\"currentColumnId\" value=\""+acsColumnId+"\">"+
+            "    </td>\n"+
             "</tr>";
     }
     tableBody = tableBody + assertionConsumerURLTblRow;
     var defaultAssertionConsumerURLRow = "<tr id=\"defaultAssertionConsumerURLRow\">\n"+
-            "<td><label class=\"\"> Default Assertion Consumer URL <font color=\"red\">*</font></label>\n"+
-            "</td>\n"+
-            "<td>\n"+
-            "<select id=\"defaultAssertionConsumerURL\" name=\"defaultAssertionConsumerURL\">\n"+
-            "<option value=\"\">---Select---</option>\n";
+        "<td><label class=\"\"> Default Assertion Consumer URL <font color=\"red\">*</font></label>\n"+
+        "</td>\n"+
+        "<td>\n"+
+        "<select id=\"defaultAssertionConsumerURL\" name=\"defaultAssertionConsumerURL\">\n"+
+        "<option value=\"\">---Select---</option>\n";
 
-    if (isEditSP && provider.assertionConsumerUrls != null) {
+    if (isEditSP && provider!=null && provider.assertionConsumerUrls != null) {
         for (var i in provider.assertionConsumerUrls) {
             var assertionConsumerUrl = provider.assertionConsumerUrls[i];
             var option = "";
@@ -248,30 +249,31 @@ function drawSAMLConfigPage(issuer,isEditSP, tableTitle) {
     tableBody = tableBody + defaultAssertionConsumerURLRow;
 
     var nameIDVal = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
-    if (isEditSP){
+    if (isEditSP && provider!=null){
         nameIDVal = provider.nameIDFormat.replace(/\//g, ":");
     }
-   var nameIdFormatRow = "<tr>\n"+
-    "<td>\n"+
-       "<label class=\"\"> NameID format</label>\n"+
+    var nameIdFormatRow = "<tr>\n"+
+        "<td>\n"+
+        "<label class=\"\"> NameID format</label>\n"+
         "</td>\n"+
         "<td>\n"+
         "<input type=\"text\" id=\"nameIdFormat\" name=\"nameIdFormat\" class=\"text-box-big\" value=\""+nameIDVal+"\"/>\n"+
-       "</td>\n" +
-       "</tr>\n";
-   var applicationSPName = json.return.applicationName;
+        "</td>\n" +
+        "</tr>\n";
+    var applicationSPName = json.return.applicationName;
+
     var claimUris = spConfigClaimUris;
     if(applicationSPName == null || applicationSPName.length==0){
-      //  <!-- UseUserClaimValueInNameID -->
+        //  <!-- UseUserClaimValueInNameID -->
 
-       if (isEditSP && provider.nameIdClaimUri!=null) {
+        if (isEditSP && provider!=null && provider.nameIdClaimUri!=null) {
 
-           nameIdFormatRow = nameIdFormatRow + "<tr>\n"+
-            "<td colspan=\"2\">\n"+
+            nameIdFormatRow = nameIdFormatRow + "<tr>\n"+
+                "<td colspan=\"2\">\n"+
                 "<input type=\"checkbox\" name=\"enableNameIdClaimUri\" value=\"true\" checked=\"checked\" onclick=\"disableNameIdClaimUri(this);\"/>\n"+
                 '<input type="hidden" id="enableNameIdClaimUriHidden" name="enableNameIdClaimUriHidden" value="true" />'+
-               'Define Claim Uri for NameID'+
-               '</td>\n'+
+                'Define Claim Uri for NameID'+
+                '</td>\n'+
                 '</tr>\n'+
                 '<tr>'+
                 '<td style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">'+
@@ -282,27 +284,27 @@ function drawSAMLConfigPage(issuer,isEditSP, tableTitle) {
                     if (claimUri != null) {
                         if (claimUri == provider.nameIdClaimUri) {
                             nameIdFormatRow = nameIdFormatRow + '<option selected="selected" value="'+claimUri+'">\n'+
-                            claimUri+ '</option>\n';
+                                claimUri+ '</option>\n';
                         } else {
                             nameIdFormatRow = nameIdFormatRow + '<option value="'+claimUri+'">'+claimUri+'</option>\n';
                         }
                     }
                 }
             }
-           nameIdFormatRow = nameIdFormatRow + '</select>\n'+
-            '</td>'+
-            '</tr>';
-       } else {
-           nameIdFormatRow = nameIdFormatRow + '<tr>\n' +
-            '<td colspan="2">\n'+
-               '<input type="checkbox" name="enableNameIdClaimUri" value="true" onclick="disableNameIdClaimUri(this);"/>\n'+
-               'Define Claim Uri for NameID'+
+            nameIdFormatRow = nameIdFormatRow + '</select>\n'+
+                '</td>'+
+                '</tr>';
+        } else {
+            nameIdFormatRow = nameIdFormatRow + '<tr>\n' +
+                '<td colspan="2">\n'+
+                '<input type="checkbox" name="enableNameIdClaimUri" value="true" onclick="disableNameIdClaimUri(this);"/>\n'+
+                'Define Claim Uri for NameID'+
                 '<input type="hidden" id="enableNameIdClaimUriHidden" name="enableNameIdClaimUriHidden" />\n'+
-               '</td>\n'+
-               '</tr>\n'+
-               '<tr>'+
-               '<td style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">'+
-               '<select id="nameIdClaim" name="nameIdClaim">';
+                '</td>\n'+
+                '</tr>\n'+
+                '<tr>'+
+                '<td style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">'+
+                '<select id="nameIdClaim" name="nameIdClaim">';
 
             if (claimUris != null) {
                 for (var r in claimUris){
@@ -312,23 +314,23 @@ function drawSAMLConfigPage(issuer,isEditSP, tableTitle) {
                     }
                 }
             }
-           nameIdFormatRow = nameIdFormatRow + '</select>\n'+
-            '</td>\n'+
-            '</tr>';
-       }
+            nameIdFormatRow = nameIdFormatRow + '</select>\n'+
+                '</td>\n'+
+                '</tr>';
+        }
     }
 
     tableBody = tableBody + nameIdFormatRow;
 
     var certificateAliasRow = "";
     var aliasSet = spConfigCertificateAlias;
- if (isEditSP) {
+    if (provider != null &&  isEditSP) {
 
-     certificateAliasRow = certificateAliasRow + '<tr>\n'+
-        '<td>\n'+
-         '<label class=""> Certificate Alias </label>\n'+
+        certificateAliasRow = certificateAliasRow + '<tr>\n'+
+            '<td>\n'+
+            '<label class=""> Certificate Alias </label>\n'+
             '</td>\n'+
-         '<td>\n'+
+            '<td>\n'+
             '<select id="alias" name="alias">';
         if (aliasSet != null) {
             for (var i in aliasSet) {
@@ -343,35 +345,35 @@ function drawSAMLConfigPage(issuer,isEditSP, tableTitle) {
                 }
             }
         }
-     certificateAliasRow = certificateAliasRow + '</select></td>'+ '</tr>\n';
- } else {
-     certificateAliasRow = certificateAliasRow + '<tr>\n' +
-         '<td>\n' +
-         '<label class=""> Certificate Alias </label>\n' +
-         '</td>\n' +
-         '<td>\n' +
-         '<select id="alias" name="alias">';
-     if (aliasSet != null) {
-         for (var i in aliasSet) {
-             var alias = aliasSet[i];
-             if (alias != null) {
-                 if (alias == 'http://www.w3.org/2000/09/xmldsig#rsa-sha1') {
-                     certificateAliasRow = certificateAliasRow + '<option selected="selected" value="' + alias + '">' + alias +
-                         '</option>\n';
-                 } else {
-                     certificateAliasRow = certificateAliasRow + '<option value="' + alias + '">' + alias + '</option>\n';
-                 }
-             }
-         }
-     }
-     certificateAliasRow = certificateAliasRow + '</select></td>\n </tr>\n';
- }
+        certificateAliasRow = certificateAliasRow + '</select></td>'+ '</tr>\n';
+    } else {
+        certificateAliasRow = certificateAliasRow + '<tr>\n' +
+            '<td>\n' +
+            '<label class=""> Certificate Alias </label>\n' +
+            '</td>\n' +
+            '<td>\n' +
+            '<select id="alias" name="alias">';
+        if (aliasSet != null) {
+            for (var i in aliasSet) {
+                var alias = aliasSet[i];
+                if (alias != null) {
+                    if (alias == 'http://www.w3.org/2000/09/xmldsig#rsa-sha1') {
+                        certificateAliasRow = certificateAliasRow + '<option selected="selected" value="' + alias + '">' + alias +
+                            '</option>\n';
+                    } else {
+                        certificateAliasRow = certificateAliasRow + '<option value="' + alias + '">' + alias + '</option>\n';
+                    }
+                }
+            }
+        }
+        certificateAliasRow = certificateAliasRow + '</select></td>\n </tr>\n';
+    }
 
-     tableBody = tableBody + certificateAliasRow;
+    tableBody = tableBody + certificateAliasRow;
 
     var defaultSigningAlgorithmRow = '<tr id="defaultSigningAlgorithmRow">\n'+
         '<td>\n'+
-     '<label class=""> Response Signing Algorithm  <font color="red">*</font></label>\n' +
+        '<label class=""> Response Signing Algorithm  <font color="red">*</font></label>\n' +
         '</td>\n'+
         '<td>\n'+
         '<select id="signingAlgorithm" name="signingAlgorithm">';
@@ -387,7 +389,7 @@ function drawSAMLConfigPage(issuer,isEditSP, tableTitle) {
             }
             if (signAlgorithm != null && signingAlgo==signAlgorithm) {
                 var defaultSigningAlgorithmRow = defaultSigningAlgorithmRow + '<option value="'+signingAlgo+'" selected>\n'+
-                signingAlgo + '</option>';
+                    signingAlgo + '</option>';
             } else {
                 var defaultSigningAlgorithmRow = defaultSigningAlgorithmRow + '<option value="'+signingAlgo+'">'+ signingAlgo+
                     '</option>\n';
@@ -395,15 +397,15 @@ function drawSAMLConfigPage(issuer,isEditSP, tableTitle) {
         }
     }
     defaultSigningAlgorithmRow = defaultSigningAlgorithmRow + '</select>\n'+
-    '</td>\n'+
-    '</tr>';
+        '</td>\n'+
+        '</tr>';
     tableBody = tableBody + defaultSigningAlgorithmRow;
 
     var digestAlgorithmRow  = '<tr id="digestAlgorithmRow">'+
         '<td>\n'+
-    '<label class=""> Response Digest Algorithm  <font color="red">*</font></label>\n' +
+        '<label class=""> Response Digest Algorithm  <font color="red">*</font></label>\n' +
         '</td>\n'+
-    '<td>\n'+
+        '<td>\n'+
         '<select id="digestAlgorithm" name="digestAlgorithm">\n';
 
     if (spConfigDigestAlgos != null) {
@@ -429,15 +431,15 @@ function drawSAMLConfigPage(issuer,isEditSP, tableTitle) {
         '</tr>';
     tableBody = tableBody + digestAlgorithmRow;
 
-var enableResponseSignatureRow = '<tr>'+
-    '<td colspan="2">'+
+    var enableResponseSignatureRow = '<tr>'+
+        '<td colspan="2">'+
         '<input type="checkbox" name="enableResponseSignature" value="true" onclick="disableResponseSignature(this);"';
     if(isEditSP && provider.doSignResponse=='true'){
         enableResponseSignatureRow = enableResponseSignatureRow + "checked=\"checked\"";
     }
     enableResponseSignatureRow = enableResponseSignatureRow + '/>\n'+
         '<label class="" style="display: inline-block"> Enable Response Signing </label>\n'+
-    '</td>\n'+
+        '</td>\n'+
         '</tr>\n'+
         '<input type="hidden" name="enableAssertionSignature" value="true"/>';
     tableBody = tableBody + enableResponseSignatureRow;
@@ -448,7 +450,7 @@ var enableResponseSignatureRow = '<tr>'+
 
     if (isEditSP && provider.doValidateSignatureInRequests=='true') {
         enableSigValidationRow = '<tr>\n'+
-        '<td colspan="2">\n'+
+            '<td colspan="2">\n'+
             '<input type="checkbox" id="enableSigValidation" name="enableSigValidation" value="true" checked="checked"/>\n'+
             '<label class="" style="display: inline-block"> Enable Signature Validation in Authentication Requests and Logout Requests </label>\n'+
             '</td>\n'+
@@ -468,18 +470,18 @@ var enableResponseSignatureRow = '<tr>'+
     //TODO : isEditSP && provider.isDoEnableEncryptedAssertionSpecified() && provider.getDoEnableEncryptedAssertion()
     if (isEditSP && provider.doEnableEncryptedAssertion=='true') {
         encryptedAssertionRow = '<tr>\n'+
-        '<td colspan="2">\n'+
+            '<td colspan="2">\n'+
             '<input type="checkbox" id="enableEncAssertion" name="enableEncAssertion" value="true" checked="checked"/>\n'+
-        '<label class="" style="display: inline-block"> Enable Assertion Encryption </label>\n'+
-        '</td>\n'+
+            '<label class="" style="display: inline-block"> Enable Assertion Encryption </label>\n'+
+            '</td>\n'+
             '</tr>';
     } else {
         encryptedAssertionRow = '<tr>\n'+
-        '<td colspan="2">' +
+            '<td colspan="2">' +
             '<input type="checkbox" id="enableEncAssertion" name="enableEncAssertion" value="true"/>'+
             '<label class="" style="display: inline-block"> Enable Assertion Encryption </label>\n'+
-        '</td>\n'+
-        '</tr>';
+            '</td>\n'+
+            '</tr>';
     }
     tableBody = tableBody + encryptedAssertionRow;
     var enableSingleLogoutRow = '<tr>\n' +
@@ -505,11 +507,11 @@ var enableResponseSignatureRow = '<tr>'+
         enableSingleLogoutRow = enableSingleLogoutRow + "disabled=\"disabled\">";
     }
     enableSingleLogoutRow = enableSingleLogoutRow + '<div class = "sectionHelp" style="margin-top: 2px;"> Single logout response accepting endpoint'+
-   '</div>\n'+
-   '</td>\n'+
-    '</tr>\n'+
-    '<tr>\n'+
-    '<td style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">\n'+
+        '</div>\n'+
+        '</td>\n'+
+        '</tr>\n'+
+        '<tr>\n'+
+        '<td style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">\n'+
         '<label class="">SLO Request URL</label>\n' +
         '</td>\n'+
         '<td><input type="text" id="sloRequestURL" name="sloRequestURL" value="';
@@ -524,69 +526,70 @@ var enableResponseSignatureRow = '<tr>'+
     }
     enableSingleLogoutRow = enableSingleLogoutRow + '<div class="sectionHelp" style="margin-top: 2px;">'+
         'Single logout request accepting endpoint'+
-    '</div>'+
-    '</td>'+
-    '</tr>';
+        '</div>'+
+        '</td>'+
+        '</tr>';
     tableBody = tableBody + enableSingleLogoutRow;
 
     var enableAudienceRestrictionRow = "";
-if (isEditSP && provider.requestedAudiences != null && provider.requestedAudiences.length > 0 &&
+    if (isEditSP && provider.requestedAudiences != null && provider.requestedAudiences.length > 0 &&
         provider.requestedAudiences[0] != null) {
 
-    enableAudienceRestrictionRow = '<tr>'+
-    '        <td colspan="2"><input type="checkbox"'+
-    '        name="enableAudienceRestriction" id="enableAudienceRestriction"'+
-    '        value="true" checked="checked"'+
-    '        onclick="disableAudienceRestriction(this);"/> <label class="" style="display: inline-block"> Enable Audience Restriction </label> </td>'+
-    '            </tr>'+
-    '            <tr>'+
-    '            <td'+
-    '        style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">'+
-    '            <label class="">Audience </label>'+
-    '            </td>'+
-    '            <td>'+
-    '            <input type="text" id="audience" name="audience"'+
-    '    class="text-box-big"/>'+
-    '            <input id="addAudience" name="addAudience" type="button"'+
-    '        value="Add"'+
-    '        onclick="addAudienceFunc()"/>'+
-    '            </td>'+
-    '            </tr>';
+        enableAudienceRestrictionRow = '<tr>'+
+            '        <td colspan="2"><input type="checkbox"'+
+            '        name="enableAudienceRestriction" id="enableAudienceRestriction"'+
+            '        value="true" checked="checked"'+
+            '        onclick="disableAudienceRestriction(this);"/> <label class="" style="display: inline-block"> Enable Audience Restriction </label> </td>'+
+            '            </tr>'+
+            '            <tr>'+
+            '            <td'+
+            '        style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">'+
+            '            <label class="">Audience </label>'+
+            '            </td>'+
+            '            <td>'+
+            '            <input type="text" id="audience" name="audience"'+
+            '    class="text-box-big"/>'+
+            '            <input id="addAudience" name="addAudience" type="button"'+
+            '        value="Add"'+
+            '        onclick="addAudienceFunc()"/>'+
+            '            </td>'+
+            '            </tr>';
 
-} else {
-    enableAudienceRestrictionRow = '<tr>'+
-    '        <td colspan="2">'+
-    '            <input type="checkbox"'+
-    '        name="enableAudienceRestriction" id="enableAudienceRestriction" value="true"'+
-    '        onclick="disableAudienceRestriction(this);"/>'+
-    '             <label class="" style="display: inline-block"> Enable Audience Restriction </label> '+
-    '            </td>'+
-    '            </tr>'+
-    '            <tr>'+
-    '            <td'+
-    '        style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">'+
-    '            <label class="">Audience </label>'+
-    '            </td>'+
-    '            <td>'+
-    '            <input type="text" id="audience" name="audience"'+
-    '    class="text-box-big" disabled="disabled"/>'+
-    '            <input id="addAudience" name="addAudience" type="button"'+
-    '        disabled="disabled" value="Add"'+
-    '        onclick="addAudienceFunc()"/>'+
-    '            </td>'+
-    '            </tr>';
-}
+    } else {
+        enableAudienceRestrictionRow = '<tr>'+
+            '        <td colspan="2">'+
+            '            <input type="checkbox"'+
+            '        name="enableAudienceRestriction" id="enableAudienceRestriction" value="true"'+
+            '        onclick="disableAudienceRestriction(this);"/>'+
+            '             <label class="" style="display: inline-block"> Enable Audience Restriction </label> '+
+            '            </td>'+
+            '            </tr>'+
+            '            <tr>'+
+            '            <td'+
+            '        style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">'+
+            '            <label class="">Audience </label>'+
+            '            </td>'+
+            '            <td>'+
+            '            <input type="text" id="audience" name="audience"'+
+            '    class="text-box-big" disabled="disabled"/>'+
+            '            <input id="addAudience" name="addAudience" type="button"'+
+            '        disabled="disabled" value="Add"'+
+            '        onclick="addAudienceFunc()"/>'+
+            '            </td>'+
+            '            </tr>';
+    }
     var audienceTableStyle = "";
-    if (provider.requestedAudiences != null && provider.requestedAudiences.length > 0) {
+    if (provider!= null && provider.requestedAudiences != null && provider.requestedAudiences.length > 0) {
         audienceTableStyle = "";
     }else {
         audienceTableStyle = "display:none";
     }
+
     enableAudienceRestrictionRow = enableAudienceRestrictionRow + '<tr>'+
-    '    <td></td>'+
-    '    <td>'+
-    '    <table id="audienceTableId" style="width: 40%;'+audienceTableStyle+'" class="styledInner">'+
-    '        <tbody id="audienceTableTbody">';
+        '    <td></td>'+
+        '    <td>'+
+        '    <table id="audienceTableId" style="width: 40%;'+audienceTableStyle+'" class="styledInner">'+
+        '        <tbody id="audienceTableTbody">';
     var j = 0;
     if (isEditSP && provider.requestedAudiences != null && provider.requestedAudiences.length > 0) {
         if (provider.requestedAudiences.constructor === Array) {
@@ -627,78 +630,79 @@ if (isEditSP && provider.requestedAudiences != null && provider.requestedAudienc
 
     }
     enableAudienceRestrictionRow = enableAudienceRestrictionRow + '<input type="hidden" name="audiencePropertyCounter" id="audiencePropertyCounter"'+
-    '    value="'+j+'"/>'+
-    '        </tbody>'+
-    '        </table>'+
-    '        </td>'+
-    '        </tr>';
+        '    value="'+j+'"/>'+
+        '        </tbody>'+
+        '        </table>'+
+        '        </td>'+
+        '        </tr>';
 
     tableBody = tableBody + enableAudienceRestrictionRow;
 
     var enableReceiptValidRow ="";
 
- if (isEditSP && provider.requestedRecipients != null && provider.requestedRecipients.length > 0 && provider.requestedRecipients[0] != null) {
-     enableReceiptValidRow = enableReceiptValidRow +'<tr>'+
-         '    <td colspan="2"><input type="checkbox"'+
-         '                           name="enableRecipients" id="enableRecipients"'+
-         '                           value="true" checked="checked"'+
-         '                           onclick="disableRecipients(this);"/> '+
-         '           <label class="" style="display: inline-block"> Enable Recipient Validation </label></td>'+
-         '</tr>'+
-         '<tr>'+
-         '    <td'+
-         '            style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">'+
-         '       <label class=""> Recipient</label>'+
-         '    </td>'+
-         '    <td>'+
-         '        <input type="text" id="recipient" name="recipient"'+
-         '               class="text-box-big"/>'+
-         '        <input id="addRecipient" name="addRecipient" type="button"'+
-         '               value="Add"'+
-         '               onclick="addRecipientFunc()"/>'+
-         '    </td>'+
-         '</tr>';
+    if (isEditSP && provider.requestedRecipients != null && provider.requestedRecipients.length > 0 && provider.requestedRecipients[0] != null) {
+        enableReceiptValidRow = enableReceiptValidRow +'<tr>'+
+            '    <td colspan="2"><input type="checkbox"'+
+            '                           name="enableRecipients" id="enableRecipients"'+
+            '                           value="true" checked="checked"'+
+            '                           onclick="disableRecipients(this);"/> '+
+            '           <label class="" style="display: inline-block"> Enable Recipient Validation </label></td>'+
+            '</tr>'+
+            '<tr>'+
+            '    <td'+
+            '            style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">'+
+            '       <label class=""> Recipient</label>'+
+            '    </td>'+
+            '    <td>'+
+            '        <input type="text" id="recipient" name="recipient"'+
+            '               class="text-box-big"/>'+
+            '        <input id="addRecipient" name="addRecipient" type="button"'+
+            '               value="Add"'+
+            '               onclick="addRecipientFunc()"/>'+
+            '    </td>'+
+            '</tr>';
 
 
 
- } else {
-     enableReceiptValidRow = enableReceiptValidRow +'<tr>'+
-         '    <td colspan="2">'+
-         '        <input type="checkbox"'+
-         '               name="enableRecipients" id="enableRecipients" value="true"'+
-         '               onclick="disableRecipients(this);"/>'+
-         '           <label class="" style="display: inline-block"> Enable Recipient Validation </label>'+
-         '    </td>'+
-         '</tr>'+
-         '<tr>'+
-         '    <td'+
-         '            style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">'+
-         '        <label class="">Recipient</label>'+
-         '    </td>'+
-         '    <td>'+
-         '        <input type="text" id="recipient" name="recipient"'+
-         '               class="text-box-big" disabled="disabled"/>'+
-         '        <input id="addRecipient" name="addRecipient" type="button"'+
-         '               disabled="disabled" value="Add"'+
-         '               onclick="addRecipientFunc()"/>'+
-         '    </td>'+
-         '</tr>';
+    } else {
+        enableReceiptValidRow = enableReceiptValidRow +'<tr>'+
+            '    <td colspan="2">'+
+            '        <input type="checkbox"'+
+            '               name="enableRecipients" id="enableRecipients" value="true"'+
+            '               onclick="disableRecipients(this);"/>'+
+            '           <label class="" style="display: inline-block"> Enable Recipient Validation </label>'+
+            '    </td>'+
+            '</tr>'+
+            '<tr>'+
+            '    <td'+
+            '            style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">'+
+            '        <label class="">Recipient</label>'+
+            '    </td>'+
+            '    <td>'+
+            '        <input type="text" id="recipient" name="recipient"'+
+            '               class="text-box-big" disabled="disabled"/>'+
+            '        <input id="addRecipient" name="addRecipient" type="button"'+
+            '               disabled="disabled" value="Add"'+
+            '               onclick="addRecipientFunc()"/>'+
+            '    </td>'+
+            '</tr>';
 
 
- }
+    }
+
     var recipientTableStyle = "";
-    if (provider.requestedRecipients != null && provider.requestedRecipients.length > 0) {
+    if (provider != null && provider.requestedRecipients != null && provider.requestedRecipients.length > 0) {
         recipientTableStyle =   "" ;
     }else{
         recipientTableStyle = "display:none";
     }
     enableReceiptValidRow = enableReceiptValidRow + '<tr>'+
-    '    <td></td>'+
-    '    <td>'+
-    '    <table id="recipientTableId" style="width: 40%; '+recipientTableStyle+';" class="styledInner">'+
-    '        <tbody id="recipientTableTbody">';
+        '    <td></td>'+
+        '    <td>'+
+        '    <table id="recipientTableId" style="width: 40%; '+recipientTableStyle+';" class="styledInner">'+
+        '        <tbody id="recipientTableTbody">';
 
-        var k = 0;
+    var k = 0;
     if (isEditSP && provider.requestedRecipients != null && provider.requestedRecipients.length > 0) {
         for (var i in provider.requestedRecipients) {
             var recipient = provider.requestedRecipients[i];
@@ -723,11 +727,11 @@ if (isEditSP && provider.requestedAudiences != null && provider.requestedAudienc
     }
 
     enableReceiptValidRow = enableReceiptValidRow +  '<input type="hidden" name="recipientPropertyCounter" id="recipientPropertyCounter"'+
-    '    value="'+k+'"/>'+
-    '        </tbody>'+
-    '        </table>'+
-    '        </td>'+
-    '        </tr>';
+        '    value="'+k+'"/>'+
+        '        </tbody>'+
+        '        </table>'+
+        '        </td>'+
+        '        </tr>';
 
 
     tableBody = tableBody + enableReceiptValidRow;
@@ -770,25 +774,25 @@ if (isEditSP && provider.requestedAudiences != null && provider.requestedAudienc
     }
 
     idpSLOReturnToURLInputRow = '<tr id="idpSLOReturnToURLInputRow">'+
-    '        <td'+
-    '    style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">'+
-    '      <label class="" >  Return to URL </label> '+
-    '        </td>'+
-    '        <td>'+
-    '        <input type="text" id="returnToURLTxtBox" class="text-box-big" '+tempstyle+' />'+
-    '    <input id="addReturnToURL" type="button"'+ tempstyle+
-    '    value="Add" onclick="addSloReturnToURL()"/>'+
-    '        </td>'+
-    '        </tr>';
+        '        <td'+
+        '    style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">'+
+        '      <label class="" >  Return to URL </label> '+
+        '        </td>'+
+        '        <td>'+
+        '        <input type="text" id="returnToURLTxtBox" class="text-box-big" '+tempstyle+' />'+
+        '    <input id="addReturnToURL" type="button"'+ tempstyle+
+        '    value="Add" onclick="addSloReturnToURL()"/>'+
+        '        </td>'+
+        '        </tr>';
 
 
 
     if (isEditSP && provider.idpInitSLOReturnToURLs != null) {
         idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + '<tr id="idpSLOReturnToURLsTblRow">'+
-        '            <td></td>'+
-        '            <td>'+
-        '            <table id="idpSLOReturnToURLsTbl" style="width: 40%;" class="styledInner">'+
-        '            <tbody id="idpSLOReturnToURLsTblBody">';
+            '            <td></td>'+
+            '            <td>'+
+            '            <table id="idpSLOReturnToURLsTbl" style="width: 40%;" class="styledInner">'+
+            '            <tbody id="idpSLOReturnToURLsTblBody">';
 
         var sloReturnToURLsBuilder = "";
         var returnToColumnId = 0;
@@ -833,11 +837,11 @@ if (isEditSP && provider.requestedAudiences != null && provider.requestedAudienc
             returnToColumnId = returnToColumnId + 1;
         }
         idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + '</tbody>'+
-        '        </table>'+
-        '        <input type="hidden" id="idpInitSLOReturnToURLs" name="idpInitSLOReturnToURLs" value="'+sloReturnToURLsBuilder+'">'+
-        '        <input type="hidden" id="currentReturnToColumnId" value="'+returnToColumnId+'">'+
-        '            </td>'+
-        '            </tr>';
+            '        </table>'+
+            '        <input type="hidden" id="idpInitSLOReturnToURLs" name="idpInitSLOReturnToURLs" value="'+sloReturnToURLsBuilder+'">'+
+            '        <input type="hidden" id="currentReturnToColumnId" value="'+returnToColumnId+'">'+
+            '            </td>'+
+            '            </tr>';
     }
 
     tableBody = tableBody + idpSLOReturnToURLInputRow;
@@ -878,6 +882,7 @@ function preDrawSAMLConfigPage(){
         type: "GET",
         data: "&cookie=" + cookie + "&user=" + userName + "&clientAction=getServiceProviders",
         success: function (data) {
+            provider = null;
             var tableTitle = "New Service Provider";
             var isEditSP=false;
             var issuer="";
@@ -897,7 +902,8 @@ function preDrawSAMLConfigPage(){
             for (var i in spConfigData.return.serviceProviders){
                 var sp = spConfigData.return.serviceProviders[i];
                 if (sp.issuer == issuer){
-                        provider = sp;
+                    provider = sp;
+
                 }
             }
             getClaimUris(issuer,isEditSP, tableTitle);
@@ -1287,7 +1293,7 @@ function addSloReturnToURL() {
 
     var returnToURL = $("#returnToURLTxtBox").val();
     if(returnToURL == null || returnToURL.trim().length == 0) {
-       // CARBON.showWarningDialog("<fmt:message key='slo.enter.not.valid.endpoint.address'/>", null, null);
+        // CARBON.showWarningDialog("<fmt:message key='slo.enter.not.valid.endpoint.address'/>", null, null);
         return false;
     }
 
@@ -1410,20 +1416,20 @@ function getSP(applicationName){
 
 function updateSP(applicationName){
     var element = "<div class=\"modal fade\" id=\"messageModal\">\n" +
-    "  <div class=\"modal-dialog\">\n" +
-    "    <div class=\"modal-content\">\n" +
-    "      <div class=\"modal-header\">\n" +
-    "        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n" +
-    "        <h3 class=\"modal-title\">Modal title</h4>\n" +
-    "      </div>\n" +
-    "      <div class=\"modal-body\">\n" +
-    "        <p>One fine body&hellip;</p>\n" +
-    "      </div>\n" +
-    "      <div class=\"modal-footer\">\n" +
-    "      </div>\n" +
-    "    </div>\n" +
-    "  </div>\n" +
-    "</div>";
+        "  <div class=\"modal-dialog\">\n" +
+        "    <div class=\"modal-content\">\n" +
+        "      <div class=\"modal-header\">\n" +
+        "        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n" +
+        "        <h3 class=\"modal-title\">Modal title</h4>\n" +
+        "      </div>\n" +
+        "      <div class=\"modal-body\">\n" +
+        "        <p>One fine body&hellip;</p>\n" +
+        "      </div>\n" +
+        "      <div class=\"modal-footer\">\n" +
+        "      </div>\n" +
+        "    </div>\n" +
+        "  </div>\n" +
+        "</div>";
     $("#message").append(element);
     validateSPName(false);
 }
