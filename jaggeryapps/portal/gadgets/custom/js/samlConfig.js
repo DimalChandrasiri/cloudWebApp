@@ -741,7 +741,6 @@ function preDrawSAMLConfigPage() {
             var issuer = "";
             if (json != null && json.return != null && json.return.inboundAuthenticationConfig != null
                 && json.return.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs != null) {
-
                 for (var i in json.return.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs) {
                     var inboundConfig = json.return.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs[i];
                     if (inboundConfig.inboundAuthType == "samlsso" && inboundConfig.inboundAuthKey.length > 0) {
@@ -756,7 +755,6 @@ function preDrawSAMLConfigPage() {
                 var sp = spConfigData.return.serviceProviders[i];
                 if (sp.issuer == issuer) {
                     provider = sp;
-
                 }
             }
             getClaimUris(issuer, isEditSP, tableTitle);

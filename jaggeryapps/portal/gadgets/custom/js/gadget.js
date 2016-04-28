@@ -24,7 +24,7 @@ function drawList() {
                     "                        <td><label class=\"\">" + json.return[i].applicationName + "</label> </td>\n" +
                     "                        <td><label class=\"\">" + json.return[i].description + "</label> </td>\n" +
                     "                        <td>\n" +
-                    "                            <input type=\"button\" onclick=\"getSP('" + json.return[i].applicationName + "');\" class=\"btn btn-primary\" value=\"Edit\"/>\n" +
+                    "                            <input type=\"button\" onclick=\"preDrawUpdatePage('" + json.return[i].applicationName + "');\" class=\"btn btn-primary\" value=\"Edit\"/>\n" +
                     "                            <input type=\"button\" onclick=\"deleteSP('" + json.return[i].applicationName + "');\" class=\"btn btn-primary\" value=\"Delete\"/>\n" +
                     "                        </td>\n" +
                     "                     </tr>\n";
@@ -34,7 +34,7 @@ function drawList() {
                 "                        <td><label class=\"\">" + json.return.applicationName + "</label> </td>\n" +
                 "                        <td><label class=\"\">" + json.return.description + "</label> </td>\n" +
                 "                        <td>\n" +
-                "                            <input type=\"button\" onclick=\"getSP('" + json.return.applicationName + "');\" class=\"btn btn-primary\" value=\"Edit\"/>\n" +
+                "                            <input type=\"button\" onclick=\"preDrawUpdatePage('" + json.return.applicationName + "');\" class=\"btn btn-primary\" value=\"Edit\"/>\n" +
                 "                            <input type=\"button\" onclick=\"deleteSP('" + json.return.applicationName + "');\" class=\"btn btn-primary\" value=\"Delete\"/>\n" +
                 "                        </td>\n" +
                 "                     </tr>\n";
@@ -146,7 +146,7 @@ function drawUpdatePage() {
             "                      <tr>\n" +
             "                         <td><label class=\"\">OAuth/OpenID Connect Configuration</label> </td>\n" +
             "                         <td>\n" +
-            "                             <input type=\"button\" onclick=\"drawOAuthConfigPage();\" class=\"btn btn-primary\" value=\"Edit\"/>\n" +
+            "                             <input type=\"button\" onclick=\"preDrawOAuthConfigPage();\" class=\"btn btn-primary\" value=\"Edit\"/>\n" +
             "                         </td>\n" +
             "                      </tr>\n" +
             "                      <tr>\n" +
@@ -173,9 +173,6 @@ function drawUpdatePage() {
 }
 
 
-function drawOAuthConfigPage() {
-    alert('oauth config page');
-}
 
 function drawFederationConfigPage() {
     alert('federation config page');
@@ -240,7 +237,7 @@ function registerSP() {
 
 }
 
-function getSP(applicationName) {
+function preDrawUpdatePage(applicationName) {
     $.ajax({
         url: "/portal/gadgets/custom/controllers/custom/getsp.jag",
         type: "GET",

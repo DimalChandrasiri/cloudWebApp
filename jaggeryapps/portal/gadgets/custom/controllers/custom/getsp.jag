@@ -13,7 +13,6 @@ function getUser(){
     try{
         var spClient = require('spAdminClient.jag');
         var fieldValues = spClient.getApplication(applicationName);
-        log.info("fieldvalues"+fieldValues);
         print( fieldValues );
     }catch(e){
         print(e);

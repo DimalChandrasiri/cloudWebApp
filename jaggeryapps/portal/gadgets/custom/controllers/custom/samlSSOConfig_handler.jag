@@ -15,7 +15,6 @@ function handle(action){
         var ssoClient = require('samlSSOConfigServiceClient.jag');
         if(action=='getServiceProviders') {
             var serviceProviders = ssoClient.getServiceProviders();
-            log.info("Here ??????????????"+serviceProviders.toSource());
             print(serviceProviders);
         }else if(action=='getClaimURIs'){
             var claimURIs = ssoClient.getClaimURIs();
