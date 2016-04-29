@@ -6,11 +6,8 @@ var appName = request.getParameter("appName");
 var clientID = request.getParameter("clientID")
 getOAuthConfigs();
 function getOAuthConfigs(){
-    log.info('appname' + appName);
     session.put('auth-cookie', cookie);
     session.put('user', user);
-
-
     try{
         var oauthClient = require('oauthAdminClient.jag');
         var grantTypes = oauthClient.getAllowedGrantTypes();
@@ -19,13 +16,10 @@ function getOAuthConfigs(){
         fieldValues['grantTypes'] = grantTypes.return;
         fieldValues['isPKCESupportEnabled'] = isPKCESupportEnabled.return;
         if(appName != null && appName.length > 0){
-            log.info('appname in if' + appName);
             fieldValues['app'] = oauthClient.getOAuthApplicationDataByAppName(appName).return;
         }else if (clientID != null && appName.length > 0){
-            log.info('clientID' + clientID);
             fieldValues['app'] = oauthClient.getOAuthApplicationData(clientID).return;
         }
-        log.info('new values' + fieldValues.toSource());
         print( fieldValues );
     }catch(e){
         print(e);

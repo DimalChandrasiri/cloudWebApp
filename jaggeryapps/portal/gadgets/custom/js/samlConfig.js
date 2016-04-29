@@ -750,7 +750,13 @@ function preDrawSAMLConfigPage() {
                     }
                 }
             }
+            debugger;
             spConfigData = $.parseJSON(data);
+            if(spConfigData.return.serviceProviders.constructor !== Array){
+                var spArr = [];
+                spArr[0] = spConfigData.return.serviceProviders;
+                spConfigData.return.serviceProviders = spArr;
+            }
             for (var i in spConfigData.return.serviceProviders) {
                 var sp = spConfigData.return.serviceProviders[i];
                 if (sp.issuer == issuer) {
