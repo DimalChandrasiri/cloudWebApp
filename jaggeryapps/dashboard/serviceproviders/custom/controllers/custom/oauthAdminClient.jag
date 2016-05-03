@@ -1,0 +1,30 @@
+<%
+include("../wsUtil.jag");
+var util = require("../../util/utility.jag");
+
+var log = new Log();
+var serverUrl = util.getServerUrl();
+serverUrl = serverUrl + "/OAuthAdminService";
+
+var ws = require('ws');
+var webService = new ws.WSRequest();
+
+function getAllowedGrantTypes(){
+    var result = callWSReturnJSON(webService, serverUrl, "urn:getAllowedGrantTypes", null);
+    return result;
+}
+function isPKCESupportEnabled(){
+    log.info("calling is pkcesupportenabled");
+    var result = callWSReturnJSON(webService, serverUrl, "urn:isPKCESupportEnabled", null);
+    return result;
+}
+function getOAuthApplicationDataByAppName(appName){
+    log.info("calling getOAuthApplicationDataByAppName " + appName);
+    var result = callWSReturnJSON(webService, serverUrl, "urn:getOAuthApplicationDataByAppName", appName ? new Array(appName) : new Array(""));
+    return result;
+}
+function getOAuthApplicationData(clientID){
+    var result = callWSReturnJSON(webService, serverUrl, "urn:getOAuthApplicationData", clientID ? new Array(clientID) : new Array(""));
+    return result;
+}
+%>

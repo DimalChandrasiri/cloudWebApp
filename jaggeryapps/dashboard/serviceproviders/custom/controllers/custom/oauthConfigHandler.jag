@@ -1,0 +1,31 @@
+<%
+var log = new Log();
+var cookie = request.getParameter("cookie") ;
+var user = request.getParameter("user");
+var appName = request.getParameter("appName");
+var clientID = request.getParameter("clientID")
+getOAuthConfigs();
+function getOAuthConfigs(){
+    session.put('auth-cookie', cookie);
+    session.put('user', user);
+    try{
+        var oauthClient = require('oauthAdminClient.jag');
+        var grantTypes = oauthClient.getAllowedGrantTypes();
+        var isPKCESupportEnabled = oauthClient.isPKCESupportEnabled();
+        var fieldValues = {};
+        fieldValues['grantTypes'] = grantTypes.return;
+        fieldValues['isPKCESupportEnabled'] = isPKCESupportEnabled.return;
+        if(appName != null && appName.length > 0){
+            fieldValues['app'] = oauthClient.getOAuthApplicationDataByAppName(appName).return;
+        }else if (clientID != null && appName.length > 0){
+            fieldValues['app'] = oauthClient.getOAuthApplicationData(clientID).return;
+        }
+        print( fieldValues );
+    }catch(e){
+        print(e);
+        log.error(e);
+    }
+
+}
+
+%>

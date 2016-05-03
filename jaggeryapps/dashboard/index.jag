@@ -1,32 +1,3 @@
-<%
-include("util/constants.jag");
-
-var user = session.get('user');
-var log = new Log();
-var util = require("util/utility.jag");
-var authzFailure = request.getParameter("authz_failure");
-
-util.setServerURL("true");
-
-if (user == null) {
-    if (authzFailure != null) {
-        response.sendRedirect("login.jag?authz_failure=" + authzFailure);
-    } else {
-        response.sendRedirect("login.jag");
-    }
-}
-
-var httpsCoreUrl = application.get(SERVER_CORE_URL);
-if (httpsCoreUrl === 'null' || httpsCoreUrl == null || httpsCoreUrl.length <= 0) {
-    httpsCoreUrl = '';
-}
-
-var proxyContextPath = application.get(PROXY_CONTEXT_PATH);
-if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.length <= 0) {
-    proxyContextPath = '';
-}
-
-%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,11 +7,15 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
     <title>WSO2 Cloud</title>
 
     <!-- Bootstrap -->
-    <link href="/dashboard/css/bootstrap-3.2.0/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/dashboard/css/fontwso2-1.2/css/font-wso2.css">
-    <link href="/dashboard/css/font-awesome-4.2.0/font-awesome.min.css" rel="stylesheet">
-    <link href="/dashboard/css/web-fonts/Roboto.css" rel="stylesheet">
-    <link href="/dashboard/css/styles_new.css" rel="stylesheet">
+    <link href="css/bootstrap-3.2.0/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/fontwso2-1.2/css/font-wso2.css">
+    <link href="css/font-awesome-4.2.0/font-awesome.min.css" rel="stylesheet">
+    <link href="css/web-fonts/Roboto.css" rel="stylesheet">
+    <link href="css/datatables-1.10.7/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="css/datatables-1.10.7/dataTables.responsive.css" rel="stylesheet">
+    <link href="css/datatables-1.10.7/jquery.dataTables.override.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <script type="text/javascript" src="serviceproviders/custom/serverinfo.jag"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -50,364 +25,117 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
     <![endif]-->
 </head>
 <body>
-<!-- BOF cloud menu -->
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="#" id="cloud-menu-popover-xs" data-toggle="popover" data-placement="bottom"
-               class="hidden-md hidden-sm hidden-lg cloud-menu-popover">
-                <i class="fw fw-tiles"></i>
-            </a>
-            <a class="navbar-brand" href="#"><img src="/dashboard/images/logo.png" alt="wso2-logo" > Cloud</a>
-        </div>
-        <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav menu-right">
-                <li><a href="#"><i class="fa fa-book"></i> Documentation</a></li>
-                <li><a href="#about"><i class="fa fa-envelope"></i> Support</a></li>
-                <li class="dropdown user-name">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">jack sparrow
-                        <i class="fa fa-chevron-circle-down"></i>
-                        <img src="/dashboard/images/user.png" alt="user" class="user-image"></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Profile</a></li>
-                        <li><a href="#">Logout</a></li>
-                    </ul>
-                </li>
-                <li class="cloud-menu hidden-xs">
-                    <a href="#" id="cloud-menu-popover" data-toggle="popover" data-placement="bottom"
-                       class="cloud-menu-popover">
-                        <i class="fw fw-tiles"></i>
-                    </a>
-                </li>
-            </ul>
-            <!-- BOF cloud menu content -->
-            <div class="cloud-menu-content hide">
-                <div id="popover-head" class="hide">
-                    Navigate to Cloud
-                </div>
-                <div id="popover-content" class="hide">
-                    <div class="cloud-apps">
-                        <a class="cloud-block">
-                            <i class="fa fa-3x fa-cubes"></i>
-                            <div class="cloud-name">Application Cloud</div>
-                        </a>
-                        <a class="cloud-block">
-                            <i class="fw fw-api fa-3x"></i>
-                            <div class="cloud-name">API Cloud</div>
-                        </a>
-                        <a class="cloud-block">
-                            <i class="fw fw-security fa-3x"></i>
-                            <div class="cloud-name">Identity Cloud</div>
-                        </a>
-                        <div class="clearfix"></div> <!-- to make seperate -->
-                    </div>
-                    <div class="cloud-actions">
-                        <h3>Manage your cloud</h3>
-                        <a class="cloud-block-invert">
-                            <i class="fa fa-3x  fa-institution"></i>
-                            <div class="cloud-name">Organizations</div>
-                        </a>
-                        <a class="cloud-block-invert">
-                            <i class="fa fa-3x  fa-users"></i>
-                            <div class="cloud-name">Members</div>
-                        </a>
-                        <a class="cloud-block-invert">
-                            <i class="fa fa-3x  fa-envelope"></i>
-                            <div class="cloud-name">Support</div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!-- EOF cloud menu content -->
-        </div><!--/.nav-collapse -->
-    </div>
-</div>
-<!-- EOF cloud menu -->
+<%
+include("templates/header.jag");
+%>
+
 <!-- BOF App  menu -->
 <div class="navbar navbar-secondary">
-    <div class="container-fliud">
-        <div class="row">
-            <div class="side-pane-trigger">
-                <i class="fa fa-reorder"></i>
-            </div>
-            <div class="breadcrumb-secondary">
-                <i class="fw fw-security "></i> <span class="hidden-xs">Identity Cloud </span> / Service Providers / Add
-            </div>
-        </div>
-    </div>
+   <div class="container-fliud">
+       <div class="row">
+           <div class="side-pane-trigger">
+               <i class="fa fa-reorder"></i>
+           </div>
+           <div class="breadcrumb-secondary">
+               <i class="fw fw-security "></i> <span class="hidden-xs">Identity Cloud </span> / Service Providers
+           </div>
+       </div>
+   </div>
 </div><!-- EOF App  menu -->
 <div class="inner-wrapper">
-    <!-- left pane wrapper -->
-    <div class="left-pane">
-        <ul>
-            <li>
-                <a href="" target="_blank"><i class="fa fa-laptop"></i> Overview</a>
-            </li>
-            <li>
-                <a href=""><i class="fw fw-folder"></i> Directories</a>
-            </li>
-            <li class="selected">
-                <a href=""><i class="fw fw-globe"></i> Service Providers</a>
-            </li>
-            <li>
-                <a href="#"><i class="fw fw-bar-chart"></i> Analytics</a>
-            </li>
-            <li>
-                <a href=""><i class="fw fw-notification"></i> Events</a>
-            </li>
+   <!-- left pane wrapper -->
+   <%
+include("templates/leftpane.jag");
+%>
 
-        </ul>
+<!-- left pane wrapper -->
+<div class="right-pane">
+
+
+<!-- BOF App  menu actionbar -->
+<div class="action-bar">
+    <a href="#" class="btn-action" data-toggle="tooltip" data-placement="top"
+       title="Back to Overview">
+            <span class="fw-stack fw-lg btn-action-ico">
+                <i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-left-arrow fw-stack-1x"></i>
+            </span> Back to Overview
+    </a>
+    <a href="serviceproviders/addsp.jag" class="btn-action" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+            <span class="fw-stack fw-lg btn-action-ico">
+                <i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-add fw-stack-1x"></i>
+            </span> <span class="hidden-xs">Add Service Provider</span>
+    </a>
+    <a href="serviceproviders/listsp.jag" class="btn-action" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+            <span class="fw-stack fw-lg btn-action-ico">
+                <i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-list fw-stack-1x"></i>
+            </span> <span class="hidden-xs">List Service Providers</span>
+    </a>
+</div><!-- EOF App  menu actionbar-->
+
+
+<div class="container-fluid app-content-section">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 msg-issues">
+          Orem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+          Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+          Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
+      </div>
     </div>
-    <!-- left pane wrapper -->
-    <div class="right-pane">
-        <!-- BOF App  menu actionbar -->
-        <div class="action-bar">
-            <a href="012-identity-cloud-providers-listing.html" class="btn-action">
+    <div class="row row-centered">
+        <div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6">
+            <div class="add-issue-content">
+                <a id="add-issue-button" class="cu-btn cu-btn-md cu-btn-blue" href="serviceproviders/addsp.jag">
                     <span class="fw-stack fw-lg btn-action-ico">
                         <i class="fw fw-ring fw-stack-2x"></i>
-                        <i class="fw fw-left-arrow fw-stack-1x"></i>
-                    </span> <span class="hidden-xs">Back to Service Providers</span>
-            </a>
-        </div><!-- EOF App  menu actionbar-->
-
-
-        <div class="container-fluid app-type-listing">
-            <div class="row listing padding-bottom-xlg" data-count="8.0">
-                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 ">
-                    <div class="cloud-app-type app-color-one cloud-app-type-max" id="1.0"
-                         data-description="A service provider is a website that hosts applications. You can enable
-                         Salesforce as a service providers. Your users can then access other applications directly
-                         from Salesforce using single sign-on. Single sign-on can be a great help to your users:
-                         instead of having to remember many passwords, they only have to remember one. Plus, the
-                         applications can be added as tabs to your Salesforce organization, which means users don’t
-                         have to switch between programs." data-appname="Salesforce" >
-                        <div class="thumbnail icon">
-                            <div class="square-element">
-                                <img class="" src="/dashboard/images/is/salesforce.png" alt="">
-                            </div>
-                        </div>
-                        <div class="type-name" >Salesforce</div>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
-                    <div class="cloud-app-type app-color-six" id="2.0" data-description="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. ultricies nec,
-                                pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla
-                                vel, aliquet nec, vulputate eget, arcu." data-appname="NetSuite" >
-                        <div class="thumbnail icon">
-                            <div class="square-element">
-                                <img class="" src="/dashboard/images/is/netsuit.png" alt="">
-                            </div>
-                        </div>
-                        <div class="type-name">NetSuite</div>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 ">
-                    <div class="cloud-app-type app-color-two" id="3.0" data-description="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. ultricies nec,
-                                pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla
-                                vel, aliquet nec, vulputate eget, arcu." data-appname="Concur" >
-                        <div class="thumbnail icon">
-                            <div class="square-element">
-                                <img class="" src="/dashboard/images/is/concur.png" alt="">
-                            </div>
-                        </div>
-                        <div class="type-name">Concur</div>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
-                    <div class="cloud-app-type app-color-three" id="4.0" data-description="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. ultricies nec,
-                                pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla
-                                vel, aliquet nec, vulputate eget, arcu." data-appname="Zuora" >
-                        <div class="thumbnail icon">
-                            <div class="square-element">
-                                <img class="" src="/dashboard/images/is/zuora.png" alt="">
-                            </div>
-                        </div>
-                        <div class="type-name">Zuora</div>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 ">
-                    <div class="cloud-app-type app-color-one" id="5.0" data-description="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. ultricies nec,
-                                pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla
-                                vel, aliquet nec, vulputate eget, arcu." data-appname="AWS" >
-                        <div class="thumbnail icon">
-                            <div class="square-element">
-                                <img class="" src="/dashboard/images/is/aws.png" alt="">
-                            </div>
-                        </div>
-                        <div class="type-name">AWS</div>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 ">
-                    <div class="cloud-app-type app-color-five cloud-app-type-max" id="6.0"
-                         data-description="TEST " data-appname="GoToMeeting" >
-                        <div class="thumbnail icon">
-                            <div class="square-element">
-                                <img class="" src="/dashboard/images/is/gotomeeting.png" alt="">
-                            </div>
-                        </div>
-                        <div class="type-name" >GoToMeeting</div>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
-                    <div class="cloud-app-type  app-color-two" id="7.0"   data-description="Nulla consequat massa quis enim. Donec pede justo, fringilla
-                                vel, aliquet nec, vulputate eget, arcu." data-appname="WSO2 Cloud" >
-                        <div class="thumbnail icon">
-                            <div class="square-element">
-                                <i class="fw fw-wso2 fw-custom-x"></i>
-                            </div>
-                        </div>
-                        <div class="type-name">WSO2 Cloud</div>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
-                    <div class="cloud-app-type app-color-three" id="8.0" data-description="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. ultricies nec,
-                                pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla
-                                vel, aliquet nec, vulputate eget, arcu." data-appname="Custom Service Provider" >
-                        <div class="thumbnail icon">
-                            <div class="square-element">
-                                <i class="fw fw fw-globe fw-custom-x"></i>
-                            </div>
-                        </div>
-
-                        <div class="type-name">Custom Service Provider</div>
-                    </div>
-                </div>
-
+                        <i class="fw fw-add fw-stack-1x"></i>
+                    </span>
+                    <span class="hidden-xs">Add Service Provider</span>
+                </a>
             </div>
 
-        </div><!-- /.container -->
-        <!-- BOF template block appear on each click -->
-        <div class="app-type-info-template" style="display: none">
-            <div class="longme" style="display: none">
-                <div class="clearfix"></div>
-                <div class="col-md-12 long">
-                    <div class="row">
-                        <div class="col-sm-8 col-md-8 col-lg-7">
-                            <h2 class="app-type-name">Salesforce</h2>
-                            <div class="app-description">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. ultricies nec,
-                                pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla
-                                vel, aliquet nec, vulputate eget, arcu.
-                            </div>
-                            <div class="button-bar">
-                                <a href="#" class="cu-btn cu-btn-md cu-btn-gray"><i class="fa fa-book"></i> Documentation</a>
-                                <a href="#" class="cu-btn cu-btn-md cu-btn-gray"><i class="fa fa-video-camera"></i> Video Guide</a>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 col-md-4 col-lg-5 description-action">
-                            <a href="" class="cu-btn cu-btn-md cu-btn-blue">
-                               <span class="fw-stack fw-lg btn-action-ico">
-                               <i class="fw fw-ring fw-stack-2x"></i>
-                               <i class="fw fw-add fw-stack-1x"></i>
-                               </span> Continue...</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-        <!-- EOF template block appear on each click -->
-        <div id="push"></div>
-    </div>
-</div>
 
-<div id="footer">
-    <div class="container-fluid">
-        <div class="footer-text">WSO2 Cloud V: 1.2 . &copy; 2015 <i class="fw fw-wso2 fw-2x"></i> All Rights Reserved.</div>
     </div>
-</div>
+</div><!-- /.container -->
 
+
+</div>
+<div class="clearfix"></div>
+<div id="push"></div>
+</div>
+<%
+include("templates/footer.jag");
+%>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="../js/jquery-1.11.1/jquery.min.js"></script>
+<script src="js/jquery-1.11.1/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="../js/bootstrap-3.2.0/bootstrap.min.js"></script>
-<script>
-    /**
-     * this function use to append description block on app type selection
-     * */
-    $(document).on('click', '.cloud-app-type', function(){
-        $('.listing').find('.longme').detach();
-        if($('.cloud-app-type').hasClass('cloud-app-selected')){
-            $('.cloud-app-type').removeClass('cloud-app-selected');
-            $(this).addClass('cloud-app-selected');
-        }else{
-            $(this).addClass('cloud-app-selected');
-        }
-        var width = $( window ).width(),
-                currentcount = parseInt($(this).attr('id')),
-                appDescription = $(this).attr('data-description'),
-                appName = $(this).attr('data-appname'),
-                dataCount = parseInt($('.listing').attr('data-count'));
-        //content replace with data attributes
-        $('.app-type-info-template').find('.app-type-name').html(appName);
-        $('.app-type-info-template').find('.app-description').html(appDescription);
-        var appendHtml =$('.app-type-info-template').html();
-        if(width >=1170){
-            if(currentcount%7 == 0){
-                $('#'+currentcount+'\\.0').parent().after(appendHtml);
-                $('.longme').fadeIn('slow')
-            }else{
-                var ctest = currentcount+(7- currentcount%7);
-                if(ctest > dataCount){
-                    $('#'+ dataCount+'\\.0').parent().after(appendHtml);
-                    $('.longme').fadeIn('slow')
-                }else{
-                    $('#'+ctest+'\\.0').parent().after(appendHtml);
-                    $('.longme').fadeIn('slow')
-                }
-            }
-        }else if(width >=970){
-            if(currentcount%4 == 0){
-                $('#'+currentcount+'\\.0').parent().after(appendHtml);
-                $('.longme').fadeIn('slow')
-            }else{
-                var ctest = parseInt(currentcount)+(4- currentcount%4);
-                if(ctest > dataCount){
-                    $('#'+ dataCount+'\\.0').parent().after(appendHtml);
-                    $('.longme').fadeIn('slow')
-                }else{
-                    $('#'+ctest+'\\.0').parent().after(appendHtml);
-                    $('.longme').fadeIn('slow')
-                }
-            }
-        }else if(width >=750 ){
-            if(currentcount%2 == 0){
-                $('#'+currentcount+'\\.0').parent().after(appendHtml);
-                $('.longme').fadeIn('slow')
-            }else{
-                var ctest = parseInt(currentcount)+1;
-                if(ctest > dataCount){
-                    $('#'+ dataCount+'\\.0').parent().after(appendHtml);
-                    $('.longme').fadeIn('slow')
-                }else{
-                    $('#'+ctest+'\\.0').parent().after(appendHtml);
-                    $('.longme').fadeIn('slow')
-                }
-            }
-        }else if(width <750 ){
-            $('#'+currentcount+'\\.0').parent().after(appendHtml);
-            $('.longme').fadeIn('slow')
-        }
-    })
-    $('.side-pane-trigger').click(function(){
-        var rightPane = $('.right-pane');
-        var leftPane = $('.left-pane');
-        if (rightPane.hasClass('visible')){
-            rightPane.animate({"left":"0em"}, "slow").removeClass('visible');
-            leftPane.animate({"left":"-18em"}, "slow");
-            $(this).find('i').removeClass('fa-arrow-left').addClass('fa-reorder');
-        } else {
-            rightPane.animate({"left":"18em"}, "slow").addClass('visible');
-            leftPane.animate({"left":"0em"}, "slow");
-            $(this).find('i').removeClass('fa-reorder').addClass('fa-arrow-left');
-        }
-    });
-</script>
+<script src="js/bootstrap-3.2.0/bootstrap.min.js"></script>
+<script src="js/datatables-1.10.7/jquery.dataTables.min.js"></script>
+<script src="js/datatables-1.10.7/dataTables.responsive.min.js"></script>
+<script src="js/datatables-1.10.7/jquery.dataTables.columnFilter.js"></script>
 <!-- include custom js functions -->
-<script src="../js/custom/custom.js"></script>
+<script src="js/custom/custom.js"></script>
+
+<script>
+
+   $('.side-pane-trigger').click(function(){
+       var rightPane = $('.right-pane');
+       var leftPane = $('.left-pane');
+       if (rightPane.hasClass('visible')){
+           rightPane.animate({"left":"0em"}, "slow").removeClass('visible');
+           leftPane.animate({"left":"-18em"}, "slow");
+           $(this).find('i').removeClass('fa-arrow-left').addClass('fa-reorder');
+       } else {
+           rightPane.animate({"left":"18em"}, "slow").addClass('visible');
+           leftPane.animate({"left":"0em"}, "slow");
+           $(this).find('i').removeClass('fa-reorder').addClass('fa-arrow-left');
+       }
+   });
+
+</script>
+
 </body>
 </html>
