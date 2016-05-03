@@ -34,19 +34,19 @@ function preDrawUpdatePage(applicationName) {
 
 }
 function showSamlForm(){
-    $('#samlConfigForm').hide();
+    $('#samlAttrIndexForm').hide();
     $('#samlUpdtBtn').hide();
-    $('#samlForm').show();
+    $('#addServiceProvider').show();
 }
 function cancelSamlForm() {
 
-    $('#samlForm').hide();
+    $('#addServiceProvider').hide();
     debugger;
     if ($('#isEditSp').val() == 'true') {
-        $('#samlConfigForm').show();
+        $('#samlAttrIndexForm').show();
         $('#samlUpdtBtn').hide();
     } else {
-        $('#samlConfigForm').hide();
+        $('#samlAttrIndexForm').hide();
         $('#samlUpdtBtn').show();
 
     }

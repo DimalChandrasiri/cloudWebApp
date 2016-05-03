@@ -1,73 +1,36 @@
 function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
-    debugger;
-    var tablehead = " <div class=\"col-lg-12 content-section\">\n" +
-        "<fieldset>\n" +
-        "<table class=\"table table-bordered\">\n" +
-        "<thead>\n" +
-        "<tr>";
-
-    tablehead = tablehead + "<th colspan=\"2\">" + tableTitle + "</th>\n" +
-        "</tr>\n" +
-        "</thead>";
-
-    var tableBody = "<tbody>\n";
-    var issuerRow = "<tr>\n" +
-        "    <td><label class=\"\">Issuer <font color=\"red\">*</font></label> </td>\n" +
-        "    <td><input type=\"text\" id=\"issuer\" name=\"issuer\" maxlength=\"100\" class=\"text-box-big\"" +
-        "value=\"" + issuer + "\"";
+    $('#addServiceProvider h4').html(tableTitle);
+    $('#issuer').val(issuer);
+    $('#hiddenIssuer').val(issuer);
     if (isEditSP) {
-        issuerRow = issuerRow + "disabled=\"disabled\"";
+        $('#issuer').prop('disabled', true);
+    } else {
+        $('#issuer').prop('disabled', false);
     }
-    issuerRow = issuerRow + "/>\n" +
-        "    <input type=\"hidden\" id=\"hiddenIssuer\" name=\"hiddenIssuer\" value=\"" + issuer + "\"\n" +
-        "</td>\n" +
-        "                     </tr>\n";
-    tableBody = tableBody + issuerRow;
+    debugger;
 
-    var assertionConsumerURLInputRow = "<tr id=\"assertionConsumerURLInputRow\">\n" +
-        "<td><label class=\"\">Assertion Consumer URLs <font color=\"red\">*</font></label> </td>\n" +
-        "<td>\n" +
-        " <input type=\"text\" id=\"assertionConsumerURLTxt\" class=\"text-box-big\" value=\"\" white-list-patterns=\"https-url\"/>\n" +
-        " <input id=\"addAssertionConsumerURLBtn\" type=\"button\" value=\"Add\" onclick=\"onClickAddACRUrl()\"/>\n" +
-        "</td>\n" +
-        "</tr>\n";
-    tableBody = tableBody + assertionConsumerURLInputRow;
     if (isEditSP && provider != null && provider.assertionConsumerUrls != null) {
-        var assertionConsumerURLTblRow = "<tr id=\"assertionConsumerURLTblRow\">\n" +
-            "<td></td>\n" +
-            "<td>\n" +
+        var assertionConsumerURLTblRow =
             "<table id=\"assertionConsumerURLsTable\" style=\"width: 40%; margin-bottom: 3px;\" class=\"styledInner\">" +
             "<tbody id=\"assertionConsumerURLsTableBody\">";
 
         var assertionConsumerURLsBuilder = "";
         var acsColumnId = 0;
-        if (provider.assertionConsumerUrls.constructor === Array) {
-            for (var i in provider.assertionConsumerUrls) {
-                var assertionConsumerURL = provider.assertionConsumerUrls[i];
+        if (provider.assertionConsumerUrls.constructor !== Array) {
+            var tempArr = [];
+            tempArr[0] = provider.assertionConsumerUrls;
+            provider.assertionConsumerUrls = tempArr;
 
-                if (assertionConsumerURLsBuilder.length > 0) {
-                    assertionConsumerURLsBuilder = assertionConsumerURLsBuilder + "," + assertionConsumerURL;
-                } else {
-                    assertionConsumerURLsBuilder = assertionConsumerURLsBuilder + assertionConsumerURL;
-                }
+        }
+        for (var i in provider.assertionConsumerUrls) {
+            var assertionConsumerURL = provider.assertionConsumerUrls[i];
 
-                var trow = " <tr id=\"acsUrl_" + acsColumnId + "\">\n" +
-                    "<td style=\"padding-left: 15px !important; color: rgb(119, 119, 119);font-style: italic;\">\n" +
-                    assertionConsumerURL +
-                    "</td>" +
-                    "<td>" +
-                    "<a onclick=\"removeAssertionConsumerURL('" + assertionConsumerURL + "','acsUrl_" + acsColumnId + "');return false;\"" +
-                    "href=\"#\" class=\"icon-link\" style=\"background-image: url(../admin/images/delete.gif)\">\n" +
-                    "Delete" +
-                    "</a>\n" +
-                    "</td>\n" +
-                    "</tr>";
-                assertionConsumerURLTblRow = assertionConsumerURLTblRow + trow;
-                acsColumnId++;
+            if (assertionConsumerURLsBuilder.length > 0) {
+                assertionConsumerURLsBuilder = assertionConsumerURLsBuilder + "," + assertionConsumerURL;
+            } else {
+                assertionConsumerURLsBuilder = assertionConsumerURLsBuilder + assertionConsumerURL;
             }
-        } else {
-            var assertionConsumerURL = provider.assertionConsumerUrls;
-            assertionConsumerURLsBuilder = assertionConsumerURLsBuilder + assertionConsumerURL;
+
             var trow = " <tr id=\"acsUrl_" + acsColumnId + "\">\n" +
                 "<td style=\"padding-left: 15px !important; color: rgb(119, 119, 119);font-style: italic;\">\n" +
                 assertionConsumerURL +
@@ -81,23 +44,18 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
                 "</tr>";
             assertionConsumerURLTblRow = assertionConsumerURLTblRow + trow;
             acsColumnId++;
-
         }
+
         var assertionConsumerURL = assertionConsumerURLsBuilder.length > 0 ? assertionConsumerURLsBuilder : "";
         assertionConsumerURLTblRow = assertionConsumerURLTblRow + "</tbody>\n" +
             "</table>\n" +
             "<input type=\"hidden\" id=\"assertionConsumerURLs\" name=\"assertionConsumerURLs\" value=\"" + assertionConsumerURL + "\">\n" +
-            "<input type=\"hidden\" id=\"currentColumnId\" value=\"" + acsColumnId + "\">" +
-            "    </td>\n" +
-            "</tr>";
+            "<input type=\"hidden\" id=\"currentColumnId\" value=\"" + acsColumnId + "\">";
+        $('#assertionConsumerURLTblRow').empty();
+        $('#assertionConsumerURLTblRow').append(assertionConsumerURLTblRow);
     }
-    tableBody = tableBody + assertionConsumerURLTblRow;
-    var defaultAssertionConsumerURLRow = "<tr id=\"defaultAssertionConsumerURLRow\">\n" +
-        "<td><label class=\"\"> Default Assertion Consumer URL <font color=\"red\">*</font></label>\n" +
-        "</td>\n" +
-        "<td>\n" +
-        "<select id=\"defaultAssertionConsumerURL\" name=\"defaultAssertionConsumerURL\">\n" +
-        "<option value=\"\">---Select---</option>\n";
+
+    var defaultAssertionConsumerURLRow = "<option value=\"\">---Select---</option>\n";
 
     if (isEditSP && provider != null && provider.assertionConsumerUrls != null) {
         for (var i in provider.assertionConsumerUrls) {
@@ -111,97 +69,18 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
             defaultAssertionConsumerURLRow = defaultAssertionConsumerURLRow + option;
         }
     }
+    $('#defaultAssertionConsumerURL').empty();
+    $('#defaultAssertionConsumerURL').append(defaultAssertionConsumerURLRow);
 
-    defaultAssertionConsumerURLRow = defaultAssertionConsumerURLRow + "</select>\n" +
-        "</td>\n" +
-        "</tr>\n";
-
-    tableBody = tableBody + defaultAssertionConsumerURLRow;
 
     var nameIDVal = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     if (isEditSP && provider != null) {
         nameIDVal = provider.nameIDFormat.replace(/\//g, ":");
     }
-    var nameIdFormatRow = "<tr>\n" +
-        "<td>\n" +
-        "<label class=\"\"> NameID format</label>\n" +
-        "</td>\n" +
-        "<td>\n" +
-        "<input type=\"text\" id=\"nameIdFormat\" name=\"nameIdFormat\" class=\"text-box-big\" value=\"" + nameIDVal + "\"/>\n" +
-        "</td>\n" +
-        "</tr>\n";
-    var applicationSPName = appdata.applicationName;
-
-    var claimUris = spConfigClaimUris;
-    if (applicationSPName == null || applicationSPName.length == 0) {
-        //  <!-- UseUserClaimValueInNameID -->
-
-        if (isEditSP && provider != null && provider.nameIdClaimUri != null) {
-
-            nameIdFormatRow = nameIdFormatRow + "<tr>\n" +
-                "<td colspan=\"2\">\n" +
-                "<input type=\"checkbox\" name=\"enableNameIdClaimUri\" value=\"true\" checked=\"checked\" onclick=\"disableNameIdClaimUri(this);\"/>\n" +
-                '<input type="hidden" id="enableNameIdClaimUriHidden" name="enableNameIdClaimUriHidden" value="true" />' +
-                'Define Claim Uri for NameID' +
-                '</td>\n' +
-                '</tr>\n' +
-                '<tr>' +
-                '<td style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">' +
-                '<select id="nameIdClaim" name="nameIdClaim">';
-            if (claimUris != null) {
-                for (var i in claimUris) {
-                    var claimUri = claimUris[i];
-                    if (claimUri != null) {
-                        if (claimUri == provider.nameIdClaimUri) {
-                            nameIdFormatRow = nameIdFormatRow + '<option selected="selected" value="' + claimUri + '">\n' +
-                                claimUri + '</option>\n';
-                        } else {
-                            nameIdFormatRow = nameIdFormatRow + '<option value="' + claimUri + '">' + claimUri + '</option>\n';
-                        }
-                    }
-                }
-            }
-            nameIdFormatRow = nameIdFormatRow + '</select>\n' +
-                '</td>' +
-                '</tr>';
-        } else {
-            nameIdFormatRow = nameIdFormatRow + '<tr>\n' +
-                '<td colspan="2">\n' +
-                '<input type="checkbox" name="enableNameIdClaimUri" value="true" onclick="disableNameIdClaimUri(this);"/>\n' +
-                'Define Claim Uri for NameID' +
-                '<input type="hidden" id="enableNameIdClaimUriHidden" name="enableNameIdClaimUriHidden" />\n' +
-                '</td>\n' +
-                '</tr>\n' +
-                '<tr>' +
-                '<td style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">' +
-                '<select id="nameIdClaim" name="nameIdClaim">';
-
-            if (claimUris != null) {
-                for (var r in claimUris) {
-                    var claimUri = claimUris[i];
-                    if (claimUri != null) {
-                        nameIdFormatRow = nameIdFormatRow + '<option value="' + claimUri + '">' + claimUri + '</option>\n';
-                    }
-                }
-            }
-            nameIdFormatRow = nameIdFormatRow + '</select>\n' +
-                '</td>\n' +
-                '</tr>';
-        }
-    }
-
-    tableBody = tableBody + nameIdFormatRow;
-
+    $('#nameIdFormat').val(nameIDVal);
     var certificateAliasRow = "";
     var aliasSet = spConfigCertificateAlias;
     if (provider != null && isEditSP) {
-
-        certificateAliasRow = certificateAliasRow + '<tr>\n' +
-            '<td>\n' +
-            '<label class=""> Certificate Alias </label>\n' +
-            '</td>\n' +
-            '<td>\n' +
-            '<select id="alias" name="alias">';
         if (aliasSet != null) {
             for (var i in aliasSet) {
                 var alias = aliasSet[i];
@@ -215,14 +94,9 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
                 }
             }
         }
-        certificateAliasRow = certificateAliasRow + '</select></td>' + '</tr>\n';
+        $('#alias').empty();
+        $('#alias').append(certificateAliasRow);
     } else {
-        certificateAliasRow = certificateAliasRow + '<tr>\n' +
-            '<td>\n' +
-            '<label class=""> Certificate Alias </label>\n' +
-            '</td>\n' +
-            '<td>\n' +
-            '<select id="alias" name="alias">';
         if (aliasSet != null) {
             for (var i in aliasSet) {
                 var alias = aliasSet[i];
@@ -236,17 +110,12 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
                 }
             }
         }
-        certificateAliasRow = certificateAliasRow + '</select></td>\n </tr>\n';
+        $('#alias').empty();
+        $('#alias').append(certificateAliasRow);
     }
 
-    tableBody = tableBody + certificateAliasRow;
 
-    var defaultSigningAlgorithmRow = '<tr id="defaultSigningAlgorithmRow">\n' +
-        '<td>\n' +
-        '<label class=""> Response Signing Algorithm  <font color="red">*</font></label>\n' +
-        '</td>\n' +
-        '<td>\n' +
-        '<select id="signingAlgorithm" name="signingAlgorithm">';
+    var defaultSigningAlgorithmRow = "";
     if (spConfigSigningAlgos != null) {
         for (var i in spConfigSigningAlgos) {
             var signingAlgo = spConfigSigningAlgos[i];
@@ -258,25 +127,18 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
                 signAlgorithm = signingAlgorithmUriByConfig;
             }
             if (signAlgorithm != null && signingAlgo == signAlgorithm) {
-                var defaultSigningAlgorithmRow = defaultSigningAlgorithmRow + '<option value="' + signingAlgo + '" selected>\n' +
+                defaultSigningAlgorithmRow = defaultSigningAlgorithmRow + '<option value="' + signingAlgo + '" selected>\n' +
                     signingAlgo + '</option>';
             } else {
-                var defaultSigningAlgorithmRow = defaultSigningAlgorithmRow + '<option value="' + signingAlgo + '">' + signingAlgo +
+                defaultSigningAlgorithmRow = defaultSigningAlgorithmRow + '<option value="' + signingAlgo + '">' + signingAlgo +
                     '</option>\n';
             }
         }
     }
-    defaultSigningAlgorithmRow = defaultSigningAlgorithmRow + '</select>\n' +
-        '</td>\n' +
-        '</tr>';
-    tableBody = tableBody + defaultSigningAlgorithmRow;
+    $('#signingAlgorithm').empty();
+    $('#signingAlgorithm').append(defaultSigningAlgorithmRow);
 
-    var digestAlgorithmRow = '<tr id="digestAlgorithmRow">' +
-        '<td>\n' +
-        '<label class=""> Response Digest Algorithm  <font color="red">*</font></label>\n' +
-        '</td>\n' +
-        '<td>\n' +
-        '<select id="digestAlgorithm" name="digestAlgorithm">\n';
+    var digestAlgorithmRow = "";
 
     if (spConfigDigestAlgos != null) {
         for (var i in spConfigDigestAlgos) {
@@ -296,157 +158,134 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
             }
         }
     }
-    digestAlgorithmRow = digestAlgorithmRow + '</select>\n' +
-        '</td>\n' +
-        '</tr>';
-    tableBody = tableBody + digestAlgorithmRow;
-
-    var enableResponseSignatureRow = '<tr>' +
-        '<td colspan="2">' +
-        '<input type="checkbox" name="enableResponseSignature" value="true" onclick="disableResponseSignature(this);"';
+    $('#digestAlgorithm').empty();
+    $('#digestAlgorithm').append(digestAlgorithmRow);
     if (isEditSP && provider.doSignResponse == 'true') {
-        enableResponseSignatureRow = enableResponseSignatureRow + "checked=\"checked\"";
+        $('#enableResponseSignature').prop('checked', true);
+    } else {
+        $('#enableResponseSignature').prop('checked', false);
     }
-    enableResponseSignatureRow = enableResponseSignatureRow + '/>\n' +
-        '<label class="" style="display: inline-block"> Enable Response Signing </label>\n' +
-        '</td>\n' +
-        '</tr>\n' +
-        '<input type="hidden" name="enableAssertionSignature" value="true"/>';
-    tableBody = tableBody + enableResponseSignatureRow;
 
     var enableSigValidationRow = "";
 
     //TODO : isEditSP && provider.isDoValidateSignatureInRequestsSpecified() && provider.getDoValidateSignatureInRequests()
 
     if (isEditSP && provider.doValidateSignatureInRequests == 'true') {
-        enableSigValidationRow = '<tr>\n' +
-            '<td colspan="2">\n' +
-            '<input type="checkbox" id="enableSigValidation" name="enableSigValidation" value="true" checked="checked"/>\n' +
-            '<label class="" style="display: inline-block"> Enable Signature Validation in Authentication Requests and Logout Requests </label>\n' +
-            '</td>\n' +
-            '</tr>\n';
+        $('#enableSigValidation').prop('checked', true);
     } else {
-        enableSigValidationRow = '<tr>\n' +
-            '<td colspan="2">\n' +
-            '<input type="checkbox" id="enableSigValidation" name="enableSigValidation" value="true"/>\n' +
-            '<label class="" style="display: inline-block"> Enable Signature Validation in Authentication Requests and Logout Requests </label>\n' +
-            '</td>\n' +
-            '</tr>\n';
+        $('#enableSigValidation').prop('checked', false);
     }
-    tableBody = tableBody + enableSigValidationRow;
 
     var encryptedAssertionRow = "";
 
     //TODO : isEditSP && provider.isDoEnableEncryptedAssertionSpecified() && provider.getDoEnableEncryptedAssertion()
     if (isEditSP && provider.doEnableEncryptedAssertion == 'true') {
-        encryptedAssertionRow = '<tr>\n' +
-            '<td colspan="2">\n' +
-            '<input type="checkbox" id="enableEncAssertion" name="enableEncAssertion" value="true" checked="checked"/>\n' +
-            '<label class="" style="display: inline-block"> Enable Assertion Encryption </label>\n' +
-            '</td>\n' +
-            '</tr>';
+        $('#enableEncAssertion').prop('checked', true);
     } else {
-        encryptedAssertionRow = '<tr>\n' +
-            '<td colspan="2">' +
-            '<input type="checkbox" id="enableEncAssertion" name="enableEncAssertion" value="true"/>' +
-            '<label class="" style="display: inline-block"> Enable Assertion Encryption </label>\n' +
-            '</td>\n' +
-            '</tr>';
+        $('#enableEncAssertion').prop('checked', false);
     }
-    tableBody = tableBody + encryptedAssertionRow;
-    var enableSingleLogoutRow = '<tr>\n' +
-        '<td colspan="2"><input type="checkbox" name="enableSingleLogout" value="true" onclick="disableLogoutUrl(this);"';
+
     if (isEditSP && provider.doSingleLogout == 'true') {
-        enableSingleLogoutRow = enableSingleLogoutRow + "checked=\"checked\"";
+        $('#enableSingleLogout').prop('checked', true);
+        $('#sloResponseURL').prop('disabled', false);
+        $('#sloRequestURL').prop('disabled', false);
+    } else {
+        $('#enableSingleLogout').prop('checked', false);
+        $('#sloResponseURL').prop('disabled', true);
+        $('#sloRequestURL').prop('disabled', true);
     }
-    enableSingleLogoutRow = enableSingleLogoutRow + '/>\n' +
-        '<label class="" style="display: inline-block"> Enable Single Logout </label>\n' +
-        '</tr>\n' +
-        '<tr>\n' +
-        '<td style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">\n' +
-        '<label class="">SLO Response URL</label>\n' +
-        '</td>\n' +
-        '<td><input type="text" id="sloResponseURL" name="sloResponseURL" value="';
+
     if (isEditSP && provider.sloResponseURL != "") {
-        enableSingleLogoutRow = enableSingleLogoutRow + provider.sloResponseURL;
+        $('#sloResponseURL').val(provider.sloResponseURL);
     }
-    enableSingleLogoutRow = enableSingleLogoutRow + '"class="text-box-big"';
-    if (isEditSP && provider.doSingleLogout == 'true') {
-        enableSingleLogoutRow = enableSingleLogoutRow + ">"
-    } else {
-        enableSingleLogoutRow = enableSingleLogoutRow + "disabled=\"disabled\">";
-    }
-    enableSingleLogoutRow = enableSingleLogoutRow + '<div class = "sectionHelp" style="margin-top: 2px;"> Single logout response accepting endpoint' +
-        '</div>\n' +
-        '</td>\n' +
-        '</tr>\n' +
-        '<tr>\n' +
-        '<td style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">\n' +
-        '<label class="">SLO Request URL</label>\n' +
-        '</td>\n' +
-        '<td><input type="text" id="sloRequestURL" name="sloRequestURL" value="';
+
     if (isEditSP && provider.sloRequestURL != "") {
-        enableSingleLogoutRow = enableSingleLogoutRow + provider.sloRequestURL
+        $('#sloRequestURL').val(provider.sloRequestURL);
     }
-    enableSingleLogoutRow = enableSingleLogoutRow + '"class="text-box-big"';
-    if (isEditSP && provider.doSingleLogout == 'true') {
-        enableSingleLogoutRow = enableSingleLogoutRow + ">";
+    debugger;
+    //if (isEditSP && provider.enableAttributesByDefault=='true'){
+    //    $('#enableDefaultAttributeProfile').prop("checked",true);
+    //}
+    //else {
+    //    $('#enableDefaultAttributeProfile').prop("checked",false);
+    //}
+    ////because of high priority
+    //if (isEditSP && provider.enableAttributeProfile == 'true') {
+    //    $('#enableAttributeProfile').prop("checked",true);
+    //}
+    //else {
+    //    $('#enableAttributeProfile').prop("checked",false);
+    //    $('#enableDefaultAttributeProfile').prop("checked",false);
+    //}
+    <!-- EnableAttributeProfile -->
+    var appClaimConfigs = appdata.claimConfig.claimMappings;
+    var requestedClaimsCounter = 0;
+    if (appClaimConfigs != null) {
+        if (appClaimConfigs.constructor !== Array) {
+            var tempArr = [];
+            tempArr[0] = appClaimConfigs;
+            appClaimConfigs = tempArr;
+        }
+
+        for (var i in appClaimConfigs) {
+            var tempClaim = appClaimConfigs[i];
+            if (tempClaim.requested == 'true') {
+                requestedClaimsCounter = requestedClaimsCounter + 1;
+            }
+        }
+    }
+    //spConfigClaimUris
+    var applicationSPName = appdata.applicationName;
+    var show = false;
+    if (applicationSPName == null || applicationSPName.length == 0) {
+        if (requestedClaimsCounter > 0) {
+            show = true;
+        }
     } else {
-        enableSingleLogoutRow = enableSingleLogoutRow + "disabled=\"disabled\">";
+        show = true;
     }
-    enableSingleLogoutRow = enableSingleLogoutRow + '<div class="sectionHelp" style="margin-top: 2px;">' +
-        'Single logout request accepting endpoint' +
-        '</div>' +
-        '</td>' +
-        '</tr>';
-    tableBody = tableBody + enableSingleLogoutRow;
+
+    if (isEditSP && show) {
+
+        if (provider.attributeConsumingServiceIndex != null && provider.attributeConsumingServiceIndex.length > 0) {
+            $('#enableAttributeProfile').prop("checked", true);
+            $('#enableDefaultAttributeProfile').prop("disabled", false);
+            $('#enableAttributeProfile').val("true");
+        } else {
+            $('#enableAttributeProfile').prop("checked", false);
+            $('#enableAttributeProfile').val("false");
+        }
+
+        if (provider.attributeConsumingServiceIndex != null && provider.attributeConsumingServiceIndex.length > 0) {
+            if (provider.enableAttributesByDefault == 'true') {
+                $('#enableDefaultAttributeProfile').prop("checked", true);
+                $('#enableDefaultAttributeProfile').val("true");
+                $('#enableDefaultAttributeProfileHidden').val("true");
+            }
+            else {
+                $('#enableDefaultAttributeProfile').prop("checked", false);
+                $('#enableDefaultAttributeProfile').val("false");
+                $('#enableDefaultAttributeProfileHidden').val("false");
+            }
+
+        } else {
+            $('#enableDefaultAttributeProfile').prop("checked", false);
+            $('#enableDefaultAttributeProfile').prop("disabled", true);
+        }
+
+    } else {
+        $('#enableAttributeProfile').val("true");
+
+    }
 
     var enableAudienceRestrictionRow = "";
     if (isEditSP && provider.requestedAudiences != null && provider.requestedAudiences.length > 0 &&
         provider.requestedAudiences[0] != null) {
-
-        enableAudienceRestrictionRow = '<tr>' +
-            '        <td colspan="2"><input type="checkbox"' +
-            '        name="enableAudienceRestriction" id="enableAudienceRestriction"' +
-            '        value="true" checked="checked"' +
-            '        onclick="disableAudienceRestriction(this);"/> <label class="" style="display: inline-block"> Enable Audience Restriction </label> </td>' +
-            '            </tr>' +
-            '            <tr>' +
-            '            <td' +
-            '        style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">' +
-            '            <label class="">Audience </label>' +
-            '            </td>' +
-            '            <td>' +
-            '            <input type="text" id="audience" name="audience"' +
-            '    class="text-box-big"/>' +
-            '            <input id="addAudience" name="addAudience" type="button"' +
-            '        value="Add"' +
-            '        onclick="addAudienceFunc()"/>' +
-            '            </td>' +
-            '            </tr>';
-
+        $('#enableAudienceRestriction').prop("checked",true);
+        $('#audience').prop('disabled', false);
     } else {
-        enableAudienceRestrictionRow = '<tr>' +
-            '        <td colspan="2">' +
-            '            <input type="checkbox"' +
-            '        name="enableAudienceRestriction" id="enableAudienceRestriction" value="true"' +
-            '        onclick="disableAudienceRestriction(this);"/>' +
-            '             <label class="" style="display: inline-block"> Enable Audience Restriction </label> ' +
-            '            </td>' +
-            '            </tr>' +
-            '            <tr>' +
-            '            <td' +
-            '        style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">' +
-            '            <label class="">Audience </label>' +
-            '            </td>' +
-            '            <td>' +
-            '            <input type="text" id="audience" name="audience"' +
-            '    class="text-box-big" disabled="disabled"/>' +
-            '            <input id="addAudience" name="addAudience" type="button"' +
-            '        disabled="disabled" value="Add"' +
-            '        onclick="addAudienceFunc()"/>' +
-            '            </td>' +
-            '            </tr>';
+        $('#enableAudienceRestriction').prop("checked",false);
+        $('#audience').prop('disabled', true);
     }
     var audienceTableStyle = "";
     if (provider != null && provider.requestedAudiences != null && provider.requestedAudiences.length > 0) {
@@ -455,9 +294,7 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
         audienceTableStyle = "display:none";
     }
 
-    enableAudienceRestrictionRow = enableAudienceRestrictionRow + '<tr>' +
-        '    <td></td>' +
-        '    <td>' +
+    enableAudienceRestrictionRow = enableAudienceRestrictionRow +
         '    <table id="audienceTableId" style="width: 40%;' + audienceTableStyle + '" class="styledInner">' +
         '        <tbody id="audienceTableTbody">';
     var j = 0;
@@ -502,61 +339,19 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
     enableAudienceRestrictionRow = enableAudienceRestrictionRow + '<input type="hidden" name="audiencePropertyCounter" id="audiencePropertyCounter"' +
         '    value="' + j + '"/>' +
         '        </tbody>' +
-        '        </table>' +
-        '        </td>' +
-        '        </tr>';
+        '        </table>' ;
+    $('#audienceTblRow').empty();
+    $('#audienceTblRow').append(enableAudienceRestrictionRow);
 
-    tableBody = tableBody + enableAudienceRestrictionRow;
 
     var enableReceiptValidRow = "";
 
     if (isEditSP && provider.requestedRecipients != null && provider.requestedRecipients.length > 0 && provider.requestedRecipients[0] != null) {
-        enableReceiptValidRow = enableReceiptValidRow + '<tr>' +
-            '    <td colspan="2"><input type="checkbox"' +
-            '                           name="enableRecipients" id="enableRecipients"' +
-            '                           value="true" checked="checked"' +
-            '                           onclick="disableRecipients(this);"/> ' +
-            '           <label class="" style="display: inline-block"> Enable Recipient Validation </label></td>' +
-            '</tr>' +
-            '<tr>' +
-            '    <td' +
-            '            style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">' +
-            '       <label class=""> Recipient</label>' +
-            '    </td>' +
-            '    <td>' +
-            '        <input type="text" id="recipient" name="recipient"' +
-            '               class="text-box-big"/>' +
-            '        <input id="addRecipient" name="addRecipient" type="button"' +
-            '               value="Add"' +
-            '               onclick="addRecipientFunc()"/>' +
-            '    </td>' +
-            '</tr>';
-
-
+        $('#enableRecipients').prop("checked",true);
+        $('#recipient').prop('disabled', false);
     } else {
-        enableReceiptValidRow = enableReceiptValidRow + '<tr>' +
-            '    <td colspan="2">' +
-            '        <input type="checkbox"' +
-            '               name="enableRecipients" id="enableRecipients" value="true"' +
-            '               onclick="disableRecipients(this);"/>' +
-            '           <label class="" style="display: inline-block"> Enable Recipient Validation </label>' +
-            '    </td>' +
-            '</tr>' +
-            '<tr>' +
-            '    <td' +
-            '            style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">' +
-            '        <label class="">Recipient</label>' +
-            '    </td>' +
-            '    <td>' +
-            '        <input type="text" id="recipient" name="recipient"' +
-            '               class="text-box-big" disabled="disabled"/>' +
-            '        <input id="addRecipient" name="addRecipient" type="button"' +
-            '               disabled="disabled" value="Add"' +
-            '               onclick="addRecipientFunc()"/>' +
-            '    </td>' +
-            '</tr>';
-
-
+        $('#enableRecipients').prop("checked",false);
+        $('#recipient').prop('disabled', true);
     }
 
     var recipientTableStyle = "";
@@ -565,9 +360,7 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
     } else {
         recipientTableStyle = "display:none";
     }
-    enableReceiptValidRow = enableReceiptValidRow + '<tr>' +
-        '    <td></td>' +
-        '    <td>' +
+    enableReceiptValidRow = enableReceiptValidRow +
         '    <table id="recipientTableId" style="width: 40%; ' + recipientTableStyle + ';" class="styledInner">' +
         '        <tbody id="recipientTableTbody">';
 
@@ -598,70 +391,35 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
     enableReceiptValidRow = enableReceiptValidRow + '<input type="hidden" name="recipientPropertyCounter" id="recipientPropertyCounter"' +
         '    value="' + k + '"/>' +
         '        </tbody>' +
-        '        </table>' +
-        '        </td>' +
-        '        </tr>';
+        '        </table>' ;
+    $('#recptTblRow').empty();
+    $('#recptTblRow').append(enableReceiptValidRow);
 
-
-    tableBody = tableBody + enableReceiptValidRow;
-
-    var idpInitSSORow = '<tr>' +
-        '    <td colspan="2">' +
-        '        <input type="checkbox" name="enableIdPInitSSO" value="true"' +
-        '    onclick="disableIdPInitSSO(this);"';
     if (isEditSP && provider.idPInitSSOEnabled) {
-        idpInitSSORow = idpInitSSORow + "checked=\"checked\""
+        $('#enableIdPInitSSO').prop("checked",true);
     } else {
-        idpInitSSORow + ""
+        $('#enableIdPInitSSO').prop("checked",false);
     }
-    idpInitSSORow = idpInitSSORow + '/>' +
-        '<label class="" style="display: inline-block"> Enable IdP Initiated SSO</label>' +
-        '        </td>' +
-        '        </tr>';
 
-
-    tableBody = tableBody + idpInitSSORow;
-
-    var idpSLOReturnToURLInputRow = '<tr>' +
-        '    <td colspan="2">' +
-        '        <input type="checkbox" name="enableIdPInitSLO" value="true"' +
-        '    onclick="disableIdPInitSLO(this);"';
     if (isEditSP && provider.idPInitSLOEnabled == 'true') {
-        idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + "checked=\"checked\""
+        $('#enableIdPInitSLO').prop("checked",true);
+    } else {
+        $('#enableIdPInitSLO').prop("checked",false);
     }
-    idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + '/>' +
-        '     <label class="" style="display: inline-block">   Enable IdP Initiated SLO </label>' +
-        '        </td>' +
-        '        </tr>';
-
 
     var tempstyle = "";
     if (isEditSP && provider.idPInitSLOEnabled == 'true') {
-        tempstyle = "";
+        $('#returnToURLTxtBox').prop("disabled",false);
+        $('#addReturnToURL').prop("disabled",false);
     } else {
-        tempstyle = "disabled=\"disabled\"";
+        $('#returnToURLTxtBox').prop("disabled",true);
+        $('#addReturnToURL').prop("disabled",true);
     }
 
-    idpSLOReturnToURLInputRow = '<tr id="idpSLOReturnToURLInputRow">' +
-        '        <td' +
-        '    style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">' +
-        '      <label class="" >  Return to URL </label> ' +
-        '        </td>' +
-        '        <td>' +
-        '        <input type="text" id="returnToURLTxtBox" class="text-box-big" ' + tempstyle + ' />' +
-        '    <input id="addReturnToURL" type="button"' + tempstyle +
-        '    value="Add" onclick="addSloReturnToURL()"/>' +
-        '        </td>' +
-        '        </tr>';
-
-
+    var idpSLOReturnToURLInputRow = '<table id="idpSLOReturnToURLsTbl" style="width: 40%;" class="styledInner">\n' +
+        '            <tbody id="idpSLOReturnToURLsTblBody">\n';
+    debugger;
     if (isEditSP && provider.idpInitSLOReturnToURLs != null) {
-        idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + '<tr id="idpSLOReturnToURLsTblRow">' +
-            '            <td></td>' +
-            '            <td>' +
-            '            <table id="idpSLOReturnToURLsTbl" style="width: 40%;" class="styledInner">' +
-            '            <tbody id="idpSLOReturnToURLsTblBody">';
-
         var sloReturnToURLsBuilder = "";
         var returnToColumnId = 0;
         if (provider.idpInitSLOReturnToURLs.constructor === Array) {
@@ -673,7 +431,7 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
                     } else {
                         sloReturnToURLsBuilder = sloReturnToURLsBuilder + returnToURL;
                     }
-                    idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + '<tr id="returnToUrl_' + returnToColumnId + '>' +
+                    idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + '<tr id="returnToUrl_' + returnToColumnId + '">' +
                         '                    <td style="padding-left: 15px !important; color: rgb(119, 119, 119);font-style: italic;">' +
                         returnToURL +
                         '                    </td>' +
@@ -707,19 +465,10 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
         idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + '</tbody>' +
             '        </table>' +
             '        <input type="hidden" id="idpInitSLOReturnToURLs" name="idpInitSLOReturnToURLs" value="' + sloReturnToURLsBuilder + '">' +
-            '        <input type="hidden" id="currentReturnToColumnId" value="' + returnToColumnId + '">' +
-            '            </td>' +
-            '            </tr>';
+            '        <input type="hidden" id="currentReturnToColumnId" value="' + returnToColumnId + '">' ;
     }
-
-    tableBody = tableBody + idpSLOReturnToURLInputRow;
-    var tableEnd = "</tbody>\n" +
-        "</table>\n" +
-        "</fieldset>\n" +
-        "</div>";
-
-    $("#gadgetBody").empty();
-    $("#gadgetBody").append(tablehead + tableBody + tableEnd);
+    $("#idpsloTblRow").empty();
+    $("#idpsloTblRow").append(idpSLOReturnToURLInputRow);
 }
 
 function preDrawSAMLConfigPage() {
@@ -753,27 +502,27 @@ function preDrawSAMLConfigPage() {
                 }
             }
             if(isEditSP){
-                $('#samlConfigForm').show();
+                $('#samlAttrIndexForm').show();
                 $('#samlUpdtBtn').hide();
             } else {
-                $('#samlConfigForm').hide();
+                $('#samlAttrIndexForm').hide();
                 $('#samlUpdtBtn').show();
             }
             $('#isEditSp').val(isEditSP);
             samlClient = $.parseJSON(data);
             serviceProviders = samlClient.serviceProviders.serviceProviders;
-            alert(serviceProviders);
-            debugger;
-            if(serviceProviders.constructor !== Array){
-                var spArr = [];
-                spArr[0] = serviceProviders;
-                serviceProviders = spArr;
-            }
-            for (var i in serviceProviders) {
-                var sp = serviceProviders[i];
-                if (sp.issuer == issuer) {
-                    provider = sp;
-                    $('#acsindex').val(provider.attributeConsumingServiceIndex);
+            if(serviceProviders!== null) {
+                if (serviceProviders.constructor !== Array) {
+                    var spArr = [];
+                    spArr[0] = serviceProviders;
+                    serviceProviders = spArr;
+                }
+                for (var i in serviceProviders) {
+                    var sp = serviceProviders[i];
+                    if (sp.issuer == issuer) {
+                        provider = sp;
+                        $('#acsindex').val(provider.attributeConsumingServiceIndex);
+                    }
                 }
             }
             spConfigClaimUris = samlClient.claimURIs;
@@ -795,35 +544,12 @@ function preDrawSAMLConfigPage() {
     });
 }
 
-function getSigningAlgorithmUriByConfig(issuer, isEditSP, tableTitle) {
-    $.ajax({
-        url: "/portal/gadgets/custom/controllers/custom/samlSSOConfig_handler.jag",
-        type: "GET",
-        data: "&cookie=" + cookie + "&user=" + userName + "&clientAction=getSigningAlgorithmUriByConfig",
-        success: function (data) {
-            signingAlgorithmUriByConfig = $.parseJSON(data).return;
-            getDigestAlgorithmURIByConfig(issuer, isEditSP, tableTitle);
-        },
-        error: function (e) {
-            message({
-                content: 'Error occurred while getting the service provider configuration.',
-                type: 'error',
-                cbk: function () {
-                }
-            });
-        }
-    });
-}
-function disableNameIdClaimUri(chkbx) {
-    if (chkbx.checked) {
-        document.addServiceProvider.enableNameIdClaimUriHidden.value = "true";
-        document.addServiceProvider.useFullQualifiedUsername.value = "false";
-        document.getElementById("useFullQualifiedUsername").checked = 'false';
-    } else {
-        document.addServiceProvider.enableNameIdClaimUriHidden.value = "false";
-    }
+function saveSAMLConfig(){
+debugger;
 
 }
+
+
 
 function onClickAddACRUrl() {
     //var isValidated = doValidateInputToConfirm(document.getElementById('assertionConsumerURLTxt'), "<fmt:message key='sp.not.https.endpoint.address'/>",
@@ -831,6 +557,18 @@ function onClickAddACRUrl() {
     var isValidated = true;
     if (isValidated) {
         addAssertionConsumerURL();
+    }
+}
+
+function disableAttributeProfile(chkbx) {
+    if (!(chkbx.checked)) {
+        $('#enableDefaultAttributeProfile').prop("checked", false);
+    }
+    $('#enableDefaultAttributeProfile').val(chkbx.checked);
+    if(chkbx.checked){
+        $('#enableDefaultAttributeProfile').prop("disabled", false);
+    } else {
+        $('#enableDefaultAttributeProfile').prop("disabled", true);
     }
 }
 
@@ -949,17 +687,17 @@ function disableResponseSignature(chkbx) {
 }
 
 function disableLogoutUrl(chkbx) {
-    debugger;
     if ($(chkbx).is(':checked')) {
-        $("#sloResponseURL").prop('readonly', false);
-        $("#sloRequestURL").prop('readonly', false);
+        $("#sloResponseURL").prop('disabled', false);
+        $("#sloRequestURL").prop('disabled', false);
     } else {
-        $("#sloResponseURL").prop('readonly', true);
-        $("#sloRequestURL").prop('readonly', true);
+        $("#sloResponseURL").prop('disabled', true);
+        $("#sloRequestURL").prop('disabled', true);
         $("#sloResponseURL").val("");
         $("#sloRequestURL").val("");
     }
 }
+
 function disableAudienceRestriction(chkbx) {
     if ($(chkbx).is(':checked')) {
         $("#audience").prop('disabled', false);
@@ -989,6 +727,7 @@ function disableIdPInitSSO(chkbx) {
         $("#addReturnToURL").prop('disabled', true);
     }
 }
+
 function addAudienceFunc() {
     var propertyCount = document.getElementById("audiencePropertyCounter");
 
@@ -1017,6 +756,7 @@ function addAudienceFunc() {
 
     audienceTableTBody.appendChild(audienceRow);
 }
+
 function removeAudience(i) {
     var propRow = document.getElementById("audienceRow" + i);
     if (propRow != undefined && propRow != null) {
@@ -1030,6 +770,7 @@ function removeAudience(i) {
         }
     }
 }
+
 function addRecipientFunc() {
     var propertyCount = document.getElementById("recipientPropertyCounter");
 
@@ -1073,7 +814,6 @@ function removeRecipient(i) {
     }
 }
 
-
 function disableIdPInitSLO(chkbx) {
     if ($(chkbx).is(':checked')) {
         $("#returnToURLTxtBox").prop('disabled', false);
@@ -1083,6 +823,7 @@ function disableIdPInitSLO(chkbx) {
         $("#addReturnToURL").prop('disabled', true);
     }
 }
+
 function removeSloReturnToURL(returnToURL, columnId) {
 
     var idpInitSLOReturnToURLs = $("#idpInitSLOReturnToURLs").val();
@@ -1109,6 +850,7 @@ function removeSloReturnToURL(returnToURL, columnId) {
         $('#idpSLOReturnToURLsTblRow').remove();
     }
 }
+
 function addSloReturnToURL() {
 
     var returnToURL = $("#returnToURLTxtBox").val();
