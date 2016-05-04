@@ -33,12 +33,51 @@ var getOAuthApplicationDataByAppName = '<xsd:getOAuthApplicationDataByAppName xm
 var getOAuthApplicationData = '<xsd:getOAuthApplicationData xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsd="http://org.apache.axis2/xsd">'+
 '<xsd:consumerKey>{0}</xsd:consumerKey>'+
 '</xsd:getOAuthApplicationData>';
+
+var removeServiceProvider = '<xsd:removeServiceProvider xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsd="http://org.apache.axis2/xsd">'+
+'<xsd:issuer>{0}</xsd:issuer>'+
+'</xsd:removeServiceProvider>';
+
+var addRPServiceProvider = '<xsd:addRPServiceProvider xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsd="http://org.apache.axis2/xsd" xmlns:xsd1="http://dto.saml.sso.identity.carbon.wso2.org/xsd">'+
+                                '<xsd:spDto>'+
+                                    '<xsd1:assertionConsumerUrl>{0}</xsd1:assertionConsumerUrl>'+
+                                    '<xsd1:assertionConsumerUrls>{1}</xsd1:assertionConsumerUrls>'+
+                                    '<xsd1:attributeConsumingServiceIndex>{2}</xsd1:attributeConsumingServiceIndex>'+
+                                    '<xsd1:certAlias>{3}</xsd1:certAlias>'+
+                                    '<xsd1:defaultAssertionConsumerUrl>{4}</xsd1:defaultAssertionConsumerUrl>'+
+                                    '<xsd1:digestAlgorithmURI>{5}</xsd1:digestAlgorithmURI>'+
+                                    '<xsd1:doEnableEncryptedAssertion>{6}</xsd1:doEnableEncryptedAssertion>'+
+                                    '<xsd1:doSignAssertions>{7}</xsd1:doSignAssertions>'+
+                                    '<xsd1:doSignResponse>{8}</xsd1:doSignResponse>'+
+                                    '<xsd1:doSingleLogout>{9}</xsd1:doSingleLogout>'+
+                                    '<xsd1:doValidateSignatureInRequests>{10}</xsd1:doValidateSignatureInRequests>'+
+                                    '<xsd1:enableAttributeProfile>{11}</xsd1:enableAttributeProfile>'+
+                                    '<xsd1:enableAttributesByDefault>{12}</xsd1:enableAttributesByDefault>'+
+                                    '<xsd1:idPInitSLOEnabled>{13}</xsd1:idPInitSLOEnabled>'+
+                                    '<xsd1:idPInitSSOEnabled>{14}</xsd1:idPInitSSOEnabled>'+
+                                    '<xsd1:idpInitSLOReturnToURLs>{15}</xsd1:idpInitSLOReturnToURLs>'+
+                                    '<xsd1:issuer>{16}</xsd1:issuer>'+
+                                    '<xsd1:loginPageURL>{17}</xsd1:loginPageURL>'+
+                                    '<xsd1:nameIDFormat>{18}</xsd1:nameIDFormat>'+
+                                    '<xsd1:nameIdClaimUri>{19}</xsd1:nameIdClaimUri>'+
+                                    '<xsd1:requestedAudiences>{20}</xsd1:requestedAudiences>'+
+                                    '<xsd1:requestedClaims>{21}</xsd1:requestedClaims>'+
+                                    '<xsd1:requestedRecipients>{22}</xsd1:requestedRecipients>'+
+                                    '<xsd1:signingAlgorithmURI>{23}</xsd1:signingAlgorithmURI>'+
+                                    '<xsd1:sloRequestURL>{24}</xsd1:sloRequestURL>'+
+                                    '<xsd1:sloResponseURL>{25}</xsd1:sloResponseURL>'+
+                                '</xsd:spDto>'+
+                            '</xsd:addRPServiceProvider>';
+
+
 application.put("urn:getApplication", getApplication);
 application.put("urn:createApplication", createApplication);
 application.put("urn:deleteApplication", deleteApplication);
 application.put("urn:updateApplicationData", updateApplicationData);
 application.put("urn:getOAuthApplicationDataByAppName",getOAuthApplicationDataByAppName);
 application.put("urn:getOAuthApplicationData",getOAuthApplicationData);
+application.put("urn:removeServiceProvider",removeServiceProvider);
+application.put("urn:addRPServiceProvider",addRPServiceProvider);
 if(!application.get(SAML_ENABLED)){
     application.put("urn:login", login);
 }

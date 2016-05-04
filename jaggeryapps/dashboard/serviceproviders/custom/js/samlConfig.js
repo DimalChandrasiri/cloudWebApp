@@ -7,7 +7,6 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
     } else {
         $('#issuer').prop('disabled', false);
     }
-    debugger;
 
     if (isEditSP && provider != null && provider.assertionConsumerUrls != null) {
         var assertionConsumerURLTblRow =
@@ -202,22 +201,7 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
     if (isEditSP && provider.sloRequestURL != "") {
         $('#sloRequestURL').val(provider.sloRequestURL);
     }
-    debugger;
-    //if (isEditSP && provider.enableAttributesByDefault=='true'){
-    //    $('#enableDefaultAttributeProfile').prop("checked",true);
-    //}
-    //else {
-    //    $('#enableDefaultAttributeProfile').prop("checked",false);
-    //}
-    ////because of high priority
-    //if (isEditSP && provider.enableAttributeProfile == 'true') {
-    //    $('#enableAttributeProfile').prop("checked",true);
-    //}
-    //else {
-    //    $('#enableAttributeProfile').prop("checked",false);
-    //    $('#enableDefaultAttributeProfile').prop("checked",false);
-    //}
-    <!-- EnableAttributeProfile -->
+
     var appClaimConfigs = appdata.claimConfig.claimMappings;
     var requestedClaimsCounter = 0;
     if (appClaimConfigs != null) {
@@ -244,7 +228,6 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
     } else {
         show = true;
     }
-
     if (isEditSP && show) {
 
         if (provider.attributeConsumingServiceIndex != null && provider.attributeConsumingServiceIndex.length > 0) {
@@ -274,7 +257,7 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
         }
 
     } else {
-        $('#enableAttributeProfile').val("true");
+        $('#enableAttributeProfile').val("false");
 
     }
 
@@ -395,7 +378,7 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
     $('#recptTblRow').empty();
     $('#recptTblRow').append(enableReceiptValidRow);
 
-    if (isEditSP && provider.idPInitSSOEnabled) {
+    if (isEditSP && provider.idPInitSSOEnabled=='true') {
         $('#enableIdPInitSSO').prop("checked",true);
     } else {
         $('#enableIdPInitSSO').prop("checked",false);
@@ -418,7 +401,6 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
 
     var idpSLOReturnToURLInputRow = '<table id="idpSLOReturnToURLsTbl" style="width: 40%;" class="styledInner">\n' +
         '            <tbody id="idpSLOReturnToURLsTblBody">\n';
-    debugger;
     if (isEditSP && provider.idpInitSLOReturnToURLs != null) {
         var sloReturnToURLsBuilder = "";
         var returnToColumnId = 0;
@@ -469,6 +451,9 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
     }
     $("#idpsloTblRow").empty();
     $("#idpsloTblRow").append(idpSLOReturnToURLInputRow);
+    if (isEditSP && provider.attributeConsumingServiceIndex != null && provider.attributeConsumingServiceIndex.length > 0){
+        $('#attributeConsumingServiceIndex').val(provider.attributeConsumingServiceInde);
+    }
 }
 
 function preDrawSAMLConfigPage() {
@@ -480,7 +465,7 @@ function preDrawSAMLConfigPage() {
     spConfigDigestAlgos = null;
     signingAlgorithmUriByConfig = null;
     digestAlgorithmUriByConfig = null;
-
+debugger;
     $.ajax({
         url: "/dashboard/serviceproviders/custom/controllers/custom/samlSSOConfigClient.jag",
         type: "GET",
@@ -501,17 +486,18 @@ function preDrawSAMLConfigPage() {
                     }
                 }
             }
+            debugger;
             if(isEditSP){
                 $('#samlAttrIndexForm').show();
-                $('#samlUpdtBtn').hide();
+                $('#samlConfigBtn').hide();
             } else {
                 $('#samlAttrIndexForm').hide();
-                $('#samlUpdtBtn').show();
+                $('#samlConfigBtn').show();
             }
             $('#isEditSp').val(isEditSP);
             samlClient = $.parseJSON(data);
             serviceProviders = samlClient.serviceProviders.serviceProviders;
-            if(serviceProviders!== null) {
+            if(serviceProviders!=null) {
                 if (serviceProviders.constructor !== Array) {
                     var spArr = [];
                     spArr[0] = serviceProviders;

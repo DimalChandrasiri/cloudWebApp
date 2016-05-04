@@ -8,7 +8,6 @@ function call(webService, serverUrl, options, payload){
     var cookie = session.get("auth-cookie");
     var userName = session.get("user");
     var pwd = session.get("pwd");
-    log.info(cookie);
 
     log.debug(cookie);
     if(cookie != null){

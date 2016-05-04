@@ -15,7 +15,6 @@ function getApplication(applicationName){
 }
 
 function createApplication(payload){
-    log.info("spAdminClient called...." + payload.toSource());
     callWSInOnly(webService, serverUrl, "urn:createApplication", payload);
 }
 

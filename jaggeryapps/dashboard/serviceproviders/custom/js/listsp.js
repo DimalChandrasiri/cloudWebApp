@@ -1,9 +1,9 @@
 function deleteCustomSP(applicationName) {
-    var str = PROXY_CONTEXT_PATH + "/portal/gadgets/custom/controllers/custom/delete_finish.jag";
+    var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/delete_finish.jag";
     $.ajax({
         url: str,
         type: "POST",
-        data: "applicationName=" + applicationName + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
+        data: "applicationName=" + applicationName + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName,
     })
         .done(function (data) {
             reloadGrid();
@@ -48,7 +48,6 @@ function reloadGrid() {
 }
 
 function drawList() {
-debugger;
     var output = "";
     if (spList != null) {
         for (var i in spList) {

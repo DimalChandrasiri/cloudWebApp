@@ -230,7 +230,7 @@ include("../templates/leftpane.jag");
                                                 </span>
                                                     Edit
                                             </button>
-                                            <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;">
+                                            <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="deleteSAMLIssuer();return false;">
                                                 <span class="fw-stack fw-lg btn-action-ico">
                                                     <i class="fw fw-ring fw-stack-2x"></i>
                                                     <i class="fw fw-delete fw-stack-1x"></i>
@@ -241,7 +241,7 @@ include("../templates/leftpane.jag");
 
 
                                     </form>
-                                    <div class="form-group" id = "samlUpdtBtn" hidden>
+                                    <div class="form-group" id = "samlConfigBtn" hidden>
                                             <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="showSamlForm();return false;">
                                                 <span class="fw-stack fw-lg btn-action-ico">
                                                     <i class="fw fw-ring fw-stack-2x"></i>
@@ -251,7 +251,7 @@ include("../templates/leftpane.jag");
                                             </button>
                                     </div>
                                     <form id="addServiceProvider" class="form-horizontal" role="form" style="color: black;" hidden>
-                                    <h4>The status</h4>
+                                    <h4>New Service Provider</h4>
                                         <!--Issuer-->
                                         <div class="form-group">
                                             <label for="issuer" class="col-sm-2 control-label">Issuer
@@ -477,7 +477,7 @@ Enable IdP Initiated SLO
                                                     </div>
                                                 </div>
 
-
+<input type="hidden" id="attributeConsumingServiceIndex" name="attributeConsumingServiceIndex"/>
                                          <div class="form-group">
                                             <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="saveSAMLConfig();return false;">
                                                 <span class="fw-stack fw-lg btn-action-ico">

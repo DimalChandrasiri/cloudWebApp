@@ -476,7 +476,6 @@ function validate() {
     document.addAppform.submit();
 }
 function adjustForm() {
-    debugger;
     var VERSION_2 = 'OAuth-2.0';
     var VERSION_1 = 'OAuth-1.0a';
     var oauthVersion = $('input[name=oauthVersion]:checked').val();

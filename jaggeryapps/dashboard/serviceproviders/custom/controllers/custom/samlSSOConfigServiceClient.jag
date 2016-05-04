@@ -41,4 +41,11 @@ function getDigestAlgorithmURIByConfig(){
     var result = callWSReturnJSON(webService, serverUrl, "urn:getDigestAlgorithmURIByConfig", null);
     return result;
 }
+function removeServiceProvider(issuer){
+    callWSInOnlyWithParams(webService, serverUrl, "urn:removeServiceProvider", issuer ? new Array(issuer) : new Array("") );
+}
+function addRPServiceProvider(payload){
+    callWSInOnly(webService, serverUrl, "urn:addRPServiceProvider", payload);
+}
+
 %>
