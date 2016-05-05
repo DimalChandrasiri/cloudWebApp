@@ -260,7 +260,7 @@ include("../templates/leftpane.jag");
                                             <div class="col-sm-10">
                                                 <input type="text" class="form-control" id="issuer" name="issuer" placeholder="Issuer" disabled="disabled">
                                                 <input id="hiddenIssuer" type="hidden" value="" name="hiddenIssuer">
-                                                <label id="issuer-error" class="error" for="cname" hidden>This field is required.</label>
+                                                <label id="issuer-error" class="error" for="issuer" hidden>This field is required.</label>
                                             </div>
                                         </div>
                                         <!--ACS URL-->
@@ -297,6 +297,8 @@ include("../templates/leftpane.jag");
 <!--</tbody>-->
 <!--</table>-->
                                             </div>
+                                             <input type="hidden" id="assertionConsumerURLs" name="assertionConsumerURLs" value="">
+                                             <input type="hidden" id="currentColumnId" value="0">
                                         </div>
                                         <!--Default Assertion Consumer Url-->
                                         <div class="form-group">
@@ -422,6 +424,7 @@ Enable Audience Restriction
                                                     <!--fill the tabel with Audience URL-->
                                                     <div class="col-sm-10" style="margin-left: 10%;" id="audienceTblRow">
                                                     </div>
+                                                    <input type="hidden" name="audiencePropertyCounter" id="audiencePropertyCounter" value="0"/>
                                                 </div>
 
 
@@ -446,6 +449,7 @@ Enable Recipient Validation
                                                     <!--fill the tabel with Audience URL-->
                                                     <div class="col-sm-10" style="margin-left: 10%;" id="recptTblRow">
                                                     </div>
+                                                    <input type="hidden" name="recipientPropertyCounter" id="recipientPropertyCounter"  value="0"/>
                                                 </div>
 
 
@@ -473,13 +477,22 @@ Enable IdP Initiated SLO
                                                 <!--IDP SLO Table Table-->
                                                 <div class="form-group" >
                                                     <!--fill the tabel with Audience URL-->
-                                                    <div class="col-sm-10" style="margin-left: 10%;" id="idpsloTblRow">
+                                                    <div class="col-sm-10" style="margin-left: 10%;" id="idpSLOReturnToURLInputRow">
                                                     </div>
+                                                    <input type="hidden" id="idpInitSLOReturnToURLs" name="idpInitSLOReturnToURLs" value="">
+                                                    <input type="hidden" id="currentReturnToColumnId" value="0">
                                                 </div>
 
 <input type="hidden" id="attributeConsumingServiceIndex" name="attributeConsumingServiceIndex"/>
                                          <div class="form-group">
-                                            <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="saveSAMLConfig();return false;">
+                                            <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" id="samlRgsterBtn" style = "margin-left: 2%;" onclick="saveSAMLConfig();return false;">
+                                                <span class="fw-stack fw-lg btn-action-ico">
+                                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                                    <i class="fw fw-save fw-stack-1x"></i>
+                                                </span>
+                                                    Register
+                                            </button>
+                                             <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" id="samlUpdtBtn" style = "margin-left: 2%;" onclick="updateSAMLConfig();return false;">
                                                 <span class="fw-stack fw-lg btn-action-ico">
                                                     <i class="fw fw-ring fw-stack-2x"></i>
                                                     <i class="fw fw-save fw-stack-1x"></i>

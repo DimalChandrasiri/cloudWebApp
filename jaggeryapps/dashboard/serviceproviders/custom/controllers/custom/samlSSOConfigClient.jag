@@ -12,6 +12,7 @@ function getsamlClient(){
     try{
         var ssoClient = require('samlSSOConfigServiceClient.jag');
         var serviceProviders = ssoClient.getServiceProviders().return;
+        log.info('it is here@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@222222222'+serviceProviders.toSource());
         var claimURIs = ssoClient.getClaimURIs().return;
         var certAliases = ssoClient.getCertAliasOfPrimaryKeyStore().return;
         var signingAlgos = ssoClient.getSigningAlgorithmUris().return;

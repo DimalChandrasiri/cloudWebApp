@@ -109,9 +109,99 @@ RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR({
 
 
 
+<xsd:addRPServiceProvider xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsd="http://org.apache.axis2/xsd" xmlns:xsd1="http://dto.saml.sso.identity.carbon.wso2.org/xsd">
+<xsd:spDto>
+    <xsd1:assertionConsumerUrl>?</xsd1:assertionConsumerUrl>
+    <xsd1:assertionConsumerUrls>?</xsd1:assertionConsumerUrls>
+    <xsd1:attributeConsumingServiceIndex>?</xsd1:attributeConsumingServiceIndex>
+    <xsd1:certAlias>?</xsd1:certAlias>
+    <xsd1:defaultAssertionConsumerUrl>?</xsd1:defaultAssertionConsumerUrl>
+    <xsd1:digestAlgorithmURI>?</xsd1:digestAlgorithmURI>
+    <xsd1:doEnableEncryptedAssertion>?</xsd1:doEnableEncryptedAssertion>
+    <xsd1:doSignAssertions>?</xsd1:doSignAssertions>
+    <xsd1:doSignResponse>?</xsd1:doSignResponse>
+    <xsd1:doSingleLogout>?</xsd1:doSingleLogout>
+    <xsd1:doValidateSignatureInRequests>?</xsd1:doValidateSignatureInRequests>
+    <xsd1:enableAttributeProfile>?</xsd1:enableAttributeProfile>
+    <xsd1:enableAttributesByDefault>?</xsd1:enableAttributesByDefault>
+    <xsd1:idPInitSLOEnabled>?</xsd1:idPInitSLOEnabled>
+    <xsd1:idPInitSSOEnabled>?</xsd1:idPInitSSOEnabled>
+    <xsd1:idpInitSLOReturnToURLs>?</xsd1:idpInitSLOReturnToURLs>
+    <xsd1:issuer>?</xsd1:issuer>
+    <xsd1:loginPageURL>?</xsd1:loginPageURL>
+    <xsd1:nameIDFormat>?</xsd1:nameIDFormat>
+    <xsd1:nameIdClaimUri>?</xsd1:nameIdClaimUri>
+    <xsd1:requestedAudiences>?</xsd1:requestedAudiences>
+    <xsd1:requestedClaims>?</xsd1:requestedClaims>
+    <xsd1:requestedRecipients>?</xsd1:requestedRecipients>
+    <xsd1:signingAlgorithmURI>?</xsd1:signingAlgorithmURI>
+    <xsd1:sloRequestURL>?</xsd1:sloRequestURL>
+    <xsd1:sloResponseURL>?</xsd1:sloResponseURL>
+</xsd:spDto>
+</xsd:addRPServiceProvider>
 
+<xsd:addRPServiceProvider xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsd="http://org.apache.axis2/xsd"
+                          xmlns:xsd1="http://dto.saml.sso.identity.carbon.wso2.org/xsd">
+<xsd:spDto>
+    <xsd1:assertionConsumerUrl></xsd1:assertionConsumerUrl>
+    <xsd1:assertionConsumerUrls>https://githuwwwb.com</xsd1:assertionConsumerUrls>
+    <xsd1:assertionConsumerUrls>https://githuwewewwwbwqw.com</xsd1:assertionConsumerUrls>
+    <xsd1:assertionConsumerUrls>https://github.com</xsd1:assertionConsumerUrls>
+    <xsd1:attributeConsumingServiceIndex></xsd1:attributeConsumingServiceIndex>
+    <xsd1:certAlias>equifaxsecureebusinessca2</xsd1:certAlias>
+    <xsd1:defaultAssertionConsumerUrl>https://github.com</xsd1:defaultAssertionConsumerUrl>
+    <xsd1:digestAlgorithmURI>http://www.w3.org/2001/04/xmldsig-more#sha384</xsd1:digestAlgorithmURI>
+    <xsd1:doEnableEncryptedAssertion>true</xsd1:doEnableEncryptedAssertion>
+    <xsd1:doSignAssertions>true</xsd1:doSignAssertions>
+    <xsd1:doSignResponse>true</xsd1:doSignResponse>
+    <xsd1:doSingleLogout>true</xsd1:doSingleLogout>
+    <xsd1:doValidateSignatureInRequests>true</xsd1:doValidateSignatureInRequests>
+    <xsd1:enableAttributeProfile>false</xsd1:enableAttributeProfile>
+    <xsd1:enableAttributesByDefault>false</xsd1:enableAttributesByDefault>
+    <xsd1:idPInitSLOEnabled>true</xsd1:idPInitSLOEnabled>
+    <xsd1:idPInitSSOEnabled>true</xsd1:idPInitSSOEnabled>
+    <xsd1:idpInitSLOReturnToURLs>https://localhost:9443/oauth2/tokewqnwss</xsd1:idpInitSLOReturnToURLs>
+    <xsd1:idpInitSLOReturnToURLs>https://localhost:9443/oauth2/tokewqn</xsd1:idpInitSLOReturnToURLs>
+    <xsd1:issuer>testtravewq23l.com</xsd1:issuer>
+    <xsd1:loginPageURL></xsd1:loginPageURL>
+    <xsd1:nameIDFormat>urn/oasis:names:tc:SAML:1.1:nameid-format:emailAddress</xsd1:nameIDFormat>
+    <xsd1:nameIdClaimUri></xsd1:nameIdClaimUri>
+    <xsd1:requestedAudiences>https://localhost:9443/oauth2/token2,https://localhost:9443/oauth2/token2ess
+    </xsd1:requestedAudiences>
+    <xsd1:requestedAudiences>https://localhost:9443/oauth2/token2,https://localhost:9443/oauth2/token2ess
+    </xsd1:requestedAudiences>
+    <xsd1:requestedRecipients>https://localhost:9443/oauth2/tokewqnwss</xsd1:requestedRecipients>
+    <xsd1:requestedRecipients>https://localhost:9443/oauth2/tokewqnw3223</xsd1:requestedRecipients>
+    <xsd1:signingAlgorithmURI>http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384</xsd1:signingAlgorithmURI>
+    <xsd1:sloRequestURL>https://github2.com</xsd1:sloRequestURL>
+    <xsd1:sloResponseURL>https://github.com</xsd1:sloResponseURL>
+</xsd:spDto>
+</xsd:addRPServiceProvider>
 
-
+<xsd:updateApplication xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://org.apache.axis2/xsd"
+                       xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">
+<xsd:serviceProvider>
+    <xsd1:applicationID>65</xsd1:applicationID>
+    <xsd1:applicationName>inspect.com</xsd1:applicationName>
+    <xsd1:claimConfig>
+        <xsd1:alwaysSendMappedLocalSubjectId>false</xsd1:alwaysSendMappedLocalSubjectId>
+        <xsd1:localClaimDialect>true</xsd1:localClaimDialect>
+        <xsd1:roleClaimURI></xsd1:roleClaimURI>
+        <xsd1:userClaimURI></xsd1:userClaimURI>
+    </xsd1:claimConfig>
+    <xsd1:description>custom]</xsd1:description>
+    <xsd1:inboundAuthenticationConfig></xsd1:inboundAuthenticationConfig>
+    <xsd1:inboundProvisioningConfig>
+        <xsd1:dumbMode>false</xsd1:dumbMode>
+        <xsd1:provisioningEnabled>false</xsd1:provisioningEnabled>
+        <xsd1:provisioningUserStore></xsd1:provisioningUserStore>
+    </xsd1:inboundProvisioningConfig>
+    <xsd1:outboundProvisioningConfig>
+        <xsd1:provisionByRoleList></xsd1:provisionByRoleList>
+    </xsd1:outboundProvisioningConfig>
+    <xsd1:permissionAndRoleConfig></xsd1:permissionAndRoleConfig>
+</xsd:serviceProvider>
+</xsd:updateApplication>
 
 
 

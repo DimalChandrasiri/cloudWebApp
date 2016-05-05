@@ -33,6 +33,40 @@ function preDrawUpdatePage(applicationName) {
     });
 
 }
+
+function saveSAMLConfig(){
+    debugger;
+    var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/samlSSOConfig_handler.jag";
+    $.ajax({
+        url: str,
+        type: "POST",
+        data: $("#addServiceProvider").serialize() + "&clientAction=addRPServiceProvider" + "&spName=" + appdata.applicationName + "&isEditSP="+$('#isEditSp').val()+"&cookie=" + cookie + "&user=" + userName,
+    })
+        .done(function (data) {
+            //reloadGrid();
+            //message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
+            $('#addServiceProvider').hide();
+            preDrawUpdatePage(appdata.applicationName);
+            //addIssuerToSP();
+        })
+        .fail(function () {
+            message({
+                content: 'Error while updating Profile', type: 'error', cbk: function () {
+                }
+            });
+
+        })
+        .always(function () {
+            console.log('completed');
+        });
+
+}
+
+
+function updateSAMLConfig(){
+
+}
+
 function deleteSAMLIssuer(){
     var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/samlSSOConfig_handler.jag";
     $.ajax({
