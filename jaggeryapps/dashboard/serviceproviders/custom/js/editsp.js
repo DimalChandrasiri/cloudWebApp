@@ -47,7 +47,6 @@ function saveSAMLConfig(){
             //message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
             $('#addServiceProvider').hide();
             preDrawUpdatePage(appdata.applicationName);
-            //addIssuerToSP();
         })
         .fail(function () {
             message({

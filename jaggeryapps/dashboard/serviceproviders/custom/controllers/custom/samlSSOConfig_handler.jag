@@ -34,7 +34,6 @@ function handle(action) {
 
 }
 function removeServiceProvider(issuer, applicationName) {
-    log.info("Came to removeServiceProvider");
     var samlClient = require('samlSSOConfigServiceClient.jag');
     var spAdminClient = require('spAdminClient.jag');
     var serviceProvider = spAdminClient.getApplication(applicationName).return;
@@ -138,7 +137,6 @@ function removeServiceProvider(issuer, applicationName) {
             '</xsd:serviceProvider>' +
             '</xsd:updateApplication>';
 
-    log.info(updateApp);
     spAdminClient.updateApplicationData(updateApp);
     samlClient.removeServiceProvider(issuer);
 }
@@ -293,6 +291,11 @@ function addServiceProvider() {
         serviceProviderDTO["attributeConsumingServiceIndex"] = request.getParameter("attributeConsumingServiceIndex");
     }
 
+    //For editing purposes
+    if( serviceProviderDTO["enableAttributeProfile"] == false){
+        serviceProviderDTO["attributeConsumingServiceIndex"] = "";
+    }
+
     if (request.getParameter("enableIdPInitSSO") == 'true') {
         serviceProviderDTO["enableIdPInitSSO"] = true;
     }
@@ -387,7 +390,6 @@ function addServiceProvider() {
     }
         for (var i in serviceProviders ) {
             var sp = serviceProviders[i];
-            log.info('sp['+i+']'+sp.toSource())
             if (sp.issuer==serviceProviderDTO["issuer"]){
                 samlIssuer = sp;
                 break;
@@ -397,7 +399,6 @@ function addServiceProvider() {
 
     var spAdminClient = require('spAdminClient.jag');
     var serviceProvider = spAdminClient.getApplication(applicationName).return;
-    log.info('serviceProvider Application ' + serviceProvider.toSource());
 
     var updateApp = '<xsd:updateApplication xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://org.apache.axis2/xsd" xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">' +
             '<xsd:serviceProvider>' +
@@ -450,11 +451,14 @@ function addServiceProvider() {
             }
             for (var i in authConfigs) {
                 var config = authConfigs[i];
-                updateApp = updateApp + '<xsd1:inboundAuthenticationRequestConfigs>' +
-                        '<xsd1:friendlyName>' + config.friendlyName + '</xsd1:friendlyName>' +
-                        '<xsd1:inboundAuthKey>' + config.inboundAuthKey + '</xsd1:inboundAuthKey>' +
-                        '<xsd1:inboundAuthType>' + config.inboundAuthType + '</xsd1:inboundAuthType>' +
-                        '</xsd1:inboundAuthenticationRequestConfigs>';
+
+                if(config.inboundAuthType!="samlsso") {
+                    updateApp = updateApp + '<xsd1:inboundAuthenticationRequestConfigs>' +
+                            '<xsd1:friendlyName>' + config.friendlyName + '</xsd1:friendlyName>' +
+                            '<xsd1:inboundAuthKey>' + config.inboundAuthKey + '</xsd1:inboundAuthKey>' +
+                            '<xsd1:inboundAuthType>' + config.inboundAuthType + '</xsd1:inboundAuthType>' +
+                            '</xsd1:inboundAuthenticationRequestConfigs>';
+                }
             }
 
         }
@@ -473,7 +477,7 @@ function addServiceProvider() {
                     '<xsd1:name>attrConsumServiceIndex</xsd1:name>' +
                     '<xsd1:required>false</xsd1:required>' +
                     '<xsd1:type></xsd1:type>' +
-                    '<xsd1:value>' + '</xsd1:value>' +
+                    '<xsd1:value>' + samlIssuer.attributeConsumingServiceIndex +'</xsd1:value>' +
                     '</xsd1:properties>';
         }
 
@@ -497,7 +501,8 @@ function addServiceProvider() {
     updateApp = updateApp + '<xsd1:permissionAndRoleConfig>' + serviceProvider.permissionAndRoleConfig + '</xsd1:permissionAndRoleConfig>' +
             '</xsd:serviceProvider>' +
             '</xsd:updateApplication>';
-log.info('updating with ' + updateApp);
+
+    log.info("update With RRRRRRRRRRRRRR" + updateApp );
     spAdminClient.updateApplicationData(updateApp);
     /*
      if (status) {

@@ -342,6 +342,10 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
 
     var k = 0;
     if (isEditSP && provider.requestedRecipients != null && provider.requestedRecipients.length > 0) {
+        if(provider.requestedRecipients.constructor !== Array){
+            var tempArr = [provider.requestedRecipients];
+            provider.requestedRecipients = tempArr;
+        }
         for (var i in provider.requestedRecipients) {
             var recipient = provider.requestedRecipients[i];
             if (recipient != null && "null" != recipient) {
@@ -397,46 +401,34 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
     if (isEditSP && provider.idpInitSLOReturnToURLs != null) {
         var sloReturnToURLsBuilder = "";
 
-        if (provider.idpInitSLOReturnToURLs.constructor === Array) {
-            for (var i in provider.idpInitSLOReturnToURLs) {
-                var returnToURL = provider.idpInitSLOReturnToURLs[i];
-                if (returnToURL != null && "null" != returnToURL) {
-                    if (sloReturnToURLsBuilder.length > 0) {
-                        sloReturnToURLsBuilder = sloReturnToURLsBuilder + "," + returnToURL;
-                    } else {
-                        sloReturnToURLsBuilder = sloReturnToURLsBuilder + returnToURL;
-                    }
-                    idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + '<tr id="returnToUrl_' + returnToColumnId + '">' +
-                        '                    <td style="padding-left: 15px !important; color: rgb(119, 119, 119);font-style: italic;">' +
-                        returnToURL +
-                        '                    </td>' +
-                        '                    <td>' +
-                        '                    <a onclick="removeSloReturnToURL(\'' + returnToURL + '\', \'returnToUrl_' + returnToColumnId + '\');return false;"' +
-                        '                href="#" class="icon-link"' +
-                        '                style="background-image: url(../admin/images/delete.gif)">' +
-                        '                    Delete' +
-                        '                    </a>' +
-                        '                    </td>' +
-                        '                    </tr>';
-                    returnToColumnId = returnToColumnId + 1;
-                }
-            }
-        } else {
-
-            idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + '<tr id="returnToUrl_' + returnToColumnId + '>' +
-                '                    <td style="padding-left: 15px !important; color: rgb(119, 119, 119);font-style: italic;">' +
-                provider.idpInitSLOReturnToURLs +
-                '                    </td>' +
-                '                    <td>' +
-                '                    <a onclick="removeSloReturnToURL(\'' + provider.idpInitSLOReturnToURLs + '\', \'returnToUrl_' + returnToColumnId + '\');return false;"' +
-                '                href="#" class="icon-link"' +
-                '                style="background-image: url(../admin/images/delete.gif)">' +
-                '                    Delete' +
-                '                    </a>' +
-                '                    </td>' +
-                '                    </tr>';
-            returnToColumnId = returnToColumnId + 1;
+        if (provider.idpInitSLOReturnToURLs.constructor !== Array) {
+            var tempArr = [provider.idpInitSLOReturnToURLs];
+            provider.idpInitSLOReturnToURLs = tempArr;
         }
+        for (var i in provider.idpInitSLOReturnToURLs) {
+            var returnToURL = provider.idpInitSLOReturnToURLs[i];
+            if (returnToURL != null && "null" != returnToURL) {
+                if (sloReturnToURLsBuilder.length > 0) {
+                    sloReturnToURLsBuilder = sloReturnToURLsBuilder + "," + returnToURL;
+                } else {
+                    sloReturnToURLsBuilder = sloReturnToURLsBuilder + returnToURL;
+                }
+                idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + '<tr id="returnToUrl_' + returnToColumnId + '">' +
+                    '                    <td style="padding-left: 15px !important; color: rgb(119, 119, 119);font-style: italic;">' +
+                    returnToURL +
+                    '                    </td>' +
+                    '                    <td>' +
+                    '                    <a onclick="removeSloReturnToURL(\'' + returnToURL + '\', \'returnToUrl_' + returnToColumnId + '\');return false;"' +
+                    '                href="#" class="icon-link"' +
+                    '                style="background-image: url(../admin/images/delete.gif)">' +
+                    '                    Delete' +
+                    '                    </a>' +
+                    '                    </td>' +
+                    '                    </tr>';
+                returnToColumnId = returnToColumnId + 1;
+            }
+            }
+
     }
         idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + '</tbody>' +
             '        </table>';
