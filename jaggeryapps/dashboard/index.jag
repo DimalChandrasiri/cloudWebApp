@@ -121,6 +121,9 @@ include("templates/footer.jag");
 
 <script>
 
+$( document ).ready(function() {
+    window.location.href = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/listsp.jag";
+});
    $('.side-pane-trigger').click(function(){
        var rightPane = $('.right-pane');
        var leftPane = $('.left-pane');

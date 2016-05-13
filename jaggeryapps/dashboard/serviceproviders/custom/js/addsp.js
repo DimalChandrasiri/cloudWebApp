@@ -1,14 +1,15 @@
 function drawAddSP() {
+    debugger;
     var output = "";
 output = '<div class="row">'+
         '<div class="col-md-5 forms">'+
             '<div class="form-group">'+
-                '<label for="service-provider-name">Service Provider Name: </label>'+
-                '<input name="service-provider-name" id="spName" name="spName" type="text" class="form-control" placeholder="Enter service provider name" />'+
+                '<label for="spName">Service Provider Name: </label>'+
+                '<input id="spName" name="spName" type="text" class="form-control" placeholder="Enter service provider name" autofocus/>'+
             '</div>'+
             '<div class="form-group">'+
-                '<label for="service-provider-description" >Description: </label>'+
-                '<textarea name="service-provider-description" id="spDesc" name="spDesc" class="form-control" rows="3" ></textarea>'+
+                '<label for="spDesc" >Description: </label>'+
+                '<textarea id="spDesc" name="spDesc" class="form-control" rows="3" ></textarea>'+
                 '<input type="hidden" value="custom]" id="spType" name="spType" />\n' +
             '</div>'+
             '<div class="form-group">'+
@@ -19,13 +20,6 @@ output = '<div class="row">'+
                  '</span>'+
                 ' Register'+
                  '</button>'+
-                '<button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style="margin-left: 2%;" onclick="cancel();return false;">'+
-                '<span class="fw-stack fw-lg btn-action-ico">'+
-                '<i class="fw fw-ring fw-stack-2x"></i>'+
-                '<i class="fw fw-add fw-stack-1x"></i>'+
-                '</span>'+
-                ' Cancel'+
-                '</button>'+
             '</div>'+
         '</div>'+
         '</div>';
@@ -54,14 +48,16 @@ function validateSPName() {
 }
 
 function registerCustomSP() {
+    debugger;
     var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/add_finish.jag";
     $.ajax({
         url: str,
         type: "POST",
-        data: "spName="+$('#spName').val()+"&spDesc="+$('#spType').val()+$('#spDesc').val() + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
+        data: "spName="+$('#spName').val()+"&spDesc="+$('#spType').val()+$('#spDesc').val() + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName,
     })
         .done(function (data) {
-            window.location.href = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/listsp.jag"
+            debugger;
+            window.location.href = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/editsp.jag?applicationName="+$('#spName').val();
             //message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
         })
         .fail(function () {

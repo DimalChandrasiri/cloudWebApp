@@ -2,10 +2,11 @@ function preDrawOAuthConfigPage() {
     var clientID = "";
     var clientSecret = "";
     var isEditSP = false;
-    if (json != null && json.return != null && json.return.inboundAuthenticationConfig != null
-        && json.return.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs != null) {
-        for (var i in json.return.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs) {
-            var inboundConfig = json.return.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs[i];
+    debugger;
+    if (appdata != null && appdata.inboundAuthenticationConfig != null
+        && appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs != null) {
+        for (var i in appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs) {
+            var inboundConfig = appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs[i];
             if (inboundConfig.inboundAuthType == "oauth2" && inboundConfig.inboundAuthKey.length > 0) {
                 clientID = inboundConfig.inboundAuthKey;
                 if (inboundConfig.properties.constructor !== Array) {
@@ -23,11 +24,16 @@ function preDrawOAuthConfigPage() {
         }
     }
     //+ "&appName=" + json.return.applicationName + "&clientID=" + clientID,
+    $('#isEditOauthSP').val(isEditSP);
     if (isEditSP) {
+        $('#oauthAttrIndexForm').show();
+        $('#oauthConfigBtn').hide();
+        $('#oauthRgsterBtn').hide();
+        $('#oauthUpdtBtn').show();
         $.ajax({
-            url: "/portal/gadgets/custom/controllers/custom/oauthConfigHandler.jag",
+            url: "/dashboard/serviceproviders/custom/controllers/custom/oauthConfigHandler.jag",
             type: "GET",
-            data: "&cookie=" + cookie + "&user=" + userName + "&appName=" + json.return.applicationName + "&clientID=" + clientID,
+            data: "&cookie=" + cookie + "&user=" + userName + "&appName=" + appdata.applicationName + "&clientID=" + clientID + "&action=getOAuthConfigs",
             success: function (data) {
                 oauthClient = $.parseJSON(data);
                 allowedGrantTypes = oauthClient.grantTypes;
@@ -43,10 +49,14 @@ function preDrawOAuthConfigPage() {
             }
         });
     } else {
+        $('#oauthAttrIndexForm').hide();
+        $('#oauthConfigBtn').show();
+        $('#oauthRgsterBtn').show();
+        $('#oauthUpdtBtn').hide();
         $.ajax({
-            url: "/portal/gadgets/custom/controllers/custom/oauthConfigHandler.jag",
+            url: "/dashboard/serviceproviders/custom/controllers/custom/oauthConfigHandler.jag",
             type: "GET",
-            data: "&cookie=" + cookie + "&user=" + userName,
+            data: "&cookie=" + cookie + "&user=" + userName + "&action=getOAuthConfigs",
             success: function (data) {
                 oauthClient = $.parseJSON(data);
                 allowedGrantTypes = oauthClient.grantTypes;
@@ -65,123 +75,59 @@ function preDrawOAuthConfigPage() {
 }
 function drawOAuthConfigPage() {
     var page = "";
-    var top = ' <div class=\"col-lg-12 content-section\">\n' +
-        '<fieldset>\n' + '<div id="middle">' +
-        '        <h2>Register New Application</h2>' +
-        '        <div id="workArea">' +
-        '    <form id="addAppForm" method="post" name="addAppform" action="add-finish.jsp"' +
-        '    target="_self">' +
-        '        <table class=\"table table-bordered\">' +
-        '        <thead>' +
-        '        <tr>' +
-        '        <th>New Application</th>' +
-        '        </tr>' +
-        '        </thead>' +
-        '        <tbody>' +
-        '        <tr>' +
-        '        <td class="formRow">' +
-        '        <table class="normal" >' +
-        '        <tr>' +
-        '        <td class="leftCol-small">OAuth Version<span class="required">*</span> </td>' +
-        '    <td><input id="oauthVersion10a" name="oauthVersion" type="radio" value="OAuth-1.0a" />1.0a' +
-        '    <input id="oauthVersion20" name="oauthVersion" type="radio" value="OAuth-2.0" CHECKED />2.0</td>' +
-        '    </tr>';
-    page = top;
-    var applicationSPName = json.return.applicationName;
+    var applicationSPName = appdata.applicationName;
     if (applicationSPName != null && applicationSPName.length > 0) {
-        page = page + '<tr style="display: none;">' +
-            '<td colspan="2" style="display: none;"><input class="text-box-big" type="hidden" id="application" name="application"' +
-            'value="' + applicationSPName + '"/></td>' +
-            '</tr>';
+        $('#application').val(applicationSPName);
+        $('#application').hide();
     } else {
-        page = page + '<tr>' +
-            '<td class="leftCol-small">Application Name<span class="required">*</span></td>' +
-            '<td><input class="text-box-big" id="application" name="application" type="text" /></td> </tr>';
+        $('#application').show();
+        $('#appnamehid').show();
     }
-
-    var callbackRow = '<tr id="callback_row">' +
-        '        <td class="leftCol-small">Callback Url<span class="required">*</span></td>' +
-        '    <td><input class="text-box-big" id="callback" name="callback" type="text"' +
-        '    white-list-patterns="https-url"/></td>' +
-        '        </tr>';
-    page = page + callbackRow;
-
-    var grantRow = '<tr id="grant_row" name="grant_row">' +
-        '        <td class="leftCol-small">Allowed Grant Types</td>' +
-        '        <td>' +
-        '        <table>';
-    page = page + grantRow;
+    var versionRow = '<label for="oauthVersion" class="col-sm-2 control-label">OAuth Version' +
+        '<span class="required">*</span>' +
+        '</label>' +
+        '<div class="col-sm-10">' +
+        '<input id="oauthVersion10a" type="radio" value="OAuth-1.0a" name="oauthVersion"> 1.0a' +
+        '<input id="oauthVersion20" type="radio" checked="" value="OAuth-2.0" name="oauthVersion"> 2.0' +
+        '</div>';
+    $('#versionRow').empty();
+    $('#versionRow').append(versionRow);
+    var grantRow = '<label for="grantTypes" class="col-sm-2 control-label">Allowed Grant Types </label>' +
+        '<div class="col-sm-10">';
     if ($.inArray('authorization_code', allowedGrantTypes) > 0) {
-        page = page + '<tr><label><input type="checkbox" id="grant_code" name="grant_code" value="authorization_code" checked="checked" onclick="toggleCallback()"/>Code</label></tr>';
+        grantRow = grantRow + '<label><input type="checkbox" id="grant_code" name="grant_code" value="authorization_code" checked="checked" onclick="toggleCallback()"/>Code</label>';
     }
     if ($.inArray('implicit', allowedGrantTypes) > 0) {
-        page = page + '<tr><label><input type="checkbox" id="grant_implicit" name="grant_implicit" value="implicit" checked="checked" onclick="toggleCallback()"/>Implicit</label></tr>';
+        grantRow = grantRow + '<label><input type="checkbox" id="grant_implicit" name="grant_implicit" value="implicit" checked="checked" onclick="toggleCallback()"/>Implicit</label>';
     }
     if ($.inArray('password', allowedGrantTypes) > 0) {
-        page = page + '<tr><lable><input type="checkbox" id="grant_password" name="grant_password" value="password" checked="checked"/>Password</lable></tr>';
+        grantRow = grantRow + '<lable><input type="checkbox" id="grant_password" name="grant_password" value="password" checked="checked"/>Password</lable>';
     }
     if ($.inArray('client_credentials', allowedGrantTypes) > 0) {
-        page = page + '<tr><label><input type="checkbox" id="grant_client" name="grant_client" value="client_credentials" checked="checked"/>Client Credential</label></tr>';
+        grantRow = grantRow + '<label><input type="checkbox" id="grant_client" name="grant_client" value="client_credentials" checked="checked"/>Client Credential</label>';
     }
     if ($.inArray('refresh_token', allowedGrantTypes) > 0) {
-        page = page + '<tr><label><input type="checkbox" id="grant_refresh" name="grant_refresh" value="refresh_token" checked="checked"/>Refresh Token</label></tr>';
+        grantRow = grantRow + '<label><input type="checkbox" id="grant_refresh" name="grant_refresh" value="refresh_token" checked="checked"/>Refresh Token</label>';
     }
     if ($.inArray('urn:ietf:params:oauth:grant-type:saml1-bearer', allowedGrantTypes) > 0) {
-        page = page + '<tr><label><input type="checkbox" id="grant_saml1" name="grant_saml1" value="urn:ietf:params:oauth:grant-type:saml1-bearer" checked="checked"/>SAML1</label></tr>';
+        grantRow = grantRow + '<label><input type="checkbox" id="grant_saml1" name="grant_saml1" value="urn:ietf:params:oauth:grant-type:saml1-bearer" checked="checked"/>SAML1</label>';
     }
     if ($.inArray('urn:ietf:params:oauth:grant-type:saml2-bearer', allowedGrantTypes) > 0) {
-        page = page + '<tr><label><input type="checkbox" id="grant_saml2" name="grant_saml2" value="urn:ietf:params:oauth:grant-type:saml2-bearer" checked="checked"/>SAML2</label></tr>';
+        grantRow = grantRow + '<label><input type="checkbox" id="grant_saml2" name="grant_saml2" value="urn:ietf:params:oauth:grant-type:saml2-bearer" checked="checked"/>SAML2</label>';
     }
     if ($.inArray('iwa:ntlm', allowedGrantTypes) > 0) {
-        page = page + '<tr><label><input type="checkbox" id="grant_ntlm" name="grant_ntlm" value="iwa:ntlm" checked="checked"/>IWA-NTLM</label></tr>';
+        grantRow = grantRow + '<label><input type="checkbox" id="grant_ntlm" name="grant_ntlm" value="iwa:ntlm" checked="checked"/>IWA-NTLM</label>';
     }
 
-    page = page + '</table>' +
-        '</td>' +
-        '</tr>';
+    grantRow = grantRow + '</div>';
+    $('#grant_row').empty();
+    $('#grant_row').append(grantRow);
     if (oauthClient.isPKCESupportEnabled == 'true') {
-        page = page + '<tr id="pkce_enable">' +
-            '<td class="leftcol-small">' +
-            '            PKCE Mandatory' +
-            '            </td>' +
-            '            <td>' +
-            '            <input type="checkbox" name="pkce" value="mandatory"/>Mandatory' +
-            '            <div class="sectionHelp">' +
-            '            Only allow applications that bear PKCE Code Challenge with them.' +
-            '            </div>' +
-            '            </td>' +
-            '            </tr>' +
-            '            <tr id="pkce_support_plain">' +
-            '            <td>' +
-            '            Support PKCE \'Plain\' Transform Algorithm' +
-            '            </td>' +
-            '            <td>' +
-            '            <input type="checkbox" name="pkce_plain" value="yes" checked>Yes' +
-            '        <div class="sectionHelp">' +
-            '            Server supports \'S256\' PKCE tranformation algorithm by default.' +
-            '            </div>' +
-            '            </td>' +
-            '            </tr>';
+        $('#pkce_enable').show();
+        $('#pkce_support_plain').show();
     }
-    page = page + '</table>' +
-        '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>' +
-        '<input name="addprofile" type="button" class=\"btn btn-primary\" value="Add" onclick="onClickAdd();"/>' +
-        '<input type="button" class=\"btn btn-primary\" onclick="" value="Cancel"/>' +
-        '</td>' +
-        '    </tr>' +
-        '    </tbody>' +
-        '    </table>' +
-        '    </form>' +
-        '    </div>' +
-        '    </div>' +
-        '</fieldset>' +
-        '</div>';
-
-    $("#gadgetBody").empty();
-    $("#gadgetBody").append(page);
+    $('#oauthRgsterBtn').show();
+    $('#oauthUpdtBtn').hide();
 
 //TODO : check the following condition if needed for cancel button
 //
@@ -219,7 +165,7 @@ function drawOAuthEditPage() {
     var VERSION_2 = 'OAuth-2.0';
     var VERSION_1 = 'OAuth-1.0a';
     var app = oauthClient.app;
-    var applicationSPName = json.return.applicationName;
+    var applicationSPName = appdata.applicationName;
     var codeGrant = false;
     var implicitGrant = false;
     var passowrdGrant = false;
@@ -241,187 +187,132 @@ function drawOAuthEditPage() {
             ntlmGrant = grants.contains("iwa:ntlm") ? true : false;
         }
     }
-    var top = ' <div class=\"col-lg-12 content-section\">\n' +
-        '<fieldset>\n' + '<div id="middle">' +
-        '' +
-        '        <h2>View/Update application settings</h2>' +
-        '' +
-        '        <div id="workArea">' +
-        '' +
-        '' +
-        '    <form method="post" name="editAppform"  action="edit-finish.jsp"  target="_self">' +
-        '        <input id="consumerkey" name="consumerkey" type="hidden" value="' + app.oauthConsumerKey + '" />' +
-        '        <input id="consumersecret" name="consumersecret" type="hidden" value="' + app.oauthConsumerSecret + '" />' +
-        '        <table class=\"table table-bordered\">' +
-        '        <thead>' +
-        '        <tr>' +
-        '        <th>Application Settings</th>' +
-        '        </tr>' +
-        '        </thead>' +
-        '        <tbody>' +
-        '        <tr>' +
-        '        <td class="formRow">' +
-        '        <table class="normal" cellspacing="0">' +
-        '        <tr>' +
-        '        <td class="leftCol-small">OAuth Version<span class="required">*</span></td>' +
-        '    <td>' + app.OAuthVersion + '<input id="oauthVersion" name="oauthVersion"' +
-        '    type="hidden" value="' + app.OAuthVersion + '"/></td>' +
-        '        </tr>';
+var hiddenFields = '<input id="consumerkey" name="consumerkey" type="hidden" />'+
+        '<input id="consumersecret" name="consumersecret" type="hidden" />'+
+        '<input id="oauthVersion" name="oauthVersion" type="hidden" />';
+    $('#oauthHiddenFields').empty();
+    $('#oauthHiddenFields').append(hiddenFields);
+    $('#consumerID').val(app.oauthConsumerKey);
+    $('#consumerSecret').val(app.oauthConsumerSecret);
+    $('#addAppForm h4').html('View/Update application settings');
+    $('#addAppForm h5').html('Application Settings');
+    $('#consumerkey').val(app.oauthConsumerKey);
+    $('#consumersecret').val(app.oauthConsumerSecret);
+    $('#oauthVersion').val(app.OAuthVersion);
+    var versionRow = '<label for="oauthVersion" class="col-sm-2 control-label">OAuth Version' +
+        '<span class="required">*</span>' +
+        '</label>' +
+        '<div class="col-sm-10">' +
+        '<label class="col-sm-2 control-label">' + app.OAuthVersion +'</label>'+
+        '</div>';
+    $('#versionRow').empty();
+    $('#versionRow').append(versionRow);
+
     if (applicationSPName == null) {
-        top = top + '<tr>' +
-            '        <td class="leftCol-small">Application Name<span class="required">*</span></td>' +
-            '        <td><input class="text-box-big" id="application" name="application"' +
-            '        type="text" value="' + app.applicationName + '" /></td>' +
-            '            </tr>';
+        $('#application').val(app.applicationName);
+        $('#appnamehid').show();
     } else {
-        top = top +
-            '    <tr style="display: none;">' +
-            '            <td colspan="2" style="display: none;"><input class="text-box-big" id="application" name="application"' +
-            '        type="hidden" value="' + applicationSPName + '" /></td>' +
-            '            </tr>';
+        $('#application').val(applicationSPName);
+        $('#appnamehid').hide();
     }
-
+    $('#callback').val(app.callbackUrl);
     var body = "";
-
-    var callbackRow = '<tr id="callback_row">' +
-        '        <td class="leftCol-small">Callback Url<span class="required">*</span></td>' +
-        '    <td><input class="text-box-big" id="callback" name="callback"' +
-        '    type="text" value="' + app.callbackUrl + '"/></td>' +
-        '        </tr>';
 
     if (app.OAuthVersion == VERSION_1 || codeGrant || implicitGrant) {
         $(jQuery('#callback_row')).attr('style', '');
     } else {
         $(jQuery('#callback_row')).attr('style', 'display:none');
     }
-
-    body = body + callbackRow;
-    var garntRow = "";
+    
     if (app.OAuthVersion == VERSION_2) {
-        garntRow = '<tr id="grant_row" name="grant_row">' +
-            '            <td class="leftCol-small">Allowed Grant Types</td>' +
-            '            <td>' +
-            '            <table>';
+        $('#grant_row').show();
+        $('#pkce_enable').show();
+        $('#pkce_support_plain').show();
+        var grantRow = '<label for="grantTypes" class="col-sm-2 control-label">Allowed Grant Types </label>' +
+            '<div class="col-sm-10">';
         if ($.inArray('authorization_code', allowedGrantTypes) > 0) {
-            garntRow = garntRow + '<tr><label><input type="checkbox" id="grant_code" name="grant_code" value="authorization_code"';
+            grantRow = grantRow + '<label><input type="checkbox" id="grant_code" name="grant_code" value="authorization_code"';
             if (codeGrant) {
-                garntRow = garntRow + "checked=\"checked\"";
+                grantRow = grantRow + "checked=\"checked\"";
             }
-            garntRow = garntRow + '/>Code</label></tr>';
+            grantRow = grantRow + '/>Code</label>';
         }
         if ($.inArray('implicit', allowedGrantTypes) > 0) {
-            garntRow = garntRow + '<tr><label><input type="checkbox" id="grant_implicit" name="grant_implicit" value="implicit"';
+            grantRow = grantRow + '<label><input type="checkbox" id="grant_implicit" name="grant_implicit" value="implicit"';
             if (implicitGrant) {
-                garntRow = garntRow + "checked=\"checked\"";
+                grantRow = grantRow + "checked=\"checked\"";
             }
-            garntRow = garntRow + '/>Implicit</label></tr>';
+            grantRow = grantRow + '/>Implicit</label>';
         }
         if ($.inArray('password', allowedGrantTypes) > 0) {
-            garntRow = garntRow + '<tr><lable><input type="checkbox" id="grant_password" name="grant_password" value="password"';
+            grantRow = grantRow + '<lable><input type="checkbox" id="grant_password" name="grant_password" value="password"';
             if (passowrdGrant) {
-                garntRow = garntRow + "checked=\"checked\"";
+                grantRow = grantRow + "checked=\"checked\"";
             }
-            garntRow = garntRow + '/>Password</lable></tr>';
+            grantRow = grantRow + '/>Password</lable>';
         }
         if ($.inArray('client_credentials', allowedGrantTypes) > 0) {
-            garntRow = garntRow + '<tr><label><input type="checkbox" id="grant_client" name="grant_client" value="client_credentials"';
+            grantRow = grantRow + '<label><input type="checkbox" id="grant_client" name="grant_client" value="client_credentials"';
             if (clientCredGrant) {
-                garntRow = garntRow + "checked=\"checked\"";
+                grantRow = grantRow + "checked=\"checked\"";
             }
-            garntRow = garntRow + '/>Client Credential</label></tr>';
+            grantRow = grantRow + '/>Client Credential</label>';
         }
         if ($.inArray('refresh_token', allowedGrantTypes) > 0) {
-            garntRow = garntRow + '<tr><label><input type="checkbox" id="grant_refresh" name="grant_refresh" value="refresh_token"';
+            grantRow = grantRow + '<label><input type="checkbox" id="grant_refresh" name="grant_refresh" value="refresh_token"';
             if (refreshGrant) {
-                garntRow = garntRow + "checked=\"checked\"";
+                grantRow = grantRow + "checked=\"checked\"";
             }
-            garntRow = garntRow + '/>Refresh Token</label></tr>';
+            grantRow = grantRow + '/>Refresh Token</label>';
         }
         if ($.inArray('urn:ietf:params:oauth:grant-type:saml1-bearer', allowedGrantTypes) > 0) {
-            garntRow = garntRow + '<tr><tr><label><input type="checkbox" id="grant_saml1" name="grant_saml1" value="urn:ietf:params:oauth:grant-type:saml1-bearer"';
+            grantRow = grantRow + '<label><input type="checkbox" id="grant_saml1" name="grant_saml1" value="urn:ietf:params:oauth:grant-type:saml1-bearer"';
             if (samlGrant1) {
-                garntRow = garntRow + "checked=\"checked\""
+                grantRow = grantRow + "checked=\"checked\""
             }
-            garntRow = garntRow + '/>SAML1</label></tr>';
+            grantRow = grantRow + '/>SAML1</label>';
         }
         if ($.inArray('urn:ietf:params:oauth:grant-type:saml2-bearer', allowedGrantTypes) > 0) {
-            garntRow = garntRow + '<tr><tr><label><input type="checkbox" id="grant_saml2" name="grant_saml2" value="urn:ietf:params:oauth:grant-type:saml2-bearer"';
+            grantRow = grantRow + '<label><input type="checkbox" id="grant_saml2" name="grant_saml2" value="urn:ietf:params:oauth:grant-type:saml2-bearer"';
             if (samlGrant2) {
-                "checked=\"checked\"";
+                grantRow = grantRow + "checked=\"checked\"";
             }
-            garntRow = garntRow + '/>SAML2</label></tr>';
+            grantRow = grantRow + '/>SAML2</label>';
         }
         if ($.inArray('iwa:ntlm', allowedGrantTypes) > 0) {
-            garntRow = garntRow + '<tr><tr><label><input type="checkbox" id="grant_ntlm" name="grant_ntlm" value="iwa:ntlm"';
+            grantRow = grantRow + '<label><input type="checkbox" id="grant_ntlm" name="grant_ntlm" value="iwa:ntlm"';
             if (ntlmGrant) {
-                "checked=\"checked\"";
+                grantRow = grantRow + "checked=\"checked\"";
             }
-            garntRow = garntRow + '/>IWA-NTLM</label></tr>';
+            grantRow = grantRow + '/>IWA-NTLM</label>';
         }
-        body = body + garntRow;
+        grantRow = grantRow + '</div>';
+        $('#grant_row').empty();
+        $('#grant_row').append(grantRow);
 
-        body = body + '</table>' +
-            '</td>' +
-            '</tr>';
         if (oauthClient.isPKCESupportEnabled) {
-
-            var pkceEnableRow = '<tr id="pkce_enable">' +
-                '                <td class="leftcol-small">' +
-                '                PKCE Mandatory' +
-                '                </td>' +
-                '                <td>' +
-                '                <input type="checkbox" name="pkce" value="mandatory"';
+            debugger;
             if (app.pkceMandatory == 'true') {
-                pkceEnableRow = pkceEnableRow + "checked";
+                $('#pkce').prop('checked', true);
+            } else {
+                $('#pkce').prop('checked', false);
             }
-            pkceEnableRow = pkceEnableRow + '/>Mandatory' +
-                '                <div class="sectionHelp">' +
-                '                Only allow applications that bear PKCE Code Challenge with them.' +
-                '                </div>' +
-                '                </td>' +
-                '                </tr>' +
-                '                <tr id="pkce_support_plain">' +
-                '                <td>' +
-                '                Support PKCE \'Plain\' Transform Algorithm' +
-                '                </td>' +
-                '                <td>' +
-                '                <input type="checkbox" name="pkce_plain" value="yes"';
-            if (app.pkceSupportPlain == 'true') {
-                pkceEnableRow = pkceEnableRow + "checked";
-            }
-            pkceEnableRow = pkceEnableRow + '>Yes' +
-                '                <div class="sectionHelp">' +
-                '                Server supports \'S256\' PKCE tranformation algorithm by default.' +
-                '                </div>' +
-                '                </td>' +
-                '                </tr>';
-            body = body + pkceEnableRow
-        }
-    }
-    body = body + '</table>' +
-        '    </td>' +
-        '    </tr>' +
-        '    <tr>' +
-        '    <td>' +
-        '        <input name="update" type="button" class=\"btn btn-primary\" value="Update" onclick="onClickUpdate();"/>' +
-        '<input type="button" class=\"btn btn-primary\" value="Cancel">' +
-        '</td>' +
-        '    </tr>' +
-        '    </tbody>' +
-        '    </table>' +
-        '    </form>' +
-        '    </div>' +
-        '    </div>' +
-        '</fieldset>' +
-        '</div>';
 
-    //TODO : check the condition ass same in the add if needed for cancel button
-    $("#gadgetBody").empty();
-    $("#gadgetBody").append(top + body);
+            if (app.pkceSupportPlain == 'true') {
+                $('#pkce_plain').prop('checked', true);
+            } else {
+                $('#pkce_plain').prop('checked', false);
+            }
+        }
+    } else {
+        $('#grant_row').hide();
+        $('#pkce_enable').hide();
+        $('#pkce_support_plain').hide();
+    }
     jQuery(document).ready(function () {
         //on load adjust the form based on the current settings
         adjustFormEdit();
-        $("form[name='editAppform']").change(adjustForm);
+        $("form[name='addAppForm']").change(adjustFormEdit);
     })
 }
 function onClickAdd() {
@@ -473,7 +364,7 @@ function validate() {
     //
     //    }
     //}
-    document.addAppform.submit();
+    saveOauthConfig();
 }
 function adjustForm() {
     var VERSION_2 = 'OAuth-2.0';
@@ -509,56 +400,57 @@ function adjustForm() {
 
 //<EDIT OAUTH>
 function onClickUpdate() {
-    var versionValue = document.getElementsByName("oauthVersion")[0].value;
-    var callbackUrl = document.getElementsByName("callback")[0].value;
-    if (!(versionValue == '<%=OAuthConstants.OAuthVersions.VERSION_2%>')) {
-        if (callbackUrl.trim() == '') {
-           // CARBON.showWarningDialog('<fmt:message key="callback.is.required"/>');
-            return false;
-        } else {
-            validateEdit();
-        }
-    }
-
-    if ($(jQuery("#grant_code"))[0].checked || $(jQuery("#grant_implicit"))[0].checked) {
-        callbackUrl = document.getElementById('callback').value;
-        if (callbackUrl.trim() == '') {
-          //  CARBON.showWarningDialog('<fmt:message key="callback.is.required"/>');
-            return false;
-        } else {
-            validateEdit();
-        }
-    } else {
-        validateEdit();
-    }
+    //var versionValue = document.getElementsByName("oauthVersion")[0].value;
+    //var callbackUrl = document.getElementsByName("callback")[0].value;
+    //if (!(versionValue == '<%=OAuthConstants.OAuthVersions.VERSION_2%>')) {
+    //    if (callbackUrl.trim() == '') {
+    //       // CARBON.showWarningDialog('<fmt:message key="callback.is.required"/>');
+    //        return false;
+    //    } else {
+    //        validateEdit();
+    //    }
+    //}
+    //
+    //if ($(jQuery("#grant_code"))[0].checked || $(jQuery("#grant_implicit"))[0].checked) {
+    //    callbackUrl = document.getElementById('callback').value;
+    //    if (callbackUrl.trim() == '') {
+    //      //  CARBON.showWarningDialog('<fmt:message key="callback.is.required"/>');
+    //        return false;
+    //    } else {
+    //        validateEdit();
+    //    }
+    //} else {
+    //    validateEdit();
+    //}
+    validateEdit(); //uncomment above and remove this line
 }
 
 function validateEdit() {
-    var callbackUrl = document.getElementById('callback').value;
-    var value = document.getElementsByName("application")[0].value;
-    if (value == '') {
-        CARBON.showWarningDialog('<fmt:message key="application.is.required"/>');
-        return false;
-    }
-    var versionValue = document.getElementsByName("oauthVersion")[0].value;
-    if (versionValue == '<%=OAuthConstants.OAuthVersions.VERSION_2%>') {
-        if (!$(jQuery("#grant_code"))[0].checked && !$(jQuery("#grant_implicit"))[0].checked) {
-            document.getElementsByName("callback")[0].value = '';
-        } else {
-            if (!isWhiteListed(callbackUrl, ["url"]) || !isNotBlackListed(callbackUrl,
-                    ["uri-unsafe-exists"])) {
-               // CARBON.showWarningDialog('<fmt:message key="callback.is.not.url"/>');
-                return false;
-            }
-        }
-    } else {
-        if (!isWhiteListed(callbackUrl, ["url"]) || !isNotBlackListed(callbackUrl,
-                ["uri-unsafe-exists"])) {
-           // CARBON.showWarningDialog('<fmt:message key="callback.is.not.url"/>');
-            return false;
-        }
-    }
-    document.editAppform.submit();
+    //var callbackUrl = document.getElementById('callback').value;
+    //var value = document.getElementsByName("application")[0].value;
+    //if (value == '') {
+    //    CARBON.showWarningDialog('<fmt:message key="application.is.required"/>');
+    //    return false;
+    //}
+    //var versionValue = document.getElementsByName("oauthVersion")[0].value;
+    //if (versionValue == '<%=OAuthConstants.OAuthVersions.VERSION_2%>') {
+    //    if (!$(jQuery("#grant_code"))[0].checked && !$(jQuery("#grant_implicit"))[0].checked) {
+    //        document.getElementsByName("callback")[0].value = '';
+    //    } else {
+    //        if (!isWhiteListed(callbackUrl, ["url"]) || !isNotBlackListed(callbackUrl,
+    //                ["uri-unsafe-exists"])) {
+    //           // CARBON.showWarningDialog('<fmt:message key="callback.is.not.url"/>');
+    //            return false;
+    //        }
+    //    }
+    //} else {
+    //    if (!isWhiteListed(callbackUrl, ["url"]) || !isNotBlackListed(callbackUrl,
+    //            ["uri-unsafe-exists"])) {
+    //       // CARBON.showWarningDialog('<fmt:message key="callback.is.not.url"/>');
+    //        return false;
+    //    }
+    //}
+    saveOauthConfig(); //uncomment above but don't remove this line
 }
 
 function adjustFormEdit() {

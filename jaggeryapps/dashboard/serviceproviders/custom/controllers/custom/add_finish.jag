@@ -26,7 +26,6 @@ function addSP(){
         '<xsd1:description>'+spDesc+'</xsd1:description>'+
         '</xsd:serviceProvider>'+
                 '</xsd:createApplication>';
-        log.info('yes bro me called.... New alert....');
         spClient.createApplication(createApp);
     }catch(e){
         log.error(e);

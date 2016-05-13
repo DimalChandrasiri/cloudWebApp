@@ -38,6 +38,10 @@ var removeServiceProvider = '<xsd:removeServiceProvider xmlns:soap="http://www.w
 '<xsd:issuer>{0}</xsd:issuer>'+
 '</xsd:removeServiceProvider>';
 
+var removeOAuthApplicationData = '<xsd:removeOAuthApplicationData xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://org.apache.axis2/xsd">' +
+'<xsd:consumerKey>{0}</xsd:consumerKey>' +
+'</xsd:removeOAuthApplicationData>';
+
 var addRPServiceProvider = '<xsd:addRPServiceProvider xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsd="http://org.apache.axis2/xsd" xmlns:xsd1="http://dto.saml.sso.identity.carbon.wso2.org/xsd">'+
                                 '<xsd:spDto>'+
                                     '<xsd1:assertionConsumerUrl>{0}</xsd1:assertionConsumerUrl>'+
@@ -78,6 +82,7 @@ application.put("urn:getOAuthApplicationDataByAppName",getOAuthApplicationDataBy
 application.put("urn:getOAuthApplicationData",getOAuthApplicationData);
 application.put("urn:removeServiceProvider",removeServiceProvider);
 application.put("urn:addRPServiceProvider",addRPServiceProvider);
+application.put("urn:removeOAuthApplicationData",removeOAuthApplicationData);
 if(!application.get(SAML_ENABLED)){
     application.put("urn:login", login);
 }

@@ -17,6 +17,7 @@
     <script type="text/javascript" src="custom/js/editsp.js" type="text/javascript"></script>
     <script type="text/javascript" src="custom/js/claimConfig.js" type="text/javascript"></script>
     <script type="text/javascript" src="custom/js/samlConfig.js" type="text/javascript"></script>
+    <script type="text/javascript" src="custom/js/oauthConfig.js" type="text/javascript"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -53,7 +54,7 @@ include("../templates/leftpane.jag");
     <div class="right-pane">
         <!-- BOF App  menu actionbar -->
         <div class="action-bar">
-            <a href="#" class="btn-action" data-toggle="tooltip" data-placement="top"
+            <a href="/dashboard/serviceproviders/listsp.jag" class="btn-action" data-toggle="tooltip" data-placement="top"
                title="Back to Overview">
                 <span class="fw-stack fw-lg btn-action-ico">
                     <i class="fw fw-ring fw-stack-2x"></i>
@@ -187,427 +188,513 @@ include("../templates/leftpane.jag");
 <!--EOF Claim Config-->
                     </div>
 
-                    <div class="form-group">
-                        <label for="service-provider-description" >Inbound Authentication Configurations: </label>
+                   <div class="form-group">
+                            <label for="service-provider-description" >Inbound Authentication Configurations: </label>
 
-                    <div class="panel-group property-accordion" id="property-accordion">
-<!--BOF SAML Config-->
-                    <input type="hidden" value="true" id="isEditSp">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#samlconfig">
-                                        SAML2 Web SSO Configurations
-                                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
-                                    </a>
+                        <div class="panel-group property-accordion" id="property-accordion">
+    <!--BOF SAML Config-->
+                        <input type="hidden" value="true" id="isEditSp"/>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#samlconfig">
+                                            SAML2 Web SSO Configurations
+                                            <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                                        </a>
 
-                                </h4>
+                                    </h4>
 
-                            </div>
-                            <div id="samlconfig" class="panel-collapse collapse in">
-                                <div class="panel-body inverse">
-                                    <form id="samlAttrIndexForm" class="form-horizontal" role="form" hidden>
-                                        <div class="form-group">
-                                            <label for="issuersaml" class="col-sm-2 control-label">Issuer Name
-                                                <span class="required">*</span>
-                                            </label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="issuersaml" placeholder="Issuer" disabled="disabled">
-                                                <label id="issuersaml-error" class="error" for="cname" hidden>This field is required.</label>
+                                </div>
+                                <div id="samlconfig" class="panel-collapse collapse in">
+                                    <div class="panel-body inverse">
+                                        <form id="samlAttrIndexForm" class="form-horizontal" role="form" hidden>
+                                            <div class="form-group">
+                                                <label for="issuersaml" class="col-sm-2 control-label">Issuer Name
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="issuersaml" placeholder="Issuer" disabled="disabled">
+                                                    <label id="issuersaml-error" class="error" for="cname" hidden>This field is required.</label>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="acsindex" class="col-sm-2 control-label">Attribute Consuming Service Index</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="acsindex" disabled="disabled">
+                                            <div class="form-group">
+                                                <label for="acsindex" class="col-sm-2 control-label">Attribute Consuming Service Index</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="acsindex" disabled="disabled">
+                                                </div>
                                             </div>
-                                        </div>
-                                         <div class="form-group">
-                                            <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="showSamlForm();return false;">
-                                                <span class="fw-stack fw-lg btn-action-ico">
-                                                    <i class="fw fw-ring fw-stack-2x"></i>
-                                                    <i class="fw fw-edit fw-stack-1x"></i>
-                                                </span>
-                                                    Edit
-                                            </button>
-                                            <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="deleteSAMLIssuer();return false;">
-                                                <span class="fw-stack fw-lg btn-action-ico">
-                                                    <i class="fw fw-ring fw-stack-2x"></i>
-                                                    <i class="fw fw-delete fw-stack-1x"></i>
-                                                </span>
-                                                    Delete
-                                            </button>
-                                        </div>
+                                             <div class="form-group">
+                                                <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="showSamlForm();return false;">
+                                                    <span class="fw-stack fw-lg btn-action-ico">
+                                                        <i class="fw fw-ring fw-stack-2x"></i>
+                                                        <i class="fw fw-edit fw-stack-1x"></i>
+                                                    </span>
+                                                        Edit
+                                                </button>
+                                                <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="deleteSAMLIssuer();return false;">
+                                                    <span class="fw-stack fw-lg btn-action-ico">
+                                                        <i class="fw fw-ring fw-stack-2x"></i>
+                                                        <i class="fw fw-delete fw-stack-1x"></i>
+                                                    </span>
+                                                        Delete
+                                                </button>
+                                            </div>
 
 
-                                    </form>
-                                    <div class="form-group" id = "samlConfigBtn" hidden>
-                                            <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="showSamlForm();return false;">
-                                                <span class="fw-stack fw-lg btn-action-ico">
-                                                    <i class="fw fw-ring fw-stack-2x"></i>
-                                                    <i class="fw fw-edit fw-stack-1x"></i>
-                                                </span>
-                                                    Configure
-                                            </button>
+                                        </form>
+                                        <div class="form-group" id = "samlConfigBtn" hidden>
+                                                <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="showSamlForm();return false;">
+                                                    <span class="fw-stack fw-lg btn-action-ico">
+                                                        <i class="fw fw-ring fw-stack-2x"></i>
+                                                        <i class="fw fw-edit fw-stack-1x"></i>
+                                                    </span>
+                                                        Configure
+                                                </button>
+                                        </div>
+                                        <form id="addServiceProvider" class="form-horizontal" role="form" style="color: black;" hidden>
+                                        <h4>New Service Provider</h4>
+                                            <!--Issuer-->
+                                            <div class="form-group">
+                                                <label for="issuer" class="col-sm-2 control-label">Issuer
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="issuer" name="issuer" placeholder="Issuer" disabled="disabled">
+                                                    <input id="hiddenIssuer" type="hidden" value="" name="hiddenIssuer">
+                                                    <label id="issuer-error" class="error" for="issuer" hidden>This field is required.</label>
+                                                </div>
+                                            </div>
+                                            <!--ACS URL-->
+                                            <div class="form-group" id="assertionConsumerURLInputRow">
+                                                <label for="assertionConsumerURLTxt" class="col-sm-2 control-label">Assertion Consumer URLs
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="assertionConsumerURLTxt" name="assertionConsumerURLTxt">
+                                                    <label id="acs-error" class="error" for="cname" hidden>This field is required.</label>
+                                                     <!--div class="form-group"-->
+                                                        <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" id="addAssertionConsumerURLBtn" onclick="onClickAddACRUrl();return false;">
+                                                            <span class="fw-stack fw-lg btn-action-ico">
+                                                                <i class="fw fw-ring fw-stack-2x"></i>
+                                                                <i class="fw fw-add fw-stack-1x"></i>
+                                                            </span>
+                                                                    Add
+                                                        </button>
+                                                     <!--/div-->
+                                                </div>
+                                            </div>
+                                            <!--ACS tabel-->
+                                            <div class="form-group" >
+                                                <!--fill the tabel with acrURLS accordingly-->
+                                                <div class="col-sm-10" style="margin-left: 10%;" id="assertionConsumerURLTblRow">
+                                                    <!--<table id="assertionConsumerURLsTable" class="styledInner" style="width: 40%; margin-bottom: 3px;">-->
+    <!--<tbody id="assertionConsumerURLsTableBody">-->
+    <!--<tr id="acsUrl_0">-->
+    <!--<td style="padding-left: 15px !important; color: rgb(119, 119, 119);font-style: italic;"> https://github.com </td>-->
+    <!--<td>-->
+    <!--<a class="icon-link" style="background-image: url(../admin/images/delete.gif)" href="#" onclick="removeAssertionConsumerURL('https://github.com', 'acsUrl_0');return false;"> Delete </a>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--</tbody>-->
+    <!--</table>-->
+                                                </div>
+                                                 <input type="hidden" id="assertionConsumerURLs" name="assertionConsumerURLs" value="">
+                                                 <input type="hidden" id="currentColumnId" value="0">
+                                            </div>
+                                            <!--Default Assertion Consumer Url-->
+                                            <div class="form-group">
+                                                <label for="defaultAssertionConsumerURL" class="col-sm-2 control-label">Default Assertion Consumer URL
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <select id="defaultAssertionConsumerURL" name="defaultAssertionConsumerURL">
+                                                        <option value="">---Select---</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!--NameID Format-->
+                                            <div class="form-group">
+                                                <label for="nameIdFormat" class="col-sm-2 control-label">NameID format
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="nameIdFormat" name="nameIdFormat">
+                                                </div>
+                                            </div>
+                                            <!--Certificate Alias-->
+                                            <div class="form-group">
+                                                <label for="alias" class="col-sm-2 control-label">Certificate Alias
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <select id="alias" name="alias">
+                                                        <option value="">---Select---</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!--Response Signing Algorithm-->
+                                            <div class="form-group">
+                                                <label for="signingAlgorithm" class="col-sm-2 control-label">Response Signing Algorithm
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <select id="signingAlgorithm" name="signingAlgorithm">
+                                                        <option value="">---Select---</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!--Response Digest Algorithm-->
+                                            <div class="form-group">
+                                                <label for="digestAlgorithm" class="col-sm-2 control-label">Response Digest Algorithm
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <select id="digestAlgorithm" name="digestAlgorithm">
+                                                        <option value="">---Select---</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!--  Enable Response Signing -->
+                                            <div class="form-group">
+                                            <input type="checkbox" onclick="disableResponseSignature(this);" value="true" id="enableResponseSignature" name="enableResponseSignature">
+    Enable Response Signing
+                                            </div>
+                                            <input type="hidden" value="true" name="enableAssertionSignature">
+                                            <!--  Enable Signature Validation -->
+                                            <div class="form-group">
+                                            <input id="enableSigValidation" type="checkbox" value="true" name="enableSigValidation">
+    Enable Signature Validation in Authentication Requests and Logout Requests
+                                            </div>
+                                            <!--  Enable Assertion Encryption -->
+                                            <div class="form-group">
+                                            <input id="enableEncAssertion" type="checkbox" value="true" name="enableEncAssertion">
+    Enable Assertion Encryption
+                                            </div>
+                                            <!--  Enable Single  Logout -->
+                                            <div class="form-group">
+                                            <input type="checkbox" onclick="disableLogoutUrl(this);" value="true" id="enableSingleLogout" name="enableSingleLogout">
+    Enable Single Logout
+                                            </div>
+                                                    <!--SLO Response URL-->
+                                                    <div class="form-group">
+                                                        <label for="sloResponseURL" class="col-sm-2 control-label">SLO Response URL
+                                                        </label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control" id="sloResponseURL" name="sloResponseURL" disabled="disabled">
+                                                            <!--label id="issuer-error" class="error" for="cname" hidden>This field is required.</label-->
+                                                        </div>
+                                                    </div>
+                                                    <!--SLO Request URL-->
+                                                    <div class="form-group">
+                                                        <label for="sloRequestURL" class="col-sm-2 control-label"> SLO Request URL
+                                                        </label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control" id="sloRequestURL" name="sloRequestURL" disabled="disabled">
+                                                            <!--label id="issuer-error" class="error" for="cname" hidden>This field is required.</label-->
+                                                        </div>
+                                                    </div>
+                                             <!--  Enable Attribute Profile -->
+                                            <div class="form-group">
+                                            <input id="enableAttributeProfile" type="checkbox" onclick="disableAttributeProfile(this);" name="enableAttributeProfile">
+    Enable Attribute Profile
+                                            </div>
+                                                    <!--Include Attributes in the response always-->
+                                                     <div class="form-group">
+                                                    <input id="enableDefaultAttributeProfileHidden" type="hidden" name="enableDefaultAttributeProfileHidden"/>
+            <input id="enableDefaultAttributeProfile" type="checkbox" onclick="disableDefaultAttributeProfile(this);" name="enableDefaultAttributeProfile" disabled="disabled">
+            Include Attributes in the Response Always
+                                                    </div>
+
+                                            <!--  Enable Audience Restriction-->
+                                            <div class="form-group">
+                                            <input id="enableAudienceRestriction" type="checkbox" onclick="disableAudienceRestriction(this);" value="true" name="enableAudienceRestriction">
+    Enable Audience Restriction
+                                            </div>
+
+                                                    <!--Audience Text-->
+                                                    <div class="form-group">
+                                                        <label for="audience" class="col-sm-2 control-label">Audience
+                                                        </label>
+                                                        <div class="col-sm-10">
+                                                            <input id="audience" class="form-control" type="text" disabled="disabled" name="audience">
+                                                            <input id="addAudience" type="button" onclick="addAudienceFunc()" value="Add" disabled="disabled" name="addAudience">
+                                                        </div>
+                                                    </div>
+
+                                                    <!--Audience Table-->
+                                                    <div class="form-group" >
+                                                        <!--fill the tabel with Audience URL-->
+                                                        <div class="col-sm-10" style="margin-left: 10%;" id="audienceTblRow">
+                                                        </div>
+                                                        <input type="hidden" name="audiencePropertyCounter" id="audiencePropertyCounter" value="0"/>
+                                                    </div>
+
+
+                                            <!--  Enable Recipient Validation-->
+                                            <div class="form-group">
+                                            <input id="enableRecipients" type="checkbox" onclick="disableRecipients(this);" value="true" name="enableRecipients">
+    Enable Recipient Validation
+                                            </div>
+
+                                                    <!--Recipient-->
+                                                    <div class="form-group">
+                                                        <label for="recipient" class="col-sm-2 control-label">Recipient
+                                                        </label>
+                                                        <div class="col-sm-10">
+                                                           <input id="recipient" class="form-control" type="text" disabled="disabled" name="recipient">
+                                                           <input id="addRecipient" type="button" onclick="addRecipientFunc()" value="Add" disabled="disabled" name="addRecipient">
+                                                        </div>
+                                                    </div>
+
+                                                    <!--Recipient Table-->
+                                                    <div class="form-group" >
+                                                        <!--fill the tabel with Audience URL-->
+                                                        <div class="col-sm-10" style="margin-left: 10%;" id="recptTblRow">
+                                                        </div>
+                                                        <input type="hidden" name="recipientPropertyCounter" id="recipientPropertyCounter"  value="0"/>
+                                                    </div>
+
+
+                                            <!--   Enable IdP Initiated SSO-->
+                                            <div class="form-group">
+                                            <input type="checkbox" onclick="disableIdPInitSSO(this);" value="true" id ="enableIdPInitSSO" name="enableIdPInitSSO"> Enable IdP Initiated SSO
+                                            </div>
+
+                                            <!--  Enable IdP Initiated SLO -->
+                                            <div class="form-group">
+                                            <input type="checkbox" onclick="disableIdPInitSLO(this);" value="true" id ="enableIdPInitSLO" name="enableIdPInitSLO">
+    Enable IdP Initiated SLO
+                                            </div>
+
+                                                    <!--IDP SLO Text-->
+                                                    <div class="form-group">
+                                                        <label for="returnToURLTxtBox" class="col-sm-2 control-label">Return to URL
+                                                        </label>
+                                                        <div class="col-sm-10">
+                                                           <input id="returnToURLTxtBox" class="form-control" type="text" disabled="disabled">
+                                                           <input id="addReturnToURL" type="button" onclick="addSloReturnToURL()" value="Add" disabled="disabled">
+                                                        </div>
+                                                    </div>
+
+                                                    <!--IDP SLO Table Table-->
+                                                    <div class="form-group" >
+                                                        <!--fill the tabel with Audience URL-->
+                                                        <div class="col-sm-10" style="margin-left: 10%;" id="idpSLOReturnToURLInputRow">
+                                                        </div>
+                                                        <input type="hidden" id="idpInitSLOReturnToURLs" name="idpInitSLOReturnToURLs" value="">
+                                                        <input type="hidden" id="currentReturnToColumnId" value="0">
+                                                    </div>
+
+    <input type="hidden" id="attributeConsumingServiceIndex" name="attributeConsumingServiceIndex"/>
+                                             <div class="form-group">
+                                                <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" id="samlRgsterBtn" style = "margin-left: 2%;" onclick="saveSAMLConfig();return false;">
+                                                    <span class="fw-stack fw-lg btn-action-ico">
+                                                        <i class="fw fw-ring fw-stack-2x"></i>
+                                                        <i class="fw fw-save fw-stack-1x"></i>
+                                                    </span>
+                                                        Register
+                                                </button>
+                                                 <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" id="samlUpdtBtn" style = "margin-left: 2%;" onclick="saveSAMLConfig();return false;">
+                                                    <span class="fw-stack fw-lg btn-action-ico">
+                                                        <i class="fw fw-ring fw-stack-2x"></i>
+                                                        <i class="fw fw-save fw-stack-1x"></i>
+                                                    </span>
+                                                        Update
+                                                </button>
+                                                <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="cancelSamlForm();return false;">
+                                                    <span class="fw-stack fw-lg btn-action-ico">
+                                                        <i class="fw fw-ring fw-stack-2x"></i>
+                                                        <i class="fw fw-delete fw-stack-1x"></i>
+                                                    </span>
+                                                        Cancel
+                                                </button>
+                                            </div>
+
+
+                                        </form>
                                     </div>
-                                    <form id="addServiceProvider" class="form-horizontal" role="form" style="color: black;" hidden>
-                                    <h4>New Service Provider</h4>
-                                        <!--Issuer-->
-                                        <div class="form-group">
-                                            <label for="issuer" class="col-sm-2 control-label">Issuer
-                                                <span class="required">*</span>
-                                            </label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="issuer" name="issuer" placeholder="Issuer" disabled="disabled">
-                                                <input id="hiddenIssuer" type="hidden" value="" name="hiddenIssuer">
-                                                <label id="issuer-error" class="error" for="issuer" hidden>This field is required.</label>
-                                            </div>
-                                        </div>
-                                        <!--ACS URL-->
-                                        <div class="form-group" id="assertionConsumerURLInputRow">
-                                            <label for="assertionConsumerURLTxt" class="col-sm-2 control-label">Assertion Consumer URLs
-                                                <span class="required">*</span>
-                                            </label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="assertionConsumerURLTxt" name="assertionConsumerURLTxt">
-                                                <label id="acs-error" class="error" for="cname" hidden>This field is required.</label>
-                                                 <!--div class="form-group"-->
-                                                    <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" id="addAssertionConsumerURLBtn" onclick="onClickAddACRUrl();return false;">
-                                                        <span class="fw-stack fw-lg btn-action-ico">
-                                                            <i class="fw fw-ring fw-stack-2x"></i>
-                                                            <i class="fw fw-add fw-stack-1x"></i>
-                                                        </span>
-                                                                Add
-                                                    </button>
-                                                 <!--/div-->
-                                            </div>
-                                        </div>
-                                        <!--ACS tabel-->
-                                        <div class="form-group" >
-                                            <!--fill the tabel with acrURLS accordingly-->
-                                            <div class="col-sm-10" style="margin-left: 10%;" id="assertionConsumerURLTblRow">
-                                                <!--<table id="assertionConsumerURLsTable" class="styledInner" style="width: 40%; margin-bottom: 3px;">-->
-<!--<tbody id="assertionConsumerURLsTableBody">-->
-<!--<tr id="acsUrl_0">-->
-<!--<td style="padding-left: 15px !important; color: rgb(119, 119, 119);font-style: italic;"> https://github.com </td>-->
-<!--<td>-->
-<!--<a class="icon-link" style="background-image: url(../admin/images/delete.gif)" href="#" onclick="removeAssertionConsumerURL('https://github.com', 'acsUrl_0');return false;"> Delete </a>-->
-<!--</td>-->
-<!--</tr>-->
-<!--</tbody>-->
-<!--</table>-->
-                                            </div>
-                                             <input type="hidden" id="assertionConsumerURLs" name="assertionConsumerURLs" value="">
-                                             <input type="hidden" id="currentColumnId" value="0">
-                                        </div>
-                                        <!--Default Assertion Consumer Url-->
-                                        <div class="form-group">
-                                            <label for="defaultAssertionConsumerURL" class="col-sm-2 control-label">Default Assertion Consumer URL
-                                                <span class="required">*</span>
-                                            </label>
-                                            <div class="col-sm-10">
-                                                <select id="defaultAssertionConsumerURL" name="defaultAssertionConsumerURL">
-                                                    <option value="">---Select---</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!--NameID Format-->
-                                        <div class="form-group">
-                                            <label for="nameIdFormat" class="col-sm-2 control-label">NameID format
-                                                <span class="required">*</span>
-                                            </label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="nameIdFormat" name="nameIdFormat">
-                                            </div>
-                                        </div>
-                                        <!--Certificate Alias-->
-                                        <div class="form-group">
-                                            <label for="alias" class="col-sm-2 control-label">Certificate Alias
-                                            </label>
-                                            <div class="col-sm-10">
-                                                <select id="alias" name="alias">
-                                                    <option value="">---Select---</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!--Response Signing Algorithm-->
-                                        <div class="form-group">
-                                            <label for="signingAlgorithm" class="col-sm-2 control-label">Response Signing Algorithm
-                                                <span class="required">*</span>
-                                            </label>
-                                            <div class="col-sm-10">
-                                                <select id="signingAlgorithm" name="signingAlgorithm">
-                                                    <option value="">---Select---</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!--Response Digest Algorithm-->
-                                        <div class="form-group">
-                                            <label for="digestAlgorithm" class="col-sm-2 control-label">Response Digest Algorithm
-                                                <span class="required">*</span>
-                                            </label>
-                                            <div class="col-sm-10">
-                                                <select id="digestAlgorithm" name="digestAlgorithm">
-                                                    <option value="">---Select---</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!--  Enable Response Signing -->
-                                        <div class="form-group">
-                                        <input type="checkbox" onclick="disableResponseSignature(this);" value="true" id="enableResponseSignature" name="enableResponseSignature">
-Enable Response Signing
-                                        </div>
-                                        <input type="hidden" value="true" name="enableAssertionSignature">
-                                        <!--  Enable Signature Validation -->
-                                        <div class="form-group">
-                                        <input id="enableSigValidation" type="checkbox" value="true" name="enableSigValidation">
-Enable Signature Validation in Authentication Requests and Logout Requests
-                                        </div>
-                                        <!--  Enable Assertion Encryption -->
-                                        <div class="form-group">
-                                        <input id="enableEncAssertion" type="checkbox" value="true" name="enableEncAssertion">
-Enable Assertion Encryption
-                                        </div>
-                                        <!--  Enable Single  Logout -->
-                                        <div class="form-group">
-                                        <input type="checkbox" onclick="disableLogoutUrl(this);" value="true" id="enableSingleLogout" name="enableSingleLogout">
-Enable Single Logout
-                                        </div>
-                                                <!--SLO Response URL-->
-                                                <div class="form-group">
-                                                    <label for="sloResponseURL" class="col-sm-2 control-label">SLO Response URL
-                                                    </label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="sloResponseURL" name="sloResponseURL" disabled="disabled">
-                                                        <!--label id="issuer-error" class="error" for="cname" hidden>This field is required.</label-->
-                                                    </div>
-                                                </div>
-                                                <!--SLO Request URL-->
-                                                <div class="form-group">
-                                                    <label for="sloRequestURL" class="col-sm-2 control-label"> SLO Request URL
-                                                    </label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="sloRequestURL" name="sloRequestURL" disabled="disabled">
-                                                        <!--label id="issuer-error" class="error" for="cname" hidden>This field is required.</label-->
-                                                    </div>
-                                                </div>
-                                         <!--  Enable Attribute Profile -->
-                                        <div class="form-group">
-                                        <input id="enableAttributeProfile" type="checkbox" onclick="disableAttributeProfile(this);" name="enableAttributeProfile">
-Enable Attribute Profile
-                                        </div>
-                                                <!--Include Attributes in the response always-->
-                                                 <div class="form-group">
-                                                <input id="enableDefaultAttributeProfileHidden" type="hidden" name="enableDefaultAttributeProfileHidden"/>
-        <input id="enableDefaultAttributeProfile" type="checkbox" onclick="disableDefaultAttributeProfile(this);" name="enableDefaultAttributeProfile" disabled="disabled">
-        Include Attributes in the Response Always
-                                                </div>
 
-                                        <!--  Enable Audience Restriction-->
-                                        <div class="form-group">
-                                        <input id="enableAudienceRestriction" type="checkbox" onclick="disableAudienceRestriction(this);" value="true" name="enableAudienceRestriction">
-Enable Audience Restriction
-                                        </div>
-
-                                                <!--Audience Text-->
-                                                <div class="form-group">
-                                                    <label for="audience" class="col-sm-2 control-label">Audience
-                                                    </label>
-                                                    <div class="col-sm-10">
-                                                        <input id="audience" class="form-control" type="text" disabled="disabled" name="audience">
-                                                        <input id="addAudience" type="button" onclick="addAudienceFunc()" value="Add" disabled="disabled" name="addAudience">
-                                                    </div>
-                                                </div>
-
-                                                <!--Audience Table-->
-                                                <div class="form-group" >
-                                                    <!--fill the tabel with Audience URL-->
-                                                    <div class="col-sm-10" style="margin-left: 10%;" id="audienceTblRow">
-                                                    </div>
-                                                    <input type="hidden" name="audiencePropertyCounter" id="audiencePropertyCounter" value="0"/>
-                                                </div>
-
-
-                                        <!--  Enable Recipient Validation-->
-                                        <div class="form-group">
-                                        <input id="enableRecipients" type="checkbox" onclick="disableRecipients(this);" value="true" name="enableRecipients">
-Enable Recipient Validation
-                                        </div>
-
-                                                <!--Recipient-->
-                                                <div class="form-group">
-                                                    <label for="recipient" class="col-sm-2 control-label">Recipient
-                                                    </label>
-                                                    <div class="col-sm-10">
-                                                       <input id="recipient" class="form-control" type="text" disabled="disabled" name="recipient">
-                                                       <input id="addRecipient" type="button" onclick="addRecipientFunc()" value="Add" disabled="disabled" name="addRecipient">
-                                                    </div>
-                                                </div>
-
-                                                <!--Recipient Table-->
-                                                <div class="form-group" >
-                                                    <!--fill the tabel with Audience URL-->
-                                                    <div class="col-sm-10" style="margin-left: 10%;" id="recptTblRow">
-                                                    </div>
-                                                    <input type="hidden" name="recipientPropertyCounter" id="recipientPropertyCounter"  value="0"/>
-                                                </div>
-
-
-                                        <!--   Enable IdP Initiated SSO-->
-                                        <div class="form-group">
-                                        <input type="checkbox" onclick="disableIdPInitSSO(this);" value="true" id ="enableIdPInitSSO" name="enableIdPInitSSO"> Enable IdP Initiated SSO
-                                        </div>
-
-                                        <!--  Enable IdP Initiated SLO -->
-                                        <div class="form-group">
-                                        <input type="checkbox" onclick="disableIdPInitSLO(this);" value="true" id ="enableIdPInitSLO" name="enableIdPInitSLO">
-Enable IdP Initiated SLO
-                                        </div>
-
-                                                <!--IDP SLO Text-->
-                                                <div class="form-group">
-                                                    <label for="returnToURLTxtBox" class="col-sm-2 control-label">Return to URL
-                                                    </label>
-                                                    <div class="col-sm-10">
-                                                       <input id="returnToURLTxtBox" class="form-control" type="text" disabled="disabled">
-                                                       <input id="addReturnToURL" type="button" onclick="addSloReturnToURL()" value="Add" disabled="disabled">
-                                                    </div>
-                                                </div>
-
-                                                <!--IDP SLO Table Table-->
-                                                <div class="form-group" >
-                                                    <!--fill the tabel with Audience URL-->
-                                                    <div class="col-sm-10" style="margin-left: 10%;" id="idpSLOReturnToURLInputRow">
-                                                    </div>
-                                                    <input type="hidden" id="idpInitSLOReturnToURLs" name="idpInitSLOReturnToURLs" value="">
-                                                    <input type="hidden" id="currentReturnToColumnId" value="0">
-                                                </div>
-
-<input type="hidden" id="attributeConsumingServiceIndex" name="attributeConsumingServiceIndex"/>
-                                         <div class="form-group">
-                                            <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" id="samlRgsterBtn" style = "margin-left: 2%;" onclick="saveSAMLConfig();return false;">
-                                                <span class="fw-stack fw-lg btn-action-ico">
-                                                    <i class="fw fw-ring fw-stack-2x"></i>
-                                                    <i class="fw fw-save fw-stack-1x"></i>
-                                                </span>
-                                                    Register
-                                            </button>
-                                             <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" id="samlUpdtBtn" style = "margin-left: 2%;" onclick="saveSAMLConfig();return false;">
-                                                <span class="fw-stack fw-lg btn-action-ico">
-                                                    <i class="fw fw-ring fw-stack-2x"></i>
-                                                    <i class="fw fw-save fw-stack-1x"></i>
-                                                </span>
-                                                    Update
-                                            </button>
-                                            <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="cancelSamlForm();return false;">
-                                                <span class="fw-stack fw-lg btn-action-ico">
-                                                    <i class="fw fw-ring fw-stack-2x"></i>
-                                                    <i class="fw fw-delete fw-stack-1x"></i>
-                                                </span>
-                                                    Cancel
-                                            </button>
-                                        </div>
-
-
-                                    </form>
                                 </div>
+                            </div>
+    <!--EOF SAML Config-->
+    <!--BOF OAuth Config-->
+                        <input type="hidden" value="true" id="isEditOauthSP"/>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#oauthConfig">
+                                            OAuth/OpenID Connect Configuration
+                                            <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-down"></i></span>
+                                        </a>
 
+                                    </h4>
+                                </div>
+                                <div id="oauthConfig" class="panel-collapse collapse">
+                                    <div class="panel-body inverse">
+                                        <form id="oauthAttrIndexForm" class="form-horizontal" role="form" hidden>
+                                            <div class="form-group">
+                                                <label for="consumerID" class="col-sm-2 control-label">OAuth Client Key
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="consumerID" disabled="disabled">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="consumerSecret" class="col-sm-2 control-label">OAuth Client Secret</label>
+                                                <div class="col-sm-10">
+                                                    <input type="password" class="form-control" id="consumerSecret" disabled="disabled">
+                                                </div>
+                                            </div>
+                                             <div class="form-group">
+                                                <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="showOauthForm();return false;">
+                                                    <span class="fw-stack fw-lg btn-action-ico">
+                                                        <i class="fw fw-ring fw-stack-2x"></i>
+                                                        <i class="fw fw-edit fw-stack-1x"></i>
+                                                    </span>
+                                                        Edit
+                                                </button>
+                                                <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="deleteOauthConfig();return false;">
+                                                    <span class="fw-stack fw-lg btn-action-ico">
+                                                        <i class="fw fw-ring fw-stack-2x"></i>
+                                                        <i class="fw fw-delete fw-stack-1x"></i>
+                                                    </span>
+                                                        Delete
+                                                </button>
+                                            </div>
+                                        </form>
+                                        <div class="form-group" id = "oauthConfigBtn" hidden>
+                                                <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="showOauthForm();return false;">
+                                                    <span class="fw-stack fw-lg btn-action-ico">
+                                                        <i class="fw fw-ring fw-stack-2x"></i>
+                                                        <i class="fw fw-edit fw-stack-1x"></i>
+                                                    </span>
+                                                        Configure
+                                                </button>
+                                        </div>
+                                        <form id="addAppForm" name="addAppForm" class="form-horizontal" role="form" style="color: black;" hidden>
+                                        <h4>Register New Application</h4>
+                                        <h5 style="margin-top: 15px;"> New Application</h5>
+                                            <!--Hidden fields-->
+                                            <div id="oauthHiddenFields" hidden>
+                                            </div>
+                                            <!--OAuth Version-->
+                                            <div class="form-group" id="versionRow">
+
+
+                                            </div>
+                                            <!--Application Name Hidden Field-->
+                                            <div class="form-group" id="appnamehid" hidden>
+                                                <label for="application" class="col-sm-2 control-label">Application Name
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="application" name="application">
+                                                </div>
+                                            </div>
+                                            <!--Callback Url-->
+                                            <div class="form-group" id="callback_row" hidden>
+                                                <label for="callback" class="col-sm-2 control-label">Callback Url
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="callback" name="callback">
+                                                    <label id="callback-error" class="error" for="callback" hidden>This field is required.</label>
+                                                </div>
+                                            </div>
+                                            <!--Grant Types-->
+                                            <div class="form-group" id="grant_row" name="grant_row" hidden>
+                                                <!--Filled in oauthConfig.js-->
+                                            </div>
+                                            <!--PKCE Mandatory-->
+                                            <div class="form-group" id="pkce_enable" hidden>
+                                                <label for="grantTypes" class="col-sm-2 control-label">Allowed Grant Types
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <label>
+                                                        <input type="checkbox" value="mandatory" name="pkce" id="pkce">
+                                                        Mandatory
+                                                        <div> Only allow applications that bear PKCE Code Challenge with them. </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <!--PKCE Support plain-->
+                                            <div class="form-group" id="pkce_support_plain" hidden>
+                                                <label for="grantTypes" class="col-sm-2 control-label">Support PKCE 'Plain' Transform Algorithm
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <label>
+                                                        <input type="checkbox" checked="" value="yes" id ="pkce_plain" name="pkce_plain">
+                                                        Yes
+                                                        <div> Server supports 'S256' PKCE tranformation algorithm by default. </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <!--Buttons-->
+                                            <div class="form-group">
+                                                <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" id="oauthRgsterBtn" style = "margin-left: 2%;" onclick="onClickAdd();return false;">
+                                                    <span class="fw-stack fw-lg btn-action-ico">
+                                                        <i class="fw fw-ring fw-stack-2x"></i>
+                                                        <i class="fw fw-save fw-stack-1x"></i>
+                                                    </span>
+                                                        Add
+                                                </button>
+                                                 <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" id="oauthUpdtBtn" style = "margin-left: 2%;" onclick="onClickUpdate();return false;">
+                                                    <span class="fw-stack fw-lg btn-action-ico">
+                                                        <i class="fw fw-ring fw-stack-2x"></i>
+                                                        <i class="fw fw-save fw-stack-1x"></i>
+                                                    </span>
+                                                        Update
+                                                </button>
+                                                <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="cancelOauthForm();return false;">
+                                                    <span class="fw-stack fw-lg btn-action-ico">
+                                                        <i class="fw fw-ring fw-stack-2x"></i>
+                                                        <i class="fw fw-delete fw-stack-1x"></i>
+                                                    </span>
+                                                        Cancel
+                                                </button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+    <!--EOF OAuth Config-->
+
+    <!--BOF WS-Federation Config-->
+                             <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#wsfed">
+                                            WS-Federation (Passive) Configuration
+                                            <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                                        </a>
+
+                                    </h4>
+
+                                </div>
+                                <div id="wsfed" class="panel-collapse collapse in">
+                                    <div class="panel-body inverse">
+                                        <form class="form-horizontal" role="form">
+                                            <div class="form-group">
+                                                <label for="passiveSTSRealm" class="col-sm-2 control-label"> Passive STS Realm:</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="passiveSTSRealm">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="passiveSTSWReply" class="col-sm-2 control-label">Attribute Consuming Service Index</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="passiveSTSWReply">
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
                             </div>
 
 
                         </div>
-<!--EOF SAML Config-->
-<!--BOF OAuth Config-->
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#oauthConfig">
-                                        OAuth/OpenID Connect Configuration
-                                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-down"></i></span>
-                                    </a>
-
-                                </h4>
-                            </div>
-                            <div id="oauthConfig" class="panel-collapse collapse">
-                                <div class="panel-body inverse">
-                                    <form class="form-horizontal" role="form">
-                                        <div class="form-group">
-                                            <label for="consumerID" class="col-sm-2 control-label">OAuth Client Key
-                                                <span class="required">*</span>
-                                            </label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="consumerID" disabled="disabled">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="consumerSecret" class="col-sm-2 control-label">OAuth Client Secret</label>
-                                            <div class="col-sm-10">
-                                                <input type="password" class="form-control" id="consumerSecret" disabled="disabled">
-                                            </div>
-                                        </div>
-                                         <div class="form-group">
-                                            <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;">
-                                                <span class="fw-stack fw-lg btn-action-ico">
-                                                    <i class="fw fw-ring fw-stack-2x"></i>
-                                                    <i class="fw fw-edit fw-stack-1x"></i>
-                                                </span>
-                                                    Edit
-                                            </button>
-                                            <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;">
-                                                <span class="fw-stack fw-lg btn-action-ico">
-                                                    <i class="fw fw-ring fw-stack-2x"></i>
-                                                    <i class="fw fw-delete fw-stack-1x"></i>
-                                                </span>
-                                                    Delete
-                                            </button>
-                                        </div>
-
-
-                                    </form>
-
-                                </div>
-                            </div>
-                        </div>
-<!--EOF OAuth Config-->
-
-<!--BOF WS-Federation Config-->
-                         <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#wsfed">
-                                        WS-Federation (Passive) Configuration
-                                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
-                                    </a>
-
-                                </h4>
-
-                            </div>
-                            <div id="wsfed" class="panel-collapse collapse in">
-                                <div class="panel-body inverse">
-                                    <form class="form-horizontal" role="form">
-                                        <div class="form-group">
-                                            <label for="passiveSTSRealm" class="col-sm-2 control-label"> Passive STS Realm:</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="passiveSTSRealm">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="passiveSTSWReply" class="col-sm-2 control-label">Attribute Consuming Service Index</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="passiveSTSWReply">
-                                            </div>
-                                        </div>
-                                    </form>
-
-                                </div>
-                            </div>
-                        </div>
-
-
                     </div>
-                </div>
-
-
                     <div class="form-group">
                         <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" >
                     <span class="fw-stack fw-lg btn-action-ico">
@@ -620,14 +707,16 @@ Enable IdP Initiated SLO
                     </div>
 
 
-                </div>
+                    </div>
 
-            </div>
-        </div><!-- /.container -->
+                </div>
+              </div> <!--row-->
+          </div><!-- /.container -->
 
         <div id="push"></div>
     </div>
 </div>
+<!--Inner Wrapper-->
 <%
 include("../templates/footer.jag");
 %>

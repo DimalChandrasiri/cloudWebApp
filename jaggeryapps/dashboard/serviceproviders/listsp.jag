@@ -44,7 +44,7 @@ include("../templates/header.jag");
 <!-- BOF Inner wrapper -->
 <div class="inner-wrapper">
      <%include("../templates/leftpane.jag");%>
-<div class="right-pane">
+    <div class="right-pane">
         <!-- BOF App  menu actionbar -->
         <div class="action-bar">
             <a href="#" class="btn-action" data-toggle="tooltip" data-placement="top"
@@ -64,8 +64,35 @@ include("../templates/header.jag");
         </div>
         <!-- EOF App  menu actionbar-->
 
+        <!--Empty List-->
 
-        <div class="container-fluid">
+        <div class="container-fluid app-content-section" id="emptyList" hidden>
+            <div class="row">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 msg-issues">
+                  Orem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+                  Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+                  Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
+              </div>
+            </div>
+            <div class="row row-centered">
+                <div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6">
+                    <div class="add-issue-content">
+                        <a id="add-issue-button" class="cu-btn cu-btn-md cu-btn-blue" href="/dashboard/serviceproviders/addsp.jag">
+                            <span class="fw-stack fw-lg btn-action-ico">
+                                <i class="fw fw-ring fw-stack-2x"></i>
+                                <i class="fw fw-add fw-stack-1x"></i>
+                            </span>
+                            <span class="hidden-xs">Add Service Provider</span>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div><!-- /.container -->
+
+        <!--/Empty List-->
+        <div class="container-fluid" id="spList" hidden>
             <div class="row row-centered app-sort-bar">
                 <div class="col-centered col-md-5 search">
                     <input type="text" class="form-control" id="search-apps" placeholder="Search service provider">

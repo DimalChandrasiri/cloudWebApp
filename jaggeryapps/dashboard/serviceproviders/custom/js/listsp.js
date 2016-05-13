@@ -30,8 +30,10 @@ function reloadGrid() {
         type: "GET",
         data: "&cookie=" + cookie + "&user=" + userName,
         success: function (data) {
-            spList = $.parseJSON(data).return;
-            if (spList.constructor !== Array) {
+            if(data) {
+                spList = $.parseJSON(data).return;
+            }
+            if (spList!=null && spList.constructor !== Array) {
                 var arr = [];
                 arr[0] = spList;
                 spList = arr;
@@ -49,7 +51,11 @@ function reloadGrid() {
 
 function drawList() {
     var output = "";
+    $("#listBody").empty();
+
     if (spList != null) {
+        $('#spList').show();
+        $('#emptyList').hide();
         for (var i in spList) {
             var spdesc = spList[i].description;
             var spimage = '<img src="../images/is/netsuit.png " class="square-element">';
@@ -95,8 +101,10 @@ function drawList() {
             //                           <li class="divider"></li>'+
             //                           <li><a href="#">'+spdesc+'</a></li>'+
         }
-
+        $("#listBody").append(output);
+    } else {
+        $('#spList').hide();
+        $('#emptyList').show();
     }
-    $("#listBody").empty();
-    $("#listBody").append(output);
+
 }

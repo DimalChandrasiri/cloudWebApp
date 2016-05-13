@@ -10,6 +10,7 @@ function drawUpdatePage() {
         $('#sp-description').val(spDescription);
         preDrawClaimConfig();
         preDrawSAMLConfigPage();
+        preDrawOAuthConfigPage();
         //preDrawSAMLConfigPage();
     }
 }
@@ -34,79 +35,6 @@ function preDrawUpdatePage(applicationName) {
 
 }
 
-function saveSAMLConfig(){
-    debugger;
-    var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/samlSSOConfig_handler.jag";
-    $.ajax({
-        url: str,
-        type: "POST",
-        data: $("#addServiceProvider").serialize() + "&clientAction=addRPServiceProvider" + "&spName=" + appdata.applicationName + "&isEditSP="+$('#isEditSp').val()+"&cookie=" + cookie + "&user=" + userName,
-    })
-        .done(function (data) {
-            //reloadGrid();
-            //message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
-            $('#addServiceProvider').hide();
-            preDrawUpdatePage(appdata.applicationName);
-        })
-        .fail(function () {
-            message({
-                content: 'Error while updating Profile', type: 'error', cbk: function () {
-                }
-            });
-
-        })
-        .always(function () {
-            console.log('completed');
-        });
-
-}
-
-
-function updateSAMLConfig(){
-
-}
-
-function deleteSAMLIssuer(){
-    var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/samlSSOConfig_handler.jag";
-    $.ajax({
-        url: str,
-        type: "POST",
-        data: "issuer=" + $('#issuersaml').val() + "&clientAction=removeServiceProvider" + "&spName="+appdata.applicationName+"&cookie=" + cookie + "&user=" + userName,
-    })
-        .done(function (data) {
-            //reloadGrid();
-            //message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
-            preDrawUpdatePage(appdata.applicationName);
-        })
-        .fail(function () {
-            message({
-                content: 'Error while updating Profile', type: 'error', cbk: function () {
-                }
-            });
-
-        })
-        .always(function () {
-            console.log('completed');
-        });
-}
-
-function showSamlForm(){
-    $('#samlAttrIndexForm').hide();
-    $('#samlConfigBtn').hide();
-    $('#addServiceProvider').show();
-}
-function cancelSamlForm() {
-
-    $('#addServiceProvider').hide();
-    if ($('#isEditSp').val() == 'true') {
-        $('#samlAttrIndexForm').show();
-        $('#samlConfigBtn').hide();
-    } else {
-        $('#samlAttrIndexForm').hide();
-        $('#samlConfigBtn').show();
-
-    }
-}
 function updateSP(applicationName) {
     var element = "<div class=\"modal fade\" id=\"messageModal\">\n" +
         "  <div class=\"modal-dialog\">\n" +
@@ -180,4 +108,147 @@ function getRequestParameter(param) {
         return vars[param] ? vars[param] : null;
     }
     return vars;
+}
+
+
+/**
+ * SAML configuration related
+ */
+function saveSAMLConfig(){
+    var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/samlSSOConfig_handler.jag";
+    $.ajax({
+        url: str,
+        type: "POST",
+        data: $("#addServiceProvider").serialize() + "&clientAction=addRPServiceProvider" + "&spName=" + appdata.applicationName + "&isEditSP="+$('#isEditSp').val()+"&cookie=" + cookie + "&user=" + userName,
+    })
+        .done(function (data) {
+            //reloadGrid();
+            //message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
+            $('#addServiceProvider').hide();
+            preDrawUpdatePage(appdata.applicationName);
+        })
+        .fail(function () {
+            message({
+                content: 'Error while updating Profile', type: 'error', cbk: function () {
+                }
+            });
+
+        })
+        .always(function () {
+            console.log('completed');
+        });
+
+}
+
+function deleteSAMLIssuer(){
+    var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/samlSSOConfig_handler.jag";
+    $.ajax({
+        url: str,
+        type: "POST",
+        data: "issuer=" + $('#issuersaml').val() + "&clientAction=removeServiceProvider" + "&spName="+appdata.applicationName+"&cookie=" + cookie + "&user=" + userName,
+    })
+        .done(function (data) {
+            //reloadGrid();
+            //message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
+            preDrawUpdatePage(appdata.applicationName);
+        })
+        .fail(function () {
+            message({
+                content: 'Error while updating Profile', type: 'error', cbk: function () {
+                }
+            });
+
+        })
+        .always(function () {
+            console.log('completed');
+        });
+}
+function showSamlForm(){
+    $('#samlAttrIndexForm').hide();
+    $('#samlConfigBtn').hide();
+    $('#addServiceProvider').show();
+}
+function cancelSamlForm() {
+
+    $('#addServiceProvider').hide();
+    if ($('#isEditSp').val() == 'true') {
+        $('#samlAttrIndexForm').show();
+        $('#samlConfigBtn').hide();
+    } else {
+        $('#samlAttrIndexForm').hide();
+        $('#samlConfigBtn').show();
+
+    }
+}
+
+/**
+ * Claim Configuration related
+ */
+function showOauthForm() {
+    $('#oauthAttrIndexForm').hide();
+    $('#oauthConfigBtn').hide();
+    $('#addAppForm').show();
+}
+
+function cancelOauthForm() {
+
+    $('#addAppForm').hide();
+    if ($('#isEditOauthSP').val() == 'true') {
+        $('#oauthAttrIndexForm').show();
+        $('#oauthConfigBtn').hide();
+    } else {
+        $('#oauthAttrIndexForm').hide();
+        $('#oauthConfigBtn').show();
+
+    }
+}
+
+function deleteOauthConfig() {
+    var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/oauthConfigHandler.jag";
+    $.ajax({
+        url: str,
+        type: "POST",
+        data: "&cookie=" + cookie + "&user=" + userName + "&appName=" + appdata.applicationName + "&clientID=" + $('#consumerID').val() + "&action=removeOauthConfig",
+    })
+        .done(function (data) {
+            //reloadGrid();
+            //message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
+            preDrawUpdatePage(appdata.applicationName);
+        })
+        .fail(function () {
+            message({
+                content: 'Error while updating Profile', type: 'error', cbk: function () {
+                }
+            });
+
+        })
+        .always(function () {
+            console.log('completed');
+        });
+}
+
+function saveOauthConfig(){
+    var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/oauthConfigHandler.jag";
+    $.ajax({
+        url: str,
+        type: "POST",
+        data: $("#addAppForm").serialize() + "&action=addOauthConfig" + "&appName=" + appdata.applicationName + "&isEditSP="+$('#isEditOauthSP').val()+"&cookie=" + cookie + "&user=" + userName,
+    })
+        .done(function (data) {
+            //reloadGrid();
+            //message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
+            $('#addAppForm').hide();
+            preDrawUpdatePage(appdata.applicationName);
+        })
+        .fail(function () {
+            message({
+                content: 'Error while updating Profile', type: 'error', cbk: function () {
+                }
+            });
+
+        })
+        .always(function () {
+            console.log('completed');
+        });
+
 }

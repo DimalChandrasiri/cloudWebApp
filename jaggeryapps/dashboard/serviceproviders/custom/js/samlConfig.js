@@ -467,7 +467,6 @@ function preDrawSAMLConfigPage() {
                     tempArr[0] = appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs;
                     appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs = tempArr;
                 }
-                debugger;
                 for (var i in appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs) {
                     var inboundConfig = appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs[i];
                     if (inboundConfig.inboundAuthType == "samlsso" && inboundConfig.inboundAuthKey.length > 0) {
@@ -535,15 +534,24 @@ function onClickAddACRUrl() {
 }
 
 function disableAttributeProfile(chkbx) {
-    if (!(chkbx.checked)) {
-        $('#enableDefaultAttributeProfile').prop("checked", false);
-    }
-    $('#enableDefaultAttributeProfile').val(chkbx.checked);
     if(chkbx.checked){
         $('#enableDefaultAttributeProfile').prop("disabled", false);
+        $('#enableAttributeProfile').val(true);
     } else {
+        $('#enableDefaultAttributeProfile').prop("checked", false);
         $('#enableDefaultAttributeProfile').prop("disabled", true);
+        $('#enableAttributeProfile').val(false);
     }
+}
+function disableDefaultAttributeProfile(chkbx) {
+    if (chkbx.checked) {
+        $('#enableDefaultAttributeProfileHidden').val("true");
+        $('#enableDefaultAttributeProfile').val(true);
+    } else {
+        $('#enableDefaultAttributeProfileHidden').val("false");
+        $('#enableDefaultAttributeProfile').val(false);
+    }
+
 }
 
 function disableResponseSignature(chkbx) {
