@@ -1,5 +1,4 @@
 function drawAddSP() {
-    debugger;
     var output = "";
 output = '<div class="row">'+
         '<div class="col-md-5 forms">'+
@@ -48,7 +47,6 @@ function validateSPName() {
 }
 
 function registerCustomSP() {
-    debugger;
     var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/add_finish.jag";
     $.ajax({
         url: str,
@@ -56,7 +54,6 @@ function registerCustomSP() {
         data: "spName="+$('#spName').val()+"&spDesc="+$('#spType').val()+$('#spDesc').val() + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName,
     })
         .done(function (data) {
-            debugger;
             window.location.href = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/editsp.jag?applicationName="+$('#spName').val();
             //message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
         })

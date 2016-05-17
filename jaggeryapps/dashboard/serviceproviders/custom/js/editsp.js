@@ -1,8 +1,11 @@
 function drawUpdatePage() {
+    debugger;
     var output = "";
     var start = "";
     if (appdata != null) {
         $('#spName').val(appdata.applicationName);
+        $('#oldSPName').val(appdata.applicationName);
+        debugger;
         var spDescription = appdata.description;
         if (spDescription.contains(']')) {
             spDescription = spDescription.split(']') [1];
@@ -23,6 +26,30 @@ function preDrawUpdatePage(applicationName) {
         data: "&cookie=" + cookie + "&user=" + userName + "&spName=" + applicationName,
         success: function (data) {
             appdata = $.parseJSON(data).return;
+
+            if (appdata != null && appdata.inboundAuthenticationConfig != null
+                && appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs != null) {
+                if(appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs.constructor !== Array){
+                    var tempArr = [];
+                    tempArr[0] = appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs;
+                    appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs = tempArr;
+                }
+                for (var i in appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs) {
+                    var inboundConfig = appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs[i];
+                    if (inboundConfig.inboundAuthType == "passivests" && inboundConfig.inboundAuthKey.length > 0) {
+                        $('#passiveSTSRealm').val(inboundConfig.inboundAuthKey);
+                        if(inboundConfig.properties != null && inboundConfig.properties.constructor !== Array){
+                            inboundConfig.properties = [inboundConfig.properties];
+                        }
+                        for(var i in inboundConfig.properties) {
+                            var property = inboundConfig.properties[i];
+                            if(property.name == "passiveSTSWReply") {
+                                $('#passiveSTSWReply').val(property.value);
+                            }
+                        }
+                    }
+                }
+            }
             drawUpdatePage();
         },
         error: function (e) {
@@ -35,7 +62,9 @@ function preDrawUpdatePage(applicationName) {
 
 }
 
-function updateSP(applicationName) {
+function updateSP() {
+    debugger;
+    $('#number_of_claimmappings').val(document.getElementById("claimMappingAddTable").rows.length);
     var element = "<div class=\"modal fade\" id=\"messageModal\">\n" +
         "  <div class=\"modal-dialog\">\n" +
         "    <div class=\"modal-content\">\n" +
@@ -56,14 +85,23 @@ function updateSP(applicationName) {
 }
 
 function updateCustomSP() {
-    var str = PROXY_CONTEXT_PATH + "/portal/gadgets/custom/controllers/custom/edit_finish.jag";
+    debugger;
+    var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/edit_finish.jag";
+    var parameters = "";
+    if ($('#isEditSp').val() == "true") {
+        parameters = "&issuersaml=" + $('#issuersaml').val() + "&acsindex=" + $('#acsindex').val();
+    }
+    if ($('#isEditOauthSP').val() == "true") {
+        parameters = parameters + "&consumerID=" + $('#consumerID').val() + "&consumerSecret=" + $('#consumerSecret').val();
+    }
+    parameters = parameters + "&passiveSTSRealm=" + $('#passiveSTSRealm').val() + "&passiveSTSWReply=" + $('#passiveSTSWReply').val();
     $.ajax({
         url: str,
         type: "POST",
-        data: $('#gadgetForm').serialize() + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
+        data: $('#claimConfigForm').serialize() + "&oldSPName=" + $('#oldSPName').val() + "&spName=" + $('#spName').val() + "&spDesc=" + $('#spType').val() + $('#sp-description').val() + parameters + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName,
     })
         .done(function (data) {
-            reloadGrid();
+            window.location.href = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/listsp.jag";
             //message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
 
         })
@@ -191,7 +229,6 @@ function showOauthForm() {
 }
 
 function cancelOauthForm() {
-
     $('#addAppForm').hide();
     if ($('#isEditOauthSP').val() == 'true') {
         $('#oauthAttrIndexForm').show();

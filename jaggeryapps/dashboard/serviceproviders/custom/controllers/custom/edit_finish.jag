@@ -18,20 +18,169 @@ function updateSP(){
         }
 
         var spName = request.getParameter('spName');
+        var oldSPName = request.getParameter('oldSPName');
         var spDesc = request.getParameter('spDesc');
+        var samlIssuer = request.getParameter('issuersaml');
+        var samlAtrIndex = request.getParameter('acsindex');
+        var oauthConsumerID = request.getParameter('consumerID');
+        var oauthSecret = request.getParameter('consumerSecret');
+        var stsRealm = request.getParameter('passiveSTSRealm');
+        var stsUrl = request.getParameter('passiveSTSWReply');
+        var dialect = request.getParameter('claim_dialect');
+        var subjectClaim = request.getParameter('subject_claim_uri');
+        var roleClaim = request.getParameter('roleClaim');
+        var claimsNumber = request.getParameter('number_of_claimmappings') - 1; //includes the header row also
 
-        var createApp = <xsd:createApplication xmlns:xsd ="http://org.apache.axis2/xsd" xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">
+        var localClaimDialect = false;
+        if(dialect == 'local'){
+            localClaimDialect = true;
+        }
 
-                </xsd:createApplication>
+        var claimMappings = [];
+        for (var i = 0; i < claimsNumber; i++) {
+            var claim = {};
+            claim["defaultValue"] = "";
+            var localClaim = {};
+            localClaim["claimId"] = 0;
+            localClaim["claimUri"] = request.getParameter('idpClaim_'+i);
+            claim["localClaim"] = localClaim;
+            var remoteClaim = {};
+            remoteClaim["claimId"] = 0;
+            if (localClaimDialect) {
+                remoteClaim["claimUri"] = request.getParameter('idpClaim_'+i);
+            } else {
+                remoteClaim["claimUri"] = request.getParameter('spClaim_' + i);
+            }
+            claim["remoteClaim"] = remoteClaim;
+            if (request.getParameter('spClaim_req_' + i) == 'on') {
+                claim["requested"] = true;
+            } else {
+                claim["requested"] = false;
+            }
+            claimMappings.push(claim);
+        }
 
-        var serviceProvider =        <xsd:serviceProvider xmlns:xsd ="http://org.apache.axis2/xsd" xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">
-                <xsd1:applicationName></xsd1:applicationName>
-        <xsd1:description></xsd1:description>
-        </xsd:serviceProvider>
-        serviceProvider.*::applicationName.setChildren(spName);
-        serviceProvider.*::description.setChildren(spDesc);
-        createApp.appendChild(serviceProvider);
-        spClient.createApplication(createApp);
+
+        var spAdminClient = require('spAdminClient.jag');
+        var serviceProvider = spAdminClient.getApplication(oldSPName).return;
+
+        var updateSp = '<xsd:updateApplication xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://org.apache.axis2/xsd" xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">'+
+        '<xsd:serviceProvider>'+
+        '<xsd1:applicationID>'+serviceProvider.applicationID+'</xsd1:applicationID>'+
+        '<xsd1:applicationName>'+spName+'</xsd1:applicationName>'+
+        '<xsd1:claimConfig>'+
+        '<xsd1:alwaysSendMappedLocalSubjectId>'+serviceProvider.claimConfig.alwaysSendMappedLocalSubjectId+'</xsd1:alwaysSendMappedLocalSubjectId>';
+
+        for (var i in claimMappings) {
+            var claimMapping = claimMappings[i];
+            updateSp = updateSp + '<xsd1:claimMappings>' +
+                    '<xsd1:defaultValue>' + claimMapping.defaultValue + '</xsd1:defaultValue>' +
+                    '<xsd1:localClaim>' +
+                    '<xsd1:claimId>' + claimMapping.localClaim.claimId + '</xsd1:claimId>' +
+                    '<xsd1:claimUri>' + claimMapping.localClaim.claimUri + '</xsd1:claimUri>' +
+                    '</xsd1:localClaim>' +
+                    '<xsd1:remoteClaim>' +
+                    '<xsd1:claimId>' + claimMapping.remoteClaim.claimId + '</xsd1:claimId>' +
+                    '<xsd1:claimUri>' + claimMapping.remoteClaim.claimUri + '</xsd1:claimUri>' +
+                    '</xsd1:remoteClaim>' +
+                    '<xsd1:requested>' + claimMapping.requested + '</xsd1:requested>' +
+                    '</xsd1:claimMappings>';
+        }
+        updateSp = updateSp +
+        '<xsd1:localClaimDialect>'+localClaimDialect+'</xsd1:localClaimDialect>'+
+        '<xsd1:roleClaimURI>'+roleClaim+'</xsd1:roleClaimURI>'+
+        '<xsd1:userClaimURI></xsd1:userClaimURI>'+
+        '</xsd1:claimConfig>'+
+        '<xsd1:description>'+spDesc+'</xsd1:description>'+
+        '<xsd1:inboundAuthenticationConfig>';
+
+        if (samlIssuer != null && samlIssuer.length > 0) {
+            updateSp = updateSp + '<xsd1:inboundAuthenticationRequestConfigs>' +
+                    '<xsd1:friendlyName>?</xsd1:friendlyName>' +
+                    '<xsd1:inboundAuthKey>' + samlIssuer + '</xsd1:inboundAuthKey>' +
+                    '<xsd1:inboundAuthType>samlsso</xsd1:inboundAuthType>' +
+                    '<xsd1:properties>' +
+                    '<xsd1:confidential>false</xsd1:confidential>' +
+                    '<xsd1:defaultValue></xsd1:defaultValue>' +
+                    '<xsd1:description></xsd1:description>' +
+                    '<xsd1:displayName></xsd1:displayName>' +
+                    '<xsd1:displayOrder>0</xsd1:displayOrder>' +
+                    '<xsd1:name>attrConsumServiceIndex</xsd1:name>' +
+                    '<xsd1:required>false</xsd1:required>' +
+                    '<xsd1:type></xsd1:type>' +
+                    '<xsd1:value>' + samlAtrIndex + '</xsd1:value>' +
+                    '</xsd1:properties>' +
+                    '</xsd1:inboundAuthenticationRequestConfigs>';
+        }
+
+        if (oauthConsumerID != null && oauthSecret != null && oauthConsumerID.length > 0 && oauthSecret.length > 0) {
+            updateSp = updateSp + '<xsd1:inboundAuthenticationRequestConfigs>' +
+                    '<xsd1:friendlyName>?</xsd1:friendlyName>' +
+                    '<xsd1:inboundAuthKey>' + oauthConsumerID + '</xsd1:inboundAuthKey>' +
+                    '<xsd1:inboundAuthType>oauth2</xsd1:inboundAuthType>' +
+                    '<xsd1:properties>' +
+                    '<xsd1:confidential>false</xsd1:confidential>' +
+                    '<xsd1:defaultValue></xsd1:defaultValue>' +
+                    '<xsd1:description></xsd1:description>' +
+                    '<xsd1:displayName></xsd1:displayName>' +
+                    '<xsd1:displayOrder>0</xsd1:displayOrder>' +
+                    '<xsd1:name>oauthConsumerSecret</xsd1:name>' +
+                    '<xsd1:required>false</xsd1:required>' +
+                    '<xsd1:type></xsd1:type>' +
+                    '<xsd1:value>' + oauthSecret + '</xsd1:value>' +
+                    '</xsd1:properties>' +
+                    '</xsd1:inboundAuthenticationRequestConfigs>';
+        }
+        if ((stsRealm != null && stsRealm.length > 0) || (stsUrl != null  && stsUrl.length > 0)) {
+            if(stsRealm == null){
+                stsRealm = "";
+            }
+            if(stsUrl == null){
+                stsUrl = "";
+            }
+            updateSp = updateSp + '<xsd1:inboundAuthenticationRequestConfigs>' +
+                    '<xsd1:friendlyName>?</xsd1:friendlyName>' +
+                    '<xsd1:inboundAuthKey>' + stsRealm + '</xsd1:inboundAuthKey>' +
+                    '<xsd1:inboundAuthType>passivests</xsd1:inboundAuthType>' +
+                    '<xsd1:properties>' +
+                    '<xsd1:confidential>false</xsd1:confidential>' +
+                    '<xsd1:defaultValue></xsd1:defaultValue>' +
+                    '<xsd1:description></xsd1:description>' +
+                    '<xsd1:displayName></xsd1:displayName>' +
+                    '<xsd1:displayOrder>0</xsd1:displayOrder>' +
+                    '<xsd1:name>passiveSTSWReply</xsd1:name>' +
+                    '<xsd1:required>false</xsd1:required>' +
+                    '<xsd1:type></xsd1:type>' +
+                    '<xsd1:value>' + stsUrl + '</xsd1:value>' +
+                    '</xsd1:properties>' +
+                    '</xsd1:inboundAuthenticationRequestConfigs>';
+        }
+        updateSp = updateSp + '</xsd1:inboundAuthenticationConfig>';
+
+        if(subjectClaim != null && subjectClaim.length > 0) {
+            updateSp = updateSp + '<xsd1:localAndOutBoundAuthenticationConfig>' +
+            '<xsd1:alwaysSendBackAuthenticatedListOfIdPs>false</xsd1:alwaysSendBackAuthenticatedListOfIdPs>' +
+            '<xsd1:authenticationType>default</xsd1:authenticationType>' +
+            '<xsd1:subjectClaimUri>' + subjectClaim + '</xsd1:subjectClaimUri>' +
+            '<xsd1:useTenantDomainInLocalSubjectIdentifier>false</xsd1:useTenantDomainInLocalSubjectIdentifier>' +
+            '<xsd1:useUserstoreDomainInLocalSubjectIdentifier>false</xsd1:useUserstoreDomainInLocalSubjectIdentifier>' +
+            '</xsd1:localAndOutBoundAuthenticationConfig>';
+        }
+        updateSp = updateSp + '<xsd1:inboundProvisioningConfig>'+
+        '<xsd1:dumbMode>false</xsd1:dumbMode>'+
+        '<xsd1:provisioningEnabled>false</xsd1:provisioningEnabled>'+
+        '<xsd1:provisioningUserStore></xsd1:provisioningUserStore>'+
+        '</xsd1:inboundProvisioningConfig>'+
+
+        '<xsd1:outboundProvisioningConfig>'+
+        '<xsd1:provisionByRoleList>'+ serviceProvider.outboundProvisioningConfig.provisionByRoleList +'</xsd1:provisionByRoleList>'+
+        '</xsd1:outboundProvisioningConfig>'+
+
+        '<xsd1:permissionAndRoleConfig></xsd1:permissionAndRoleConfig>'+
+        '</xsd:serviceProvider>'+
+        '</xsd:updateApplication>';
+        log.info(updateSp);
+        spClient.updateApplicationData(updateSp);
     }catch(e){
         log.error(e);
         print("This didn't work" + getErrorMessage(e.message));

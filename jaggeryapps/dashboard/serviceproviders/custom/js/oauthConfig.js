@@ -2,7 +2,6 @@ function preDrawOAuthConfigPage() {
     var clientID = "";
     var clientSecret = "";
     var isEditSP = false;
-    debugger;
     if (appdata != null && appdata.inboundAuthenticationConfig != null
         && appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs != null) {
         for (var i in appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs) {
@@ -128,7 +127,7 @@ function drawOAuthConfigPage() {
     }
     $('#oauthRgsterBtn').show();
     $('#oauthUpdtBtn').hide();
-
+    $('#oauthHiddenFields').empty();
 //TODO : check the following condition if needed for cancel button
 //
 //        <%
@@ -217,7 +216,6 @@ var hiddenFields = '<input id="consumerkey" name="consumerkey" type="hidden" />'
     }
     $('#callback').val(app.callbackUrl);
     var body = "";
-
     if (app.OAuthVersion == VERSION_1 || codeGrant || implicitGrant) {
         $(jQuery('#callback_row')).attr('style', '');
     } else {
@@ -291,7 +289,6 @@ var hiddenFields = '<input id="consumerkey" name="consumerkey" type="hidden" />'
         $('#grant_row').append(grantRow);
 
         if (oauthClient.isPKCESupportEnabled) {
-            debugger;
             if (app.pkceMandatory == 'true') {
                 $('#pkce').prop('checked', true);
             } else {
@@ -317,7 +314,7 @@ var hiddenFields = '<input id="consumerkey" name="consumerkey" type="hidden" />'
 }
 function onClickAdd() {
     var version2Checked = document.getElementById("oauthVersion20").checked;
-    if ($(jQuery("#grant_code"))[0].checked || $(jQuery("#grant_implicit"))[0].checked) {
+    if (($(jQuery("#grant_code"))[0] != null && $(jQuery("#grant_code"))[0].checked) || ($(jQuery("#grant_implicit"))[0] && $(jQuery("#grant_implicit"))[0].checked)) {
         var callbackUrl = document.getElementById('callback').value;
         if (callbackUrl.trim() == '') {
             //CARBON.showWarningDialog('<fmt:message key="callback.is.required"/>');
@@ -329,7 +326,7 @@ function onClickAdd() {
         var callbackUrl = document.getElementsByName("callback")[0].value;
         if (!version2Checked) {
             if (callbackUrl.trim() == '') {
-               // CARBON.showWarningDialog('<fmt:message key="callback.is.required"/>');
+                // CARBON.showWarningDialog('<fmt:message key="callback.is.required"/>');
                 return false;
             }
         }
@@ -374,7 +371,8 @@ function adjustForm() {
     var supportImplicit = $('input[name=grant_implicit]:checked').val() != null;
 
     if (oauthVersion == VERSION_1) {
-        $(jQuery('#grant_row')).hide();
+        $(jQuery('#grant_row')).empty();
+        $(jQuery('#callback_row')).show();
         $(jQuery("#pkce_enable").hide());
         $(jQuery("#pkce_support_plain").hide());
     } else if (oauthVersion == VERSION_2) {
@@ -454,6 +452,9 @@ function validateEdit() {
 }
 
 function adjustFormEdit() {
+    if($('#isEditOauthSP').val() == "false"){
+        return false;
+    }
     var oauthVersion = $('input[name=oauthVersion]:checked').val();
     var supportGrantCode = $('input[name=grant_code]:checked').val() != null;
     var supportImplicit = $('input[name=grant_implicit]:checked').val() != null;

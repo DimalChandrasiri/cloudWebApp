@@ -386,8 +386,7 @@ function postAddSAMLInboundAuthnConfig(samlIssuer,applicationName){
                     updateApp = updateApp + '<xsd1:inboundAuthenticationRequestConfigs>' +
                             '<xsd1:friendlyName>' + config.friendlyName + '</xsd1:friendlyName>' +
                             '<xsd1:inboundAuthKey>' + config.inboundAuthKey + '</xsd1:inboundAuthKey>' +
-                            '<xsd1:inboundAuthType>' + config.inboundAuthType + '</xsd1:inboundAuthType>' +
-                            '</xsd1:inboundAuthenticationRequestConfigs>';
+                            '<xsd1:inboundAuthType>' + config.inboundAuthType + '</xsd1:inboundAuthType>';
                     if (config.properties != null) {
                         if (!(config.properties instanceof Array)) {
                             var tempArr = [config.properties];
@@ -408,6 +407,7 @@ function postAddSAMLInboundAuthnConfig(samlIssuer,applicationName){
                                     '</xsd1:properties>';
                         }
                     }
+                    updateApp = updateApp + '</xsd1:inboundAuthenticationRequestConfigs>';
                 }
             }
 

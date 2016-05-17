@@ -67,13 +67,13 @@ function drawClaimConfig(spClaimConfig, isLocalClaimsSelected, claimMapping) {
         $('#claimMappingAddBody').append( requestedClaimTableBody );
 
     }
-
+    debugger;
     var subjectClaimUri = appdata.localAndOutBoundAuthenticationConfig.subjectClaimUri;
     var subjectoptionList = '<option value="">---Select---</option>';
     if (isLocalClaimsSelected) {
         for (var localClaimNameEntry in spConfigClaimUris) {
             var localClaimName = spConfigClaimUris[localClaimNameEntry];
-            if (subjectClaimUri != null && localClaimName == localClaimName) {
+            if (subjectClaimUri != null && localClaimName == subjectClaimUri) {
                 subjectoptionList = subjectoptionList + '<option value="' + localClaimName + '" selected>' + localClaimName + '</option>';
             } else {
                 subjectoptionList = subjectoptionList + '<option value="' + localClaimName + '">' + localClaimName + '</option>';
