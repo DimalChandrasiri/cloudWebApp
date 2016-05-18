@@ -96,7 +96,8 @@ include("../templates/leftpane.jag");
                                 </h4>
 
                             </div>
-                            <div id="claimconfig" class="panel-collapse collapse in">
+                            <!--Make panel-collapse collapse in to keep it expanded at beginning-->
+                            <div id="claimconfig" class="panel-collapse collapse">
                                 <div class="panel-body inverse">
                                     <form class="form-horizontal" role="form" id="claimConfigForm">
 
@@ -207,7 +208,7 @@ include("../templates/leftpane.jag");
                                     </h4>
 
                                 </div>
-                                <div id="samlconfig" class="panel-collapse collapse in">
+                                <div id="samlconfig" class="panel-collapse collapse">
                                     <div class="panel-body inverse">
                                         <form id="samlAttrIndexForm" class="form-horizontal" role="form" hidden>
                                             <div class="form-group">
@@ -532,7 +533,7 @@ include("../templates/leftpane.jag");
                                 </div>
                                 <div id="oauthConfig" class="panel-collapse collapse">
                                     <div class="panel-body inverse">
-                                        <form id="oauthAttrIndexForm" class="form-horizontal" role="form" hidden>
+                                        <form id="oauthAttrIndexForm" class="form-horizontal" style="color: black;" role="form" hidden>
                                             <div class="form-group">
                                                 <label for="consumerID" class="col-sm-2 control-label">OAuth Client Key
                                                     <span class="required">*</span>
@@ -545,8 +546,10 @@ include("../templates/leftpane.jag");
                                                 <label for="consumerSecret" class="col-sm-2 control-label">OAuth Client Secret</label>
                                                 <div class="col-sm-10">
                                                     <input type="password" class="form-control" id="consumerSecret" disabled="disabled">
+                                                     <input id="showSecret" type="button" onclick="showHidePassword(this, 'consumerSecret')" value="Show" name="showSecret">
                                                 </div>
                                             </div>
+
                                              <div class="form-group">
                                                 <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="showOauthForm();return false;">
                                                     <span class="fw-stack fw-lg btn-action-ico">
@@ -673,7 +676,7 @@ include("../templates/leftpane.jag");
                                     </h4>
 
                                 </div>
-                                <div id="wsfed" class="panel-collapse collapse in">
+                                <div id="wsfed" class="panel-collapse collapse">
                                     <div class="panel-body inverse">
                                         <form class="form-horizontal" role="form">
                                             <div class="form-group">

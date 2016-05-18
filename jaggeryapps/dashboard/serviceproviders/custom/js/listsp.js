@@ -80,7 +80,7 @@ function drawList() {
             }
             output = output + '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">' +
                 '                    <div class="cloud-app-listing app-color-one">' +
-                '                        <a href="#">' +
+                '                        <a href="/dashboard/serviceproviders/editsp.jag?applicationName='+spList[i].applicationName+'">' +
                 '                            <div class="app-icon">' +
                 spimage +
                 '                            </div>' +
