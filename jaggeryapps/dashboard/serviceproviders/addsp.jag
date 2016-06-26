@@ -14,6 +14,10 @@
     <link href="../css/web-fonts/Roboto.css" rel="stylesheet">
     <link href="../css/styles.css" rel="stylesheet">
     <script type="text/javascript" src="custom/js/addsp.js" type="text/javascript"></script>
+    <script type="text/javascript" src="custom/js/main.js" type="text/javascript"></script>
+    <script src="../js/jquery-1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/noty-2.3.5/jquery.noty.packaged.min.js"></script>
+    <script type="text/javascript" src="../js/noty-2.3.5/themes/noty.theme.wso2.js"></script>
     <script type="text/javascript" src="custom/serverinfo.jag"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -67,11 +71,11 @@ include("../templates/leftpane.jag");
                 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 ">
                     <div class="cloud-app-type app-color-one cloud-app-type-max" id="1.0"
                          data-description="A service provider is a website that hosts applications. You can enable
-                         Salesforce as a service providers. Your users can then access other applications directly
+                         Salesforce as a service provider. Your users can then access other applications directly
                          from Salesforce using single sign-on. Single sign-on can be a great help to your users:
                          instead of having to remember many passwords, they only have to remember one. Plus, the
                          applications can be added as tabs to your Salesforce organization, which means users don’t
-                         have to switch between programs." data-appname="Salesforce" >
+                         have to switch between programs." data-appname="Salesforce" sp-type='salesforce'>
                         <div class="thumbnail icon">
                             <div class="square-element">
                                 <img class="" src="../images/is/salesforce.png" alt="">
@@ -83,7 +87,7 @@ include("../templates/leftpane.jag");
                 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
                     <div class="cloud-app-type app-color-six" id="2.0" data-description="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. ultricies nec,
                                 pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla
-                                vel, aliquet nec, vulputate eget, arcu." data-appname="NetSuite" >
+                                vel, aliquet nec, vulputate eget, arcu." data-appname="NetSuite" sp-type="netsuite">
                         <div class="thumbnail icon">
                             <div class="square-element">
                                 <img class="" src="../images/is/netsuit.png" alt="">
@@ -95,7 +99,7 @@ include("../templates/leftpane.jag");
                 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 ">
                     <div class="cloud-app-type app-color-two" id="3.0" data-description="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. ultricies nec,
                                 pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla
-                                vel, aliquet nec, vulputate eget, arcu." data-appname="Concur" >
+                                vel, aliquet nec, vulputate eget, arcu." data-appname="Concur" sp-type="concur">
                         <div class="thumbnail icon">
                             <div class="square-element">
                                 <img class="" src="../images/is/concur.png" alt="">
@@ -107,7 +111,7 @@ include("../templates/leftpane.jag");
                 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
                     <div class="cloud-app-type app-color-three" id="4.0" data-description="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. ultricies nec,
                                 pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla
-                                vel, aliquet nec, vulputate eget, arcu." data-appname="Zuora" >
+                                vel, aliquet nec, vulputate eget, arcu." data-appname="Zuora" sp-type="zuora">
                         <div class="thumbnail icon">
                             <div class="square-element">
                                 <img class="" src="../images/is/zuora.png" alt="">
@@ -119,7 +123,7 @@ include("../templates/leftpane.jag");
                 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 ">
                     <div class="cloud-app-type app-color-one" id="5.0" data-description="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. ultricies nec,
                                 pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla
-                                vel, aliquet nec, vulputate eget, arcu." data-appname="AWS" >
+                                vel, aliquet nec, vulputate eget, arcu." data-appname="AWS" sp-type="aws">
                         <div class="thumbnail icon">
                             <div class="square-element">
                                 <img class="" src="../images/is/aws.png" alt="">
@@ -130,7 +134,7 @@ include("../templates/leftpane.jag");
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 ">
                     <div class="cloud-app-type app-color-five cloud-app-type-max" id="6.0"
-                         data-description="TEST " data-appname="GoToMeeting" >
+                         data-description="TEST " data-appname="GoToMeeting" sp-type="gotomeeting">
                         <div class="thumbnail icon">
                             <div class="square-element">
                                 <img class="" src="../images/is/gotomeeting.png" alt="">
@@ -155,7 +159,7 @@ include("../templates/leftpane.jag");
                          from Salesforce using single sign-on. Single sign-on can be a great help to your users:
                          instead of having to remember many passwords, they only have to remember one. Plus, the
                          applications can be added as tabs to your organization, which means users don’t
-                         have to switch between programs." data-appname="Custom Service Provider" >
+                         have to switch between programs." data-appname="Custom Service Provider" sp-type="custom">
                         <div class="thumbnail icon">
                             <div class="square-element">
                                 <i class="fw fw fw-globe fw-custom-x"></i>
@@ -186,12 +190,14 @@ include("../templates/leftpane.jag");
                                 <a href="#" class="cu-btn cu-btn-md cu-btn-gray"><i class="fa fa-video-camera"></i> Video Guide</a>
                             </div>
                         </div>
-                        <div class="col-sm-4 col-md-4 col-lg-5 description-action">
-                            <a href="" class="cu-btn cu-btn-md cu-btn-blue" onclick="drawAddSP(); return false">
-                               <span class="fw-stack fw-lg btn-action-ico">
-                               <i class="fw fw-ring fw-stack-2x"></i>
-                               <i class="fw fw-add fw-stack-1x"></i>
-                               </span> Continue...</a>
+                        <div class="drawAdd">
+                            <!--<div class="col-sm-4 col-md-4 col-lg-5 description-action">-->
+                                <!--<a href="" class="cu-btn cu-btn-md cu-btn-blue" onclick="drawAddSP();return false">-->
+                                   <!--<span class="fw-stack fw-lg btn-action-ico">-->
+                                   <!--<i class="fw fw-ring fw-stack-2x"></i>-->
+                                   <!--<i class="fw fw-add fw-stack-1x"></i>-->
+                                   <!--</span> Continue...</a>-->
+                            <!--</div>-->
                         </div>
                     </div>
                 </div>
@@ -232,14 +238,22 @@ include("../templates/footer.jag");
                 currentcount = parseInt($(this).attr('id')),
                 appDescription = $(this).attr('data-description'),
                 appName = $(this).attr('data-appname'),
+                sptype=$(this).attr('sp-type'),
                 dataCount = parseInt($('.listing').attr('data-count'));
 
         //content replace with data attributes
         $('.app-type-info-template').find('.app-type-name').html(appName);
         $('.app-type-info-template').find('.app-description').html(appDescription);
+
+        var drawadd = '<div class="col-sm-4 col-md-4 col-lg-5 description-action">'+
+                                '<a href="" class="cu-btn cu-btn-md cu-btn-blue" onclick="drawAddSP(\''+sptype+'\');return false">'+
+                                   '<span class="fw-stack fw-lg btn-action-ico">'+
+                                   '<i class="fw fw-ring fw-stack-2x"></i>'+
+                                   '<i class="fw fw-add fw-stack-1x"></i>'+
+                                   '</span> Continue...</a>'+
+                            '</div>';
+           $('.app-type-info-template').find('.drawAdd').html(drawadd);
         var appendHtml =$('.app-type-info-template').html();
-
-
         if(width >=1170){
             if(currentcount%7 == 0){
                 $('#'+currentcount+'\\.0').parent().after(appendHtml);

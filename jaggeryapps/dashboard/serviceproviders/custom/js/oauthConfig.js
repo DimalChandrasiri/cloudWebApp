@@ -475,7 +475,6 @@ function adjustFormEdit() {
 }
 
 function showHidePassword(element, inputId){
-    debugger;
     if($(element).val()=='Show'){
         document.getElementById(inputId).type = 'text';
         $(element).val('Hide');

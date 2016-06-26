@@ -31,6 +31,11 @@ function updateSP(){
         var roleClaim = request.getParameter('roleClaim');
         var claimsNumber = request.getParameter('number_of_claimmappings') - 1; //includes the header row also
 
+        var sptype = 'custom';
+        if(spDesc.indexOf(']')>1){
+            sptype = spDesc.split(']')[0];
+        }
+
         var localClaimDialect = false;
         if(dialect == 'local'){
             localClaimDialect = true;
@@ -94,7 +99,7 @@ function updateSP(){
         '<xsd1:description>'+spDesc+'</xsd1:description>'+
         '<xsd1:inboundAuthenticationConfig>';
 
-        if (samlIssuer != null && samlIssuer.length > 0) {
+        if (sptype == 'custom' && samlIssuer != null && samlIssuer.length > 0) {
             updateSp = updateSp + '<xsd1:inboundAuthenticationRequestConfigs>' +
                     '<xsd1:friendlyName>?</xsd1:friendlyName>' +
                     '<xsd1:inboundAuthKey>' + samlIssuer + '</xsd1:inboundAuthKey>' +
@@ -111,6 +116,119 @@ function updateSP(){
                     '<xsd1:value>' + samlAtrIndex + '</xsd1:value>' +
                     '</xsd1:properties>' +
                     '</xsd1:inboundAuthenticationRequestConfigs>';
+        } else if (sptype == 'salesforce') {
+
+            var acsUrls = request.getParameter("assertionConsumerURLs");
+            var defaultacs = request.getParameter("defaultAssertionConsumerURL");
+            var aliascert = request.getParameter("alias");
+            var signAlgo = request.getParameter("signingAlgorithm");
+            var digAlgo = request.getParameter("digestAlgorithm");
+            var enableRespSign = false;
+            var enableSigValid = false;
+            var enableEncAssert  = false;
+            if (request.getParameter("enableResponseSignature") == 'true') {
+                enableRespSign = true;
+            }
+            if (request.getParameter("enableSigValidation") == 'true') {
+                enableSigValid = true;
+            }
+            if (request.getParameter("enableEncAssertion") == 'true') {
+                enableEncAssert = true;
+            }
+
+            updateSp = updateSp + '<xsd1:inboundAuthenticationRequestConfigs>'+
+            '<xsd1:friendlyName>Salesforce Properties</xsd1:friendlyName>'+
+            '<xsd1:inboundAuthKey>Salesforce</xsd1:inboundAuthKey>'+
+            '<xsd1:inboundAuthType>Salesforce</xsd1:inboundAuthType>'+
+            '<xsd1:properties>'+
+                '<xsd1:confidential>false</xsd1:confidential>'+
+                '<xsd1:defaultValue></xsd1:defaultValue>' +
+                '<xsd1:description></xsd1:description>' +
+                '<xsd1:displayName>Certificate Alias</xsd1:displayName>'+
+                '<xsd1:displayOrder>0</xsd1:displayOrder>'+
+                '<xsd1:name>alias</xsd1:name>'+
+                '<xsd1:required>false</xsd1:required>'+ 
+                '<xsd1:type></xsd1:type>' +
+                '<xsd1:value>'+aliascert+'</xsd1:value>'+
+            '</xsd1:properties>'+
+            '<xsd1:properties>'+
+                '<xsd1:confidential>false</xsd1:confidential>'+
+                '<xsd1:defaultValue/>'+
+                '<xsd1:description/>'+
+                '<xsd1:displayName>Response Signing Algorithm</xsd1:displayName>'+
+                '<xsd1:displayOrder>0</xsd1:displayOrder>'+
+                '<xsd1:name>signingAlgorithm</xsd1:name>'+
+                '<xsd1:required>false</xsd1:required>'+
+                '<xsd1:type/>'+
+                '<xsd1:value>'+signAlgo+'</xsd1:value>'+
+            '</xsd1:properties>'+
+            '<xsd1:properties>'+
+                '<xsd1:confidential>false</xsd1:confidential>'+
+                '<xsd1:defaultValue/>'+
+                '<xsd1:description>The url where you should redirected after authenticated.</xsd1:description>'+
+                '<xsd1:displayName>Assertion Consumer URLs</xsd1:displayName>'+
+                '<xsd1:displayOrder>0</xsd1:displayOrder>'+
+                '<xsd1:name>assertionConsumerURLs</xsd1:name>'+
+                '<xsd1:required>false</xsd1:required>'+
+                '<xsd1:type/>'+
+                '<xsd1:value>'+acsUrls+'</xsd1:value>'+
+            '</xsd1:properties>'+
+            '<xsd1:properties>'+
+                '<xsd1:confidential>false</xsd1:confidential>'+
+                '<xsd1:defaultValue/>'+
+                '<xsd1:description/>'+
+                '<xsd1:displayName>Enable Assertion Encryption</xsd1:displayName>'+
+                '<xsd1:displayOrder>0</xsd1:displayOrder>'+
+                '<xsd1:name>enableEncAssertion</xsd1:name>'+
+                '<xsd1:required>false</xsd1:required>'+
+                '<xsd1:type/>'+
+                '<xsd1:value>'+enableEncAssert+'</xsd1:value>'+
+            '</xsd1:properties>'+
+            '<xsd1:properties>'+
+                '<xsd1:confidential>false</xsd1:confidential>'+
+                '<xsd1:defaultValue/>'+
+                '<xsd1:description/>'+
+                '<xsd1:displayName>Default Assertion Consumer URL</xsd1:displayName>'+
+                '<xsd1:displayOrder>0</xsd1:displayOrder>'+
+                '<xsd1:name>defaultAssertionConsumerURL</xsd1:name>'+
+                '<xsd1:required>false</xsd1:required>'+
+                '<xsd1:type/>'+
+                '<xsd1:value>'+defaultacs+'</xsd1:value>'+
+            '</xsd1:properties>'+
+            '<xsd1:properties>'+
+                '<xsd1:confidential>false</xsd1:confidential>'+
+                '<xsd1:defaultValue/>'+
+                '<xsd1:description/>'+
+                '<xsd1:displayName>Enable Signature Validation in Authentication Requests and Logout Requests</xsd1:displayName>'+
+                '<xsd1:displayOrder>0</xsd1:displayOrder>'+
+                '<xsd1:name>enableSigValidation</xsd1:name>'+
+                '<xsd1:required>false</xsd1:required>'+
+                '<xsd1:type/>'+
+                '<xsd1:value>'+enableSigValid+'</xsd1:value>'+
+            '</xsd1:properties>'+
+            '<xsd1:properties>'+
+                '<xsd1:confidential>false</xsd1:confidential>'+
+                '<xsd1:defaultValue/>'+
+                '<xsd1:description/>'+
+                '<xsd1:displayName>Enable Response Signing</xsd1:displayName>'+
+                '<xsd1:displayOrder>0</xsd1:displayOrder>'+
+                '<xsd1:name>enableResponseSignature</xsd1:name>'+
+                '<xsd1:required>false</xsd1:required>'+
+                '<xsd1:type/>'+
+                '<xsd1:value>'+enableRespSign+'</xsd1:value>'+
+            '</xsd1:properties>'+
+            '<xsd1:properties>'+
+                '<xsd1:confidential>false</xsd1:confidential>'+
+                '<xsd1:defaultValue/>'+
+                '<xsd1:description/>'+
+                '<xsd1:displayName>Response Digest Algorithm</xsd1:displayName>'+
+                '<xsd1:displayOrder>0</xsd1:displayOrder>'+
+                '<xsd1:name>digestAlgorithm</xsd1:name>'+
+                '<xsd1:required>false</xsd1:required>'+
+                '<xsd1:type/>'+
+                '<xsd1:value>'+digAlgo+'</xsd1:value>'+
+            '</xsd1:properties>'+
+            '</xsd1:inboundAuthenticationRequestConfigs>'
         }
 
         if (oauthConsumerID != null && oauthSecret != null && oauthConsumerID.length > 0 && oauthSecret.length > 0) {

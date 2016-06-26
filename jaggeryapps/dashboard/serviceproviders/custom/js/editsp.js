@@ -1,25 +1,27 @@
 function drawUpdatePage() {
-    debugger;
-    var output = "";
-    var start = "";
     if (appdata != null) {
         $('#spName').val(appdata.applicationName);
         $('#oldSPName').val(appdata.applicationName);
-        debugger;
         var spDescription = appdata.description;
+        var sptype = 'custom';
         if (spDescription.contains(']')) {
+            sptype = spDescription.split(']') [0];
             spDescription = spDescription.split(']') [1];
         }
         $('#sp-description').val(spDescription);
         preDrawClaimConfig();
-        preDrawSAMLConfigPage();
+        if(sptype=='salesforce') {
+            preDrawSalesForce();
+        }else{
+            preDrawSAMLConfigPage();
+        }
         preDrawOAuthConfigPage();
-        //preDrawSAMLConfigPage();
     }
 }
 
-function preDrawUpdatePage(applicationName) {
+function preDrawUpdatePage() {
     var applicationName = getRequestParameter('applicationName');
+    var sptype = getRequestParameter('sptype');
     $.ajax({
         url: "/dashboard/serviceproviders/custom/controllers/custom/getsp.jag",
         type: "GET",
@@ -63,7 +65,6 @@ function preDrawUpdatePage(applicationName) {
 }
 
 function updateSP() {
-    debugger;
     $('#number_of_claimmappings').val(document.getElementById("claimMappingAddTable").rows.length);
     var element = "<div class=\"modal fade\" id=\"messageModal\">\n" +
         "  <div class=\"modal-dialog\">\n" +
@@ -88,8 +89,11 @@ function updateCustomSP() {
     debugger;
     var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/edit_finish.jag";
     var parameters = "";
+    if($('#spType').val()!='custom]'){
+        parameters = $("#addServiceProvider").serialize();
+    }
     if ($('#isEditSp').val() == "true") {
-        parameters = "&issuersaml=" + $('#issuersaml').val() + "&acsindex=" + $('#acsindex').val();
+        parameters = parameters+"&issuersaml=" + $('#issuersaml').val() + "&acsindex=" + $('#acsindex').val();
     }
     if ($('#isEditOauthSP').val() == "true") {
         parameters = parameters + "&consumerID=" + $('#consumerID').val() + "&consumerSecret=" + $('#consumerSecret').val();

@@ -21,7 +21,38 @@ function cancelProcess(parameters){
 function cancelProcessToLogin(parameters){
     location.href = "login.jag?" + (parameters ? parameters : "");
 }
+function message(params){
+    if(params.type == "custom"){
+        messageDisplay(params);
+        return;
+    }
 
+    var icon = "";
+    if(params.type == "servererror"){
+        var n = noty({
+            theme:'wso2',
+            layout: 'topCenter',
+            type: 'error',
+            closeWith: ['button','click'],
+            text: params.content,
+            animation: {
+                open: {height: 'toggle'}, // jQuery animate function property object
+                close: {height: 'toggle'}, // jQuery animate function property object
+                easing: 'swing', // easing
+                speed: 500 // opening & closing animation speed
+            }
+        });
+    }else if(params.type == "success"){
+        debugger;
+        icon = "icon-info";
+    }else if(params.type == "error"){
+        $('#'+params.labelId).text(params.content);
+        $('#'+params.labelId).show();
+        alert(params.labelId);
+    }else if(params.type == "confirm"){
+        icon = "icon-question-sign";
+    }
+}
 
     var messageDisplay = function (params) {
            $('#messageModal').html($('#confirmation-data').html());
@@ -59,54 +90,6 @@ function cancelProcessToLogin(parameters){
        Show confirm dialog
        message({content:'foo',type:'confirm',okCallback:function(){},cancelCallback:function(){}});
         */
-       var message = function(params){
-           if(params.type == "custom"){
-               messageDisplay(params);
-               return;
-           }
 
-           var icon = "";
-           if(params.type == "warning"){
-               icon = "icon-warning-sign";
-           }else if(params.type == "info"){
-               icon = "icon-info";
-           }else if(params.type == "error"){
-               icon = "icon-remove-sign";
-           }else if(params.type == "confirm"){
-               icon = "icon-question-sign";
-           }
-           params.content = '<table class="msg-table"><tr><td class="imageCell '+params.type+'"><i class="'+icon+'"></i></td><td class="messageText-wrapper"><span class="messageText">'+params.content+'</span></td></tr></table>';
-           if(params.type == "confirm"){
-              if( params.title == undefined ){ params.title = "My Identity"}
-              messageDisplay({content:params.content,title:params.title ,buttons:[
-                  {name:"Yes",cssClass:"btn btn-primary",cbk:function() {
-                      $('#messageModal').modal('hide');
-                      if(typeof params.okCallback == "function") {params.okCallback()};
-                  }},
-                  {name:"No",cssClass:"btn",cbk:function() {
-                      $('#messageModal').modal('hide');
-                      if(typeof params.cancelCallback  == "function") {params.cancelCallback()};
-                  }}
-              ]
-              });
-              return;
-           }
-
-
-           var type = "";
-           if(params.title == undefined){
-               if(params.type == "info"){ type = "Notification"}
-               if(params.type == "warning"){ type = "Warning"}
-               if(params.type == "error"){ type = "Error"}
-           }
-           messageDisplay({content:params.content,title:"My - Identity " + type,buttons:[
-               {name:"OK",cssClass:"btn btn-primary",cbk:function() {
-                   $('#messageModal').modal('hide');
-                   if(params.cbk && typeof params.cbk == "function")
-   	                    params.cbk();
-               }}
-           ]
-           });
-       };
 
 

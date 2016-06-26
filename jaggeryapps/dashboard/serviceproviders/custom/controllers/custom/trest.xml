@@ -157,3 +157,236 @@
     <xsd1:permissionAndRoleConfig></xsd1:permissionAndRoleConfig>
 </xsd:serviceProvider>
 </xsd:updateApplication>
+<xsd1:inboundAuthenticationRequestConfigs>
+<xsd1:friendlyName></xsd1:friendlyName>
+<xsd1:inboundAuthKey>iLXPJ1oTnD1JUHr5QU8ngBRyElQa</xsd1:inboundAuthKey>
+<xsd1:inboundAuthType>oauth2</xsd1:inboundAuthType>
+<xsd1:properties>
+    <xsd1:confidential>false</xsd1:confidential>
+    <xsd1:defaultValue></xsd1:defaultValue>
+    <xsd1:description></xsd1:description>
+    <xsd1:displayName></xsd1:displayName>
+    <xsd1:displayOrder>0</xsd1:displayOrder>
+    <xsd1:name>oauthConsumerSecret</xsd1:name>
+    <xsd1:required>false</xsd1:required>
+    <xsd1:type></xsd1:type>
+    <xsd1:value>nW08xa06nDvSFWcGTx8IB8t2jawa</xsd1:value>
+</xsd1:properties>
+</xsd1:inboundAuthenticationRequestConfigs>
+
+'<xsdl:inboundAuthenticationRequestConfigs xsi:type="xsdl:InboundAuthenticationRequestConfig">'+
+'<xsdl:friendlyName>Salesforce Properties</xsdl:friendlyName>'+
+'<xsdl:inboundAuthKey>Salesforce</xsdl:inboundAuthKey>'+
+'<xsdl:inboundAuthType>Salesforce</xsdl:inboundAuthType>'+
+'<xsdl:properties xsi:type="xsdl:Property">'+
+    '<xsdl:confidential>false</xsdl:confidential>'+
+    '<xsdl:defaultValue xsi:nil="true"/>'+
+    '<xsdl:description xsi:nil="true"/>'+
+    '<xsdl:displayName>Certificate Alias</xsdl:displayName>'+
+    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
+    '<xsdl:name>alias</xsdl:name>'+
+    '<xsdl:required>false</xsdl:required>'+
+    '<xsdl:type xsi:nil="true"/>'+
+    '<xsdl:value>salesforce.cert</xsdl:value>'+
+'</xsdl:properties>'+
+'<xsdl:properties xsi:type="xsdl:Property">'+
+    '<xsdl:confidential>false</xsdl:confidential>'+
+    '<xsdl:defaultValue xsi:nil="true"/>'+
+    '<xsdl:description xsi:nil="true"/>'+
+    '<xsdl:displayName>Response Signing Algorithm</xsdl:displayName>'+
+    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
+    '<xsdl:name>signingAlgorithm</xsdl:name>'+
+    '<xsdl:required>false</xsdl:required>'+
+    '<xsdl:type xsi:nil="true"/>'+
+    '<xsdl:value>http://www.w3.org/2000/09/xmldsig#dsa-sha1</xsdl:value>'+
+'</xsdl:properties>'+
+'<xsdl:properties xsi:type="xsdl:Property">'+
+    '<xsdl:confidential>false</xsdl:confidential>'+
+    '<xsdl:defaultValue xsi:nil="true"/>'+
+    '<xsdl:description>The url where you should redirected after authenticated.</xsdl:description>'+
+    '<xsdl:displayName>Assertion Consumer URLs</xsdl:displayName>'+
+    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
+    '<xsdl:name>assertionConsumerURLs</xsdl:name>'+
+    '<xsdl:required>false</xsdl:required>'+
+    '<xsdl:type xsi:nil="true"/>'+
+    '<xsdl:value>acsurl1.com,acsurl2.com</xsdl:value>'+
+'</xsdl:properties>'+
+'<xsdl:properties xsi:type="xsdl:Property">'+
+    '<xsdl:confidential>false</xsdl:confidential>'+
+    '<xsdl:defaultValue xsi:nil="true"/>'+
+    '<xsdl:description xsi:nil="true"/>'+
+    '<xsdl:displayName>Enable Assertion Encryption</xsdl:displayName>'+
+    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
+    '<xsdl:name>enableEncAssertion</xsdl:name>'+
+    '<xsdl:required>false</xsdl:required>'+
+    '<xsdl:type xsi:nil="true"/>'+
+    '<xsdl:value>true</xsdl:value>'+
+'</xsdl:properties>'+
+'<xsdl:properties xsi:type="xsdl:Property">'+
+    '<xsdl:confidential>false</xsdl:confidential>'+
+    '<xsdl:defaultValue xsi:nil="true"/>'+
+    '<xsdl:description xsi:nil="true"/>'+
+    '<xsdl:displayName>Default Assertion Consumer URL</xsdl:displayName>'+
+    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
+    '<xsdl:name>defaultAssertionConsumerURL</xsdl:name>'+
+    '<xsdl:required>false</xsdl:required>'+
+    '<xsdl:type xsi:nil="true"/>'+
+    '<xsdl:value>acsurl1.com</xsdl:value>'+
+'</xsdl:properties>'+
+'<xsdl:properties xsi:type="xsdl:Property">'+
+    '<xsdl:confidential>false</xsdl:confidential>'+
+    '<xsdl:defaultValue xsi:nil="true"/>'+
+    '<xsdl:description xsi:nil="true"/>'+
+    '<xsdl:displayName>Enable Signature Validation in Authentication Requests and Logout Requests</xsdl:displayName>'+
+    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
+    '<xsdl:name>enableSigValidation</xsdl:name>'+
+    '<xsdl:required>false</xsdl:required>'+
+    '<xsdl:type xsi:nil="true"/>'+
+    '<xsdl:value>true</xsdl:value>'+
+'</xsdl:properties>'+
+'<xsdl:properties xsi:type="xsdl:Property">'+
+    '<xsdl:confidential>false</xsdl:confidential>'+
+    '<xsdl:defaultValue xsi:nil="true"/>'+
+    '<xsdl:description xsi:nil="true"/>'+
+    '<xsdl:displayName>Enable Response Signing</xsdl:displayName>'+
+    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
+    '<xsdl:name>enableResponseSignature</xsdl:name>'+
+    '<xsdl:required>false</xsdl:required>'+
+    '<xsdl:type xsi:nil="true"/>'+
+    '<xsdl:value>true</xsdl:value>'+
+'</xsdl:properties>'+
+'<xsdl:properties xsi:type="xsdl:Property">'+
+    '<xsdl:confidential>false</xsdl:confidential>'+
+    '<xsdl:defaultValue xsi:nil="true"/>'+
+    '<xsdl:description xsi:nil="true"/>'+
+    '<xsdl:displayName>Response Digest Algorithm</xsdl:displayName>'+
+    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
+    '<xsdl:name>digestAlgorithm</xsdl:name>'+
+    '<xsdl:required>false</xsdl:required>'+
+    '<xsdl:type xsi:nil="true"/>'+
+    '<xsdl:value>http://www.w3.org/2001/04/xmldsig-more#md5</xsdl:value>'+
+'</xsdl:properties>'+
+'</xsdl:inboundAuthenticationRequestConfigs>'
+
+
+<xsd:updateApplication xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://org.apache.axis2/xsd"
+                       xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">
+<xsd:updateApplication xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://org.apache.axis2/xsd"
+                       xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">
+    <xsd:serviceProvider>
+        <xsd1:applicationID>6</xsd1:applicationID>
+        <xsd1:applicationName>NewSalesForce.com</xsd1:applicationName>
+        <xsd1:claimConfig>
+            <xsd1:alwaysSendMappedLocalSubjectId>false</xsd1:alwaysSendMappedLocalSubjectId>
+            <xsd1:localClaimDialect>true</xsd1:localClaimDialect>
+            <xsd1:roleClaimURI></xsd1:roleClaimURI>
+            <xsd1:userClaimURI></xsd1:userClaimURI>
+        </xsd1:claimConfig>
+        <xsd1:description>salesforce]hiddenIssuer=</xsd1:description>
+        <xsd1:inboundAuthenticationConfig>
+            <xsd1:inboundAuthenticationRequestConfigs>
+                <xsd1:friendlyName>Salesforce Properties</xsd1:friendlyName>
+                <xsd1:inboundAuthKey>Salesforce</xsd1:inboundAuthKey>
+                <xsd1:inboundAuthType>Salesforce</xsd1:inboundAuthType>
+                <xsd1:properties>
+                    <xsd1:confidential>false</xsd1:confidential>
+                    <xsd1:defaultValue></xsd1:defaultValue>
+                    <xsd1:description></xsd1:description>
+                    <xsd1:displayName>Certificate Alias</xsd1:displayName>
+                    <xsd1:displayOrder>0</xsd1:displayOrder>
+                    <xsd1:name>alias</xsd1:name>
+                    <xsd1:required>false</xsd1:required>
+                    <xsd1:type></xsd1:type>
+                    <xsd1:value></xsd1:value>
+                </xsd1:properties>
+                <xsd1:properties>
+                    <xsd1:confidential>false</xsd1:confidential>
+                    <xsd1:defaultValue/>
+                    <xsd1:description/>
+                    <xsd1:displayName>Response Signing Algorithm</xsd1:displayName>
+                    <xsd1:displayOrder>0</xsd1:displayOrder>
+                    <xsd1:name>signingAlgorithm</xsd1:name>
+                    <xsd1:required>false</xsd1:required>
+                    <xsd1:type/>
+                    <xsd1:value></xsd1:value>
+                </xsd1:properties>
+                <xsd1:properties>
+                    <xsd1:confidential>false</xsd1:confidential>
+                    <xsd1:defaultValue/>
+                    <xsd1:description>The url where you should redirected after authenticated.</xsd1:description>
+                    <xsd1:displayName>Assertion Consumer URLs</xsd1:displayName>
+                    <xsd1:displayOrder>0</xsd1:displayOrder>
+                    <xsd1:name>assertionConsumerURLs</xsd1:name>
+                    <xsd1:required>false</xsd1:required>
+                    <xsd1:type/>
+                    <xsd1:value>https://githuwewewwwbwqw.com</xsd1:value>
+                </xsd1:properties>
+                <xsd1:properties>
+                    <xsd1:confidential>false</xsd1:confidential>
+                    <xsd1:defaultValue/>
+                    <xsd1:description/>
+                    <xsd1:displayName>Enable Assertion Encryption</xsd1:displayName>
+                    <xsd1:displayOrder>0</xsd1:displayOrder>
+                    <xsd1:name>enableEncAssertion</xsd1:name>
+                    <xsd1:required>false</xsd1:required>
+                    <xsd1:type/>
+                    <xsd1:value>false</xsd1:value>
+                </xsd1:properties>
+                <xsd1:properties>
+                    <xsd1:confidential>false</xsd1:confidential>
+                    <xsd1:defaultValue/>
+                    <xsd1:description/>
+                    <xsd1:displayName>Default Assertion Consumer URL</xsd1:displayName>
+                    <xsd1:displayOrder>0</xsd1:displayOrder>
+                    <xsd1:name>defaultAssertionConsumerURL</xsd1:name>
+                    <xsd1:required>false</xsd1:required>
+                    <xsd1:type/>
+                    <xsd1:value>https://githuwewewwwbwqw.com</xsd1:value>
+                </xsd1:properties>
+                <xsd1:properties>
+                    <xsd1:confidential>false</xsd1:confidential>
+                    <xsd1:defaultValue/>
+                    <xsd1:description/>
+                    <xsd1:displayName>Enable Signature Validation in Authentication Requests and Logout Requests
+                    </xsd1:displayName>
+                    <xsd1:displayOrder>0</xsd1:displayOrder>
+                    <xsd1:name>enableSigValidation</xsd1:name>
+                    <xsd1:required>false</xsd1:required>
+                    <xsd1:type/>
+                    <xsd1:value>true</xsd1:value>
+                </xsd1:properties>
+                <xsd1:properties>
+                    <xsd1:confidential>false</xsd1:confidential>
+                    <xsd1:defaultValue/>
+                    <xsd1:description/>
+                    <xsd1:displayName>Enable Response Signing</xsd1:displayName>
+                    <xsd1:displayOrder>0</xsd1:displayOrder>
+                    <xsd1:name>enableResponseSignature</xsd1:name>
+                    <xsd1:required>false</xsd1:required>
+                    <xsd1:type/>
+                    <xsd1:value>true</xsd1:value>
+                </xsd1:properties>
+                <xsd1:properties>
+                    <xsd1:confidential>false</xsd1:confidential>
+                    <xsd1:defaultValue/>
+                    <xsd1:description/>
+                    <xsd1:displayName>Response Digest Algorithm</xsd1:displayName>
+                    <xsd1:displayOrder>0</xsd1:displayOrder>
+                    <xsd1:name>digestAlgorithm</xsd1:name>
+                    <xsd1:required>false</xsd1:required>
+                    <xsd1:type/>
+                    <xsd1:value></xsd1:value>
+                </xsd1:properties>
+            </xsd1:inboundAuthenticationRequestConfigs>
+        </xsd1:inboundAuthenticationConfig>
+        <xsd1:inboundProvisioningConfig>
+            <xsd1:dumbMode>false</xsd1:dumbMode>
+            <xsd1:provisioningEnabled>false</xsd1:provisioningEnabled>
+            <xsd1:provisioningUserStore></xsd1:provisioningUserStore>
+        </xsd1:inboundProvisioningConfig>
+        <xsd1:outboundProvisioningConfig>
+            <xsd1:provisionByRoleList></xsd1:provisionByRoleList>
+        </xsd1:outboundProvisioningConfig>
+        <xsd1:permissionAndRoleConfig></xsd1:permissionAndRoleConfig>
+    </xsd:serviceProvider>
+</xsd:updateApplication>
