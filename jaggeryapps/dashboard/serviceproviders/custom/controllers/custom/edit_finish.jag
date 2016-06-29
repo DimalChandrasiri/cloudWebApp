@@ -30,6 +30,8 @@ function updateSP(){
         var subjectClaim = request.getParameter('subject_claim_uri');
         var roleClaim = request.getParameter('roleClaim');
         var claimsNumber = request.getParameter('number_of_claimmappings') - 1; //includes the header row also
+        var sptype=request.getParameter("spType");
+
 
         var localClaimDialect = false;
         if(dialect == 'local'){
@@ -94,7 +96,7 @@ function updateSP(){
         '<xsd1:description>'+spDesc+'</xsd1:description>'+
         '<xsd1:inboundAuthenticationConfig>';
 
-        if (samlIssuer != null && samlIssuer.length > 0) {
+        if (sptype == 'custom' && samlIssuer != null && samlIssuer.length > 0) {
             updateSp = updateSp + '<xsd1:inboundAuthenticationRequestConfigs>' +
                     '<xsd1:friendlyName>?</xsd1:friendlyName>' +
                     '<xsd1:inboundAuthKey>' + samlIssuer + '</xsd1:inboundAuthKey>' +
@@ -111,6 +113,86 @@ function updateSP(){
                     '<xsd1:value>' + samlAtrIndex + '</xsd1:value>' +
                     '</xsd1:properties>' +
                     '</xsd1:inboundAuthenticationRequestConfigs>';
+        } else if (sptype == 'salesforce') {
+            var acsUrls = request.getParameter("assertionConsumerURLs");
+            var defaultacs = request.getParameter("defaultAssertionConsumerURL");
+            var aliascert = request.getParameter("alias");
+            var signAlgo = request.getParameter("signingAlgorithm");
+            var digAlgo = request.getParameter("digestAlgorithm");
+            samlIssuer = request.getParameter("hiddenIssuer");
+            var enableRespSign = false;
+            var enableSigValid = false;
+            var enableEncAssert  = false;
+            if (request.getParameter("enableResponseSignature") == 'true') {
+                enableRespSign = true;
+            }
+            if (request.getParameter("enableSigValidation") == 'true') {
+                enableSigValid = true;
+            }
+            if (request.getParameter("enableEncAssertion") == 'true') {
+                enableEncAssert = true;
+            }
+
+            var inboundConfigs = serviceProvider.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs;
+            if(inboundConfigs.constructor !== Array){
+                inboundConfigs = [inboundConfigs];
+            }
+            var config = null;
+            for (var i in inboundConfigs){
+                var conf = inboundConfigs[i];
+                if(conf.friendlyName == "salesforce"){
+                    config = conf;
+                    break;
+                }
+            }
+            if(config != null){
+                updateSp = updateSp + '<xsd1:inboundAuthenticationRequestConfigs>'+
+                        '<xsd1:friendlyName>' + config.friendlyName + '</xsd1:friendlyName>'+
+                        '<xsd1:inboundAuthKey>' + samlIssuer + '</xsd1:inboundAuthKey>'+
+                        '<xsd1:inboundAuthType>' + config.inboundAuthType+'</xsd1:inboundAuthType>';
+                var props = config.properties;
+                if(props.constructor !== Array) {
+                    props = [props];
+                }
+                for (var i in props) {
+                    var prop = props[i];
+                    var propval = "";
+                    if (prop.name == "alias") {
+                        propval = aliascert;
+                    } else if (prop.name == "signingAlgorithm") {
+                        propval = signAlgo;
+                    } else if (prop.name == "assertionConsumerURLs") {
+                        propval = acsUrls;
+                    } else if (prop.name == "enableEncAssertion") {
+                        propval = enableEncAssert;
+                    } else if (prop.name == "defaultAssertionConsumerURL") {
+                        propval = defaultacs;
+                    } else if (prop.name == "enableSigValidation") {
+                        propval = enableSigValid;
+                    } else if (prop.name == "enableResponseSignature") {
+                        propval = enableRespSign;
+                    } else if (prop.name == "digestAlgorithm") {
+                        propval = digAlgo;
+                    } else if (prop.name == "issuer") {
+                        propval = samlIssuer;
+                    } else if (prop.name == "hiddenFields") {
+                        propval = prop.value;
+                    }
+                    updateSp = updateSp + '<xsd1:properties>' +
+                            '<xsd1:confidential>' + prop.confidential + '</xsd1:confidential>' +
+                            '<xsd1:defaultValue>' + prop.defaultValue + '</xsd1:defaultValue>' +
+                            '<xsd1:description>' + prop.description + '</xsd1:description>' +
+                            '<xsd1:displayName>' + prop.displayName + '</xsd1:displayName>' +
+                            '<xsd1:displayOrder>' + prop.displayOrder + '</xsd1:displayOrder>' +
+                            '<xsd1:name>' + prop.name + '</xsd1:name>' +
+                            '<xsd1:required>' + prop.required + '</xsd1:required>' +
+                            '<xsd1:type>' + prop.type + '</xsd1:type>' +
+                            '<xsd1:value>' + propval + '</xsd1:value>' +
+                            '</xsd1:properties>';
+                }
+                updateSp = updateSp + '</xsd1:inboundAuthenticationRequestConfigs>';
+            }
+
         }
 
         if (oauthConsumerID != null && oauthSecret != null && oauthConsumerID.length > 0 && oauthSecret.length > 0) {
@@ -177,6 +259,11 @@ function updateSP(){
         '</xsd1:outboundProvisioningConfig>'+
 
         '<xsd1:permissionAndRoleConfig></xsd1:permissionAndRoleConfig>'+
+        '<xsd1:spProperties>'+
+        '<xsd1:displayName>WellKnown Application Type</xsd1:displayName>'+
+        '<xsd1:name>appType</xsd1:name>'+
+        '<xsd1:value>'+sptype+'</xsd1:value>'+
+        '</xsd1:spProperties>'+
         '</xsd:serviceProvider>'+
         '</xsd:updateApplication>';
         log.info(updateSp);

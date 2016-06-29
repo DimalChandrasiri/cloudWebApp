@@ -1,25 +1,39 @@
 function drawUpdatePage() {
     debugger;
-    var output = "";
-    var start = "";
     if (appdata != null) {
         $('#spName').val(appdata.applicationName);
         $('#oldSPName').val(appdata.applicationName);
-        debugger;
         var spDescription = appdata.description;
+        var sptype = 'custom';
+        var spProperties = appdata.spProperties;
+        if (spProperties.constructor !== Array) {
+            spProperties = [spProperties];
+        }
+        debugger;
+        for (var i in spProperties) {
+            var property = spProperties[i];
+            if (property.name == "appType" && property.value != null && property.value.length > 0) {
+                sptype = property.value;
+            }
+        }
         if (spDescription.contains(']')) {
             spDescription = spDescription.split(']') [1];
         }
         $('#sp-description').val(spDescription);
         preDrawClaimConfig();
-        preDrawSAMLConfigPage();
-        preDrawOAuthConfigPage();
-        //preDrawSAMLConfigPage();
+        if(sptype=='salesforce') {
+            preDrawSalesForce();
+        }else{
+            preDrawSAMLConfigPage();
+            preDrawOAuthConfigPage();
+        }
+
     }
 }
 
-function preDrawUpdatePage(applicationName) {
+function preDrawUpdatePage() {
     var applicationName = getRequestParameter('applicationName');
+    var sptype = getRequestParameter('sptype');
     $.ajax({
         url: "/dashboard/serviceproviders/custom/controllers/custom/getsp.jag",
         type: "GET",
@@ -85,11 +99,12 @@ function updateSP() {
 }
 
 function updateCustomSP() {
-    debugger;
     var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/edit_finish.jag";
     var parameters = "";
-    if ($('#isEditSp').val() == "true") {
-        parameters = "&issuersaml=" + $('#issuersaml').val() + "&acsindex=" + $('#acsindex').val();
+    if($('#spType').val()!='custom]'){
+        parameters = '&'+$("#addServiceProvider").serialize();
+    }else if ($('#isEditSp').val() == "true") {
+        parameters = parameters+"&issuersaml=" + $('#issuersaml').val() + "&acsindex=" + $('#acsindex').val();
     }
     if ($('#isEditOauthSP').val() == "true") {
         parameters = parameters + "&consumerID=" + $('#consumerID').val() + "&consumerSecret=" + $('#consumerSecret').val();
@@ -98,7 +113,7 @@ function updateCustomSP() {
     $.ajax({
         url: str,
         type: "POST",
-        data: $('#claimConfigForm').serialize() + "&oldSPName=" + $('#oldSPName').val() + "&spName=" + $('#spName').val() + "&spDesc=" + $('#spType').val() + $('#sp-description').val() + parameters + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName,
+        data: $('#claimConfigForm').serialize() + "&oldSPName=" + $('#oldSPName').val() + "&spName=" + $('#spName').val() + "&spType="+ $('#spType').val() +"&spDesc=" + $('#spType').val() + ']' +$('#sp-description').val() + parameters + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName,
     })
         .done(function (data) {
             window.location.href = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/listsp.jag";

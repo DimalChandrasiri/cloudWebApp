@@ -80,7 +80,7 @@ function drawList() {
             }
             output = output + '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">' +
                 '                    <div class="cloud-app-listing app-color-one">' +
-                '                        <a href="/dashboard/serviceproviders/editsp.jag?applicationName='+spList[i].applicationName+'">' +
+                '                        <a href="/dashboard/serviceproviders/editsp.jag?applicationName='+spList[i].applicationName+'&sptype='+type+'">' +
                 '                            <div class="app-icon">' +
                 spimage +
                 '                            </div>' +
@@ -92,7 +92,7 @@ function drawList() {
                 '                            <span class="sr-only">Toggle Dropdown</span>' +
                 '                        </a>' +
                 '                        <ul class="dropdown-menu app-extra-menu" role="menu">' +
-                '                            <li><a href="/dashboard/serviceproviders/editsp.jag?applicationName='+spList[i].applicationName+'">Edit</a></li>' +
+                '                            <li><a href="/dashboard/serviceproviders/editsp.jag?applicationName='+spList[i].applicationName+'&sptype='+type+'">Edit</a></li>' +
                 '                            <li><a href="" onclick = deleteCustomSP(\'' + spList[i].applicationName + '\');>Delete</a></li>' +
                 '                        </ul>' +
                 '                    </div>' +

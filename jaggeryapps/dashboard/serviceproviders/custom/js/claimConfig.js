@@ -67,7 +67,6 @@ function drawClaimConfig(spClaimConfig, isLocalClaimsSelected, claimMapping) {
         $('#claimMappingAddBody').append( requestedClaimTableBody );
 
     }
-    debugger;
     var subjectClaimUri = appdata.localAndOutBoundAuthenticationConfig.subjectClaimUri;
     var subjectoptionList = '<option value="">---Select---</option>';
     if (isLocalClaimsSelected) {

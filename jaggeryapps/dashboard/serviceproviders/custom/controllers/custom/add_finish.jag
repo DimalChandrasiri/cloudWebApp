@@ -7,7 +7,6 @@ var i18n = session.get("i18n");
 function addSP(){
 
     try{
-
         var cookie = session.get('auth-cookie');
         if(cookie == null){
             var cookie = request.getParameter("cookie");
@@ -19,13 +18,20 @@ function addSP(){
 
         var spName = request.getParameter('spName');
         var spDesc = request.getParameter('spDesc');
+        var spType = request.getParameter('spType');
 
         var createApp = '<xsd:createApplication xmlns:xsd ="http://org.apache.axis2/xsd" xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">'+
                 '<xsd:serviceProvider xmlns:xsd ="http://org.apache.axis2/xsd" xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">'+
                 '<xsd1:applicationName>'+spName+'</xsd1:applicationName>'+
         '<xsd1:description>'+spDesc+'</xsd1:description>'+
+        '<xsd1:spProperties>'+
+        '<xsd1:displayName>WellKnown Application Type</xsd1:displayName>'+
+        '<xsd1:name>appType</xsd1:name>'+
+        '<xsd1:value>'+spType+'</xsd1:value>'+
+        '</xsd1:spProperties>'+
         '</xsd:serviceProvider>'+
                 '</xsd:createApplication>';
+        log.error(createApp);
         spClient.createApplication(createApp);
     }catch(e){
         log.error(e);
