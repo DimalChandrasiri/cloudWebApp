@@ -89,6 +89,3 @@ function message(params){
        Show confirm dialog
        message({content:'foo',type:'confirm',okCallback:function(){},cancelCallback:function(){}});
         */
-
-
-
