@@ -176,14 +176,14 @@ function drawOAuthEditPage() {
     if (VERSION_2 == app.OAuthVersion) {
         var grants = app.grantTypes;
         if (grants != null) {
-            codeGrant = grants.contains("authorization_code") ? true : false;
-            implicitGrant = grants.contains("implicit") ? true : false;
-            passowrdGrant = grants.contains("password") ? true : false;
-            clientCredGrant = grants.contains("client_credentials") ? true : false;
-            refreshGrant = grants.contains("refresh_token") ? true : false;
-            samlGrant1 = grants.contains("urn:ietf:params:oauth:grant-type:saml1-bearer") ? true : false;
-            samlGrant2 = grants.contains("urn:ietf:params:oauth:grant-type:saml2-bearer") ? true : false;
-            ntlmGrant = grants.contains("iwa:ntlm") ? true : false;
+            codeGrant = grants.indexOf("authorization_code") > -1 ? true : false;
+            implicitGrant = grants.indexOf("implicit") > -1 ? true : false;
+            passowrdGrant = grants.indexOf("password") > -1 ? true : false;
+            clientCredGrant = grants.indexOf("client_credentials") > -1 ? true : false;
+            refreshGrant = grants.indexOf("refresh_token") > -1 ? true : false;
+            samlGrant1 = grants.indexOf("urn:ietf:params:oauth:grant-type:saml1-bearer") > -1 ? true : false;
+            samlGrant2 = grants.indexOf("urn:ietf:params:oauth:grant-type:saml2-bearer") > -1 ? true : false;
+            ntlmGrant = grants.indexOf("iwa:ntlm") > -1 ? true : false;
         }
     }
 var hiddenFields = '<input id="consumerkey" name="consumerkey" type="hidden" />'+

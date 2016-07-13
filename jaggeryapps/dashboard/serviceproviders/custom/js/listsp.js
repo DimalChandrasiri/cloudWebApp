@@ -52,14 +52,13 @@ function reloadGrid() {
 function drawList() {
     var output = "";
     $("#listBody").empty();
-
     if (spList != null) {
         $('#spList').show();
         $('#emptyList').hide();
         for (var i in spList) {
             var spdesc = spList[i].description;
             var spimage = '<img src="../images/is/netsuit.png " class="square-element">';
-            if (spList[i].description.contains(']')) {
+            if (spList[i].description.indexOf(']') > -1) {
                 spdesc = spList[i].description.split(']') [1];
                 var type = spList[i].description.split(']') [0];
                 if (type == 'custom') {
@@ -97,9 +96,6 @@ function drawList() {
                 '                        </ul>' +
                 '                    </div>' +
                 '               </div>';
-            //                            <li>'+spdesc+'</li>'+
-            //                           <li class="divider"></li>'+
-            //                           <li><a href="#">'+spdesc+'</a></li>'+
         }
         $("#listBody").append(output);
     } else {

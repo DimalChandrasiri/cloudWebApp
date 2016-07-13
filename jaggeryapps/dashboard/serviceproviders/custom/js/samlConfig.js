@@ -1,34 +1,32 @@
-function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
-    $('#addServiceProvider h4').html(tableTitle);
-    $('#issuer').val(issuer);
-    $('#hiddenIssuer').val(issuer);
-    if (isEditSP) {
-        $('#issuer').prop('disabled', true);
-    } else {
-        $('#issuer').prop('disabled', false);
+function drawSAMLConfigPage(issuer, isEditSP, tableTitle, samlsp) {
+    debugger;
+    var providerProps = {};
+    for (var i in samlsp.properties) {
+        var prop = samlsp.properties[i];
+        providerProps[prop.name] = prop;
     }
+    $('#addServiceProvider h4').html(tableTitle);
+    $('#issuer').val(providerProps["issuer"].value);
+    $('#hiddenIssuer').val(issuer);
 
-    if (isEditSP && provider != null && provider.assertionConsumerUrls != null) {
+    if(providerProps["hiddenFields"] != null && providerProps["hiddenFields"].value.length > 0){
+        $('#hiddenFields').val(providerProps["hiddenFields"].value)
+    }
+    if (isEditSP && providerProps["assertionConsumerURLs"] != null && providerProps["assertionConsumerURLs"].value.length > 0) {
         var assertionConsumerURLTblRow =
-            "<table id=\"assertionConsumerURLsTable\" style=\"width: 40%; margin-bottom: 3px;\" class=\"styledInner\">" +
+            "<table id=\"assertionConsumerURLsTable\" style=\"margin-bottom: 3px;\" class=\"styledInner table table-bordered col-sm-offset-1\">" +
             "<tbody id=\"assertionConsumerURLsTableBody\">";
 
-        var assertionConsumerURLsBuilder = "";
         var acsColumnId = 0;
-        if (provider.assertionConsumerUrls.constructor !== Array) {
-            var tempArr = [];
-            tempArr[0] = provider.assertionConsumerUrls;
-            provider.assertionConsumerUrls = tempArr;
-
+        var defaultAssertionConsumerURLRow = "<option value=\"\">---Select---</option>\n";
+        var acsUrls=[];
+        if (providerProps["assertionConsumerURLs"].value.indexOf(',') > -1) {
+            acsUrls = providerProps["assertionConsumerURLs"].value.split(',');
+        } else {
+            acsUrls = [providerProps["assertionConsumerURLs"].value]
         }
-        for (var i in provider.assertionConsumerUrls) {
-            var assertionConsumerURL = provider.assertionConsumerUrls[i];
-
-            if (assertionConsumerURLsBuilder.length > 0) {
-                assertionConsumerURLsBuilder = assertionConsumerURLsBuilder + "," + assertionConsumerURL;
-            } else {
-                assertionConsumerURLsBuilder = assertionConsumerURLsBuilder + assertionConsumerURL;
-            }
+        for (var i in acsUrls) {
+            var assertionConsumerURL = acsUrls[i];
 
             var trow = " <tr id=\"acsUrl_" + acsColumnId + "\">\n" +
                 "<td style=\"padding-left: 15px !important; color: rgb(119, 119, 119);font-style: italic;\">\n" +
@@ -43,48 +41,38 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
                 "</tr>";
             assertionConsumerURLTblRow = assertionConsumerURLTblRow + trow;
             acsColumnId++;
-        }
 
-        var assertionConsumerURL = assertionConsumerURLsBuilder.length > 0 ? assertionConsumerURLsBuilder : "";
-        assertionConsumerURLTblRow = assertionConsumerURLTblRow + "</tbody>\n" +
-            "</table>\n";
-        $('#assertionConsumerURLs').val(assertionConsumerURL);
-        $('#currentColumnId').val(acsColumnId);
-        $('#assertionConsumerURLTblRow').empty();
-        $('#assertionConsumerURLTblRow').append(assertionConsumerURLTblRow);
-    }
-
-    var defaultAssertionConsumerURLRow = "<option value=\"\">---Select---</option>\n";
-
-    if (isEditSP && provider != null && provider.assertionConsumerUrls != null) {
-        for (var i in provider.assertionConsumerUrls) {
-            var assertionConsumerUrl = provider.assertionConsumerUrls[i];
             var option = "";
-            if (assertionConsumerUrl == provider.defaultAssertionConsumerUrl) {
-                option = "<option value=\"" + assertionConsumerUrl + "\" selected>" + assertionConsumerUrl + "</option>";
+            if (assertionConsumerURL == providerProps["defaultAssertionConsumerUrl"].value) {
+                option = "<option value=\"" + assertionConsumerURL + "\" selected>" + assertionConsumerURL + "</option>";
             } else {
-                option = "<option value=\"" + assertionConsumerUrl + "\">" + assertionConsumerUrl + "</option>";
+                option = "<option value=\"" + assertionConsumerURL + "\">" + assertionConsumerURL + "</option>";
             }
             defaultAssertionConsumerURLRow = defaultAssertionConsumerURLRow + option;
         }
+
+        assertionConsumerURLTblRow = assertionConsumerURLTblRow + "</tbody>\n" +
+            "</table>\n";
+        $('#assertionConsumerURLs').val(providerProps["assertionConsumerURLs"].value);
+        $('#currentColumnId').val(acsColumnId);
+        $('#assertionConsumerURLTblRow').empty();
+        $('#assertionConsumerURLTblRow').append(assertionConsumerURLTblRow);
+        $('#defaultAssertionConsumerURL').empty();
+        $('#defaultAssertionConsumerURL').append(defaultAssertionConsumerURLRow);
     }
-    $('#defaultAssertionConsumerURL').empty();
-    $('#defaultAssertionConsumerURL').append(defaultAssertionConsumerURLRow);
-
-
     var nameIDVal = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
-    if (isEditSP && provider != null) {
-        nameIDVal = provider.nameIDFormat.replace(/\//g, ":");
+    if (isEditSP && providerProps["nameIdFormat"].value.length > 0) {
+        nameIDVal = providerProps["nameIdFormat"].value.replace(/\//g, ":");
     }
     $('#nameIdFormat').val(nameIDVal);
     var certificateAliasRow = "";
     var aliasSet = spConfigCertificateAlias;
-    if (provider != null && isEditSP) {
+    if (isEditSP && providerProps["alias"] != null && providerProps["alias"].value.length > 0) {
         if (aliasSet != null) {
             for (var i in aliasSet) {
                 var alias = aliasSet[i];
                 if (alias != null) {
-                    if (alias == provider.certAlias) {
+                    if (alias == providerProps["alias"].value) {
                         certificateAliasRow = certificateAliasRow + '<option selected="selected" value="' + alias + '">' + alias +
                             '</option>\n';
                     } else {
@@ -115,16 +103,17 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
 
 
     var defaultSigningAlgorithmRow = "";
+    var signAlgorithm = null;
+    if (providerProps["signingAlgorithm"] != null && providerProps["signingAlgorithm"].value.length > 0) {
+        signAlgorithm = providerProps["signingAlgorithm"].value;
+    }
+    else {
+        signAlgorithm = signingAlgorithmUriByConfig;
+    }
     if (spConfigSigningAlgos != null) {
         for (var i in spConfigSigningAlgos) {
             var signingAlgo = spConfigSigningAlgos[i];
-            var signAlgorithm = null;
-            if (provider != null) {
-                signAlgorithm = provider.signingAlgorithmURI;
-            }
-            else {
-                signAlgorithm = signingAlgorithmUriByConfig;
-            }
+
             if (signAlgorithm != null && signingAlgo == signAlgorithm) {
                 defaultSigningAlgorithmRow = defaultSigningAlgorithmRow + '<option value="' + signingAlgo + '" selected>\n' +
                     signingAlgo + '</option>';
@@ -138,16 +127,15 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
     $('#signingAlgorithm').append(defaultSigningAlgorithmRow);
 
     var digestAlgorithmRow = "";
-
+    var digestAlgorithm = "";
+    if (providerProps["digestAlgorithm"] != null && providerProps["digestAlgorithm"].value.length > 0 ) {
+        digestAlgorithm = providerProps["digestAlgorithm"].value;
+    } else {
+        digestAlgorithm = digestAlgorithmUriByConfig;
+    }
     if (spConfigDigestAlgos != null) {
         for (var i in spConfigDigestAlgos) {
             var digestAlgo = spConfigDigestAlgos[i];
-            var digestAlgorithm = "";
-            if (provider != null) {
-                digestAlgorithm = provider.digestAlgorithmURI;
-            } else {
-                digestAlgorithm = digestAlgorithmUriByConfig;
-            }
             if (digestAlgorithm != "" && digestAlgo == digestAlgorithm) {
                 digestAlgorithmRow = digestAlgorithmRow + '<option value="' + digestAlgo + '" selected>' + digestAlgo +
                     '</option>';
@@ -159,25 +147,26 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
     }
     $('#digestAlgorithm').empty();
     $('#digestAlgorithm').append(digestAlgorithmRow);
-    if (isEditSP && provider.doSignResponse == 'true') {
+    //start from here
+    if (isEditSP && providerProps["enableResponseSignature"] != null && providerProps["enableResponseSignature"].value == 'true') {
         $('#enableResponseSignature').prop('checked', true);
     } else {
         $('#enableResponseSignature').prop('checked', false);
     }
 
-    if (isEditSP && provider.doValidateSignatureInRequests == 'true') {
+    if (isEditSP && providerProps["enableSigValidation"] != null && providerProps["enableSigValidation"].value == 'true') {
         $('#enableSigValidation').prop('checked', true);
     } else {
         $('#enableSigValidation').prop('checked', false);
     }
 
-    if (isEditSP && provider.doEnableEncryptedAssertion == 'true') {
+    if (isEditSP && providerProps["enableEncAssertion"]!= null && providerProps["enableEncAssertion"].value == 'true') {
         $('#enableEncAssertion').prop('checked', true);
     } else {
         $('#enableEncAssertion').prop('checked', false);
     }
 
-    if (isEditSP && provider.doSingleLogout == 'true') {
+    if (isEditSP && providerProps["enableSingleLogout"] != null && providerProps["enableSingleLogout"].value == 'true') {
         $('#enableSingleLogout').prop('checked', true);
         $('#sloResponseURL').prop('disabled', false);
         $('#sloRequestURL').prop('disabled', false);
@@ -191,15 +180,11 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
         $('#sloRequestURL').val("");
     }
 
-
-
     var appClaimConfigs = appdata.claimConfig.claimMappings;
     var requestedClaimsCounter = 0;
     if (appClaimConfigs != null) {
         if (appClaimConfigs.constructor !== Array) {
-            var tempArr = [];
-            tempArr[0] = appClaimConfigs;
-            appClaimConfigs = tempArr;
+            appClaimConfigs = [appClaimConfigs];
         }
 
         for (var i in appClaimConfigs) {
@@ -221,11 +206,13 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
     }
     if (isEditSP && show) {
 
-        if (provider.attributeConsumingServiceIndex != null && provider.attributeConsumingServiceIndex.length > 0) {
+        if (providerProps["enableAttributeProfile"] != null && providerProps["enableAttributeProfile"].value == 'true') {
+            $('#acsindex').val(providerProps["acsindex"].value);
+            $('#attributeIndex').val(providerProps["acsindex"].value);
             $('#enableAttributeProfile').prop("checked", true);
             $('#enableDefaultAttributeProfile').prop("disabled", false);
             $('#enableAttributeProfile').val("true");
-            if (provider.enableAttributesByDefault == 'true') {
+            if (providerProps["enableDefaultAttributeProfile"].value == 'true') {
                 $('#enableDefaultAttributeProfile').prop("checked", true);
                 $('#enableDefaultAttributeProfile').val("true");
                 $('#enableDefaultAttributeProfileHidden').val("true");
@@ -250,8 +237,7 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
     }
 
     var enableAudienceRestrictionRow = "";
-    if (isEditSP && provider.requestedAudiences != null && provider.requestedAudiences.length > 0 &&
-        provider.requestedAudiences[0] != null) {
+    if (isEditSP && providerProps["enableAudienceRestriction"] != null && providerProps["enableAudienceRestriction"].value == 'true') {
         $('#enableAudienceRestriction').prop("checked",true);
         $('#audience').prop('disabled', false);
     } else {
@@ -259,55 +245,45 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
         $('#audience').prop('disabled', true);
     }
     var audienceTableStyle = "";
-    if (provider != null && provider.requestedAudiences != null && provider.requestedAudiences.length > 0) {
+    if (providerProps["audienceURLs"] != null && providerProps["audienceURLs"].value.length > 0) {
         audienceTableStyle = "";
     } else {
         audienceTableStyle = "display:none";
     }
 
     enableAudienceRestrictionRow = enableAudienceRestrictionRow +
-        '    <table id="audienceTableId" style="width: 40%;' + audienceTableStyle + '" class="styledInner">' +
+        '    <table id="audienceTableId" style="' + audienceTableStyle + '" class="styledInner table table-bordered col-sm-offset-1">' +
         '        <tbody id="audienceTableTbody">';
     var j = 0;
-    if (isEditSP && provider.requestedAudiences != null && provider.requestedAudiences.length > 0) {
-        if (provider.requestedAudiences.constructor === Array) {
-            for (var i in provider.requestedAudiences) {
-                var audience = provider.requestedAudiences[i];
-                if (audience != null && "null" != audience) {
-                    enableAudienceRestrictionRow = enableAudienceRestrictionRow + '<tr id="audienceRow' + j + '">' +
-                        '                    <td style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">' +
-                        '                    <input type="hidden" name="audiencePropertyName' + j + '"' +
-                        '                id="audiencePropertyName' + j + '" value="' + audience + '"/>' + audience +
-                        '                    </td>' +
-                        '                    <td>' +
-                        '                    <a onclick="removeAudience(\'' + j + '\');return false;"' +
-                        '                href="#" class="icon-link"' +
-                        '                style="background-image: url(../admin/images/delete.gif)">Delete' +
-                        '                    </a>' +
-                        '                    </td>' +
-                        '                    </tr>';
-                    j = j + 1;
-                }
-            }
+    if (isEditSP && providerProps["audienceURLs"] != null && providerProps["audienceURLs"].value.length > 0) {
+        var requestedAudiences = [];
+        if (providerProps["audienceURLs"].value.indexOf(',') > -1) {
+            requestedAudiences = providerProps["audienceURLs"].value.split(',');
+        } else {
+            requestedAudiences = [providerProps["audienceURLs"].value]
         }
-        else {
-            enableAudienceRestrictionRow = enableAudienceRestrictionRow + '<tr id="audienceRow' + j + '">' +
-                '                    <td style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">' +
-                '                    <input type="hidden" name="audiencePropertyName' + j + '"' +
-                '                id="audiencePropertyName' + j + '" value="' + provider.requestedAudiences + '"/>' + provider.requestedAudiences +
-                '                    </td>' +
-                '                    <td>' +
-                '                    <a onclick="removeAudience(\'' + j + '\');return false;"' +
-                '                href="#" class="icon-link"' +
-                '                style="background-image: url(../admin/images/delete.gif)">Delete' +
-                '                    </a>' +
-                '                    </td>' +
-                '                    </tr>';
-            j = j + 1;
+        for (var i in requestedAudiences) {
+            var audience = requestedAudiences[i];
+            if (audience != null && "null" != audience) {
+                enableAudienceRestrictionRow = enableAudienceRestrictionRow + '<tr id="audienceRow' + j + '">' +
+                    '                    <td style="padding-left: 15px ! important; color: rgb(119, 119, 119); font-style: italic;">' +
+                    '                    <input type="hidden" name="audiencePropertyName' + j + '"' +
+                    '                id="audiencePropertyName' + j + '" value="' + audience + '"/>' + audience +
+                    '                    </td>' +
+                    '                    <td>' +
+                    '                    <a onclick="removeAudience(\'' + j + '\');return false;"' +
+                    '                href="#" class="icon-link"' +
+                    '                style="background-image: url(../admin/images/delete.gif)">Delete' +
+                    '                    </a>' +
+                    '                    </td>' +
+                    '                    </tr>';
+                j = j + 1;
+            }
         }
 
     }
     $('#audiencePropertyCounter').val(j);
+    $('#audienceURLs').val(providerProps["audienceURLs"].value);
     enableAudienceRestrictionRow = enableAudienceRestrictionRow +
         '        </tbody>' +
         '        </table>' ;
@@ -317,7 +293,7 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
 
     var enableReceiptValidRow = "";
 
-    if (isEditSP && provider.requestedRecipients != null && provider.requestedRecipients.length > 0 && provider.requestedRecipients[0] != null) {
+    if (isEditSP && providerProps["enableRecipients"] != null && providerProps["enableRecipients"].value == 'true') {
         $('#enableRecipients').prop("checked",true);
         $('#recipient').prop('disabled', false);
     } else {
@@ -326,27 +302,30 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
     }
 
     var recipientTableStyle = "";
-    if (provider != null && provider.requestedRecipients != null && provider.requestedRecipients.length > 0) {
+    if (providerProps["receipientURLs"] != null && providerProps["receipientURLs"].value.length > 0) {
         recipientTableStyle = "";
     } else {
         recipientTableStyle = "display:none";
     }
     enableReceiptValidRow = enableReceiptValidRow +
-        '    <table id="recipientTableId" style="width: 40%; ' + recipientTableStyle + ';" class="styledInner">' +
+        '    <table id="recipientTableId" style="' + recipientTableStyle + ';" class="styledInner table table-bordered col-sm-offset-1">' +
         '        <tbody id="recipientTableTbody">';
 
     var k = 0;
-    if (isEditSP && provider.requestedRecipients != null && provider.requestedRecipients.length > 0) {
-        if(provider.requestedRecipients.constructor !== Array){
-            var tempArr = [provider.requestedRecipients];
-            provider.requestedRecipients = tempArr;
+    if (isEditSP && providerProps["receipientURLs"] != null && providerProps["receipientURLs"].value.length > 0) {
+        var requestedRecipients = [];
+        if (providerProps["receipientURLs"].value.indexOf(',') > -1) {
+            requestedRecipients = providerProps["receipientURLs"].value.split(',');
+        } else {
+            requestedRecipients = [providerProps["receipientURLs"].value];
         }
-        for (var i in provider.requestedRecipients) {
-            var recipient = provider.requestedRecipients[i];
+
+        for (var i in requestedRecipients) {
+            var recipient = requestedRecipients[i];
             if (recipient != null && "null" != recipient) {
 
                 enableReceiptValidRow = enableReceiptValidRow + '<tr id="recipientRow' + k + '">' +
-                    '                    <td style="padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;">' +
+                    '                    <td style="padding-left: 15px ! important; color: rgb(119, 119, 119); font-style: italic;">' +
                     '                    <input type="hidden" name="recipientPropertyName' + k + '"' +
                     '                id="recipientPropertyName' + k + '" value="' + recipient + '"/>' + recipient +
                     '                    </td>' +
@@ -363,51 +342,42 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
 
     }
     $('#recipientPropertyCounter').val(k);
+    $('#receipientURLs').val(providerProps["receipientURLs"].value);
     enableReceiptValidRow = enableReceiptValidRow +
         '        </tbody>' +
         '        </table>' ;
     $('#recptTblRow').empty();
     $('#recptTblRow').append(enableReceiptValidRow);
 
-    if (isEditSP && provider.idPInitSSOEnabled=='true') {
+    if (isEditSP && providerProps["enableIdPInitSSO"] != null && providerProps["enableIdPInitSSO"].value =='true') {
         $('#enableIdPInitSSO').prop("checked",true);
     } else {
         $('#enableIdPInitSSO').prop("checked",false);
     }
 
-    if (isEditSP && provider.idPInitSLOEnabled == 'true') {
+    if (isEditSP && providerProps["enableIdPInitSLO"] != null && providerProps["enableIdPInitSLO"].value == 'true') {
         $('#enableIdPInitSLO').prop("checked",true);
-    } else {
-        $('#enableIdPInitSLO').prop("checked",false);
-    }
-
-    var tempstyle = "";
-    if (isEditSP && provider.idPInitSLOEnabled == 'true') {
         $('#returnToURLTxtBox').prop("disabled",false);
         $('#addReturnToURL').prop("disabled",false);
     } else {
+        $('#enableIdPInitSLO').prop("checked",false);
         $('#returnToURLTxtBox').prop("disabled",true);
         $('#addReturnToURL').prop("disabled",true);
     }
 
-    var idpSLOReturnToURLInputRow = '<table id="idpSLOReturnToURLsTbl" style="width: 40%;" class="styledInner">\n' +
+    var idpSLOReturnToURLInputRow = '<table id="idpSLOReturnToURLsTbl" style="margin-bottom: 3px;" class="styledInner table table-bordered col-sm-offset-1">\n' +
         '            <tbody id="idpSLOReturnToURLsTblBody">\n';
     var returnToColumnId = 0;
-    if (isEditSP && provider.idpInitSLOReturnToURLs != null) {
-        var sloReturnToURLsBuilder = "";
-
-        if (provider.idpInitSLOReturnToURLs.constructor !== Array) {
-            var tempArr = [provider.idpInitSLOReturnToURLs];
-            provider.idpInitSLOReturnToURLs = tempArr;
+    if (isEditSP && providerProps["idpSLOURLs"] != null && providerProps["idpSLOURLs"].value > 0) {
+        var idpInitSLOReturnToURLs = [];
+        if (providerProps["idpSLOURLs"].value.indexOf(',') > -1) {
+            idpInitSLOReturnToURLs = providerProps["idpSLOURLs"].value.split(',');
+        } else {
+            idpInitSLOReturnToURLs = [providerProps["idpSLOURLs"].value];
         }
-        for (var i in provider.idpInitSLOReturnToURLs) {
-            var returnToURL = provider.idpInitSLOReturnToURLs[i];
+        for (var i in idpInitSLOReturnToURLs) {
+            var returnToURL = idpInitSLOReturnToURLs[i];
             if (returnToURL != null && "null" != returnToURL) {
-                if (sloReturnToURLsBuilder.length > 0) {
-                    sloReturnToURLsBuilder = sloReturnToURLsBuilder + "," + returnToURL;
-                } else {
-                    sloReturnToURLsBuilder = sloReturnToURLsBuilder + returnToURL;
-                }
                 idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + '<tr id="returnToUrl_' + returnToColumnId + '">' +
                     '                    <td style="padding-left: 15px !important; color: rgb(119, 119, 119);font-style: italic;">' +
                     returnToURL +
@@ -422,24 +392,24 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle) {
                     '                    </tr>';
                 returnToColumnId = returnToColumnId + 1;
             }
-            }
-
+        }
     }
-        idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + '</tbody>' +
-            '        </table>';
-        $('#idpInitSLOReturnToURLs').val(sloReturnToURLsBuilder);
-        $('#currentReturnToColumnId').val(returnToColumnId);
+    idpSLOReturnToURLInputRow = idpSLOReturnToURLInputRow + '</tbody>' +
+        '        </table>';
+    $('#idpSLOURLs').val(providerProps["idpSLOURLs"].value);
+    $('#currentReturnToColumnId').val(returnToColumnId);
 
 
     $("#idpSLOReturnToURLInputRow").empty();
     $("#idpSLOReturnToURLInputRow").append(idpSLOReturnToURLInputRow);
-    if (isEditSP && provider.attributeConsumingServiceIndex != null && provider.attributeConsumingServiceIndex.length > 0){
-        $('#attributeConsumingServiceIndex').val(provider.attributeConsumingServiceIndex);
+    if (isEditSP && providerProps["acsindex"] != null && providerProps["acsindex"].value.length > 0) {
+        $('#attributeConsumingServiceIndex').val(providerProps["acsindex"].value);
+        $('#acsindex').val(providerProps["acsindex"].value);
     }
+    $('#samlAttrIndexForm').show();
 }
 
-function preDrawSAMLConfigPage() {
-    provider = null;
+function preDrawSAMLConfigPage(samlsp) {
     serviceProviders = null;
     spConfigClaimUris = null;
     spConfigCertificateAlias = null;
@@ -447,66 +417,30 @@ function preDrawSAMLConfigPage() {
     spConfigDigestAlgos = null;
     signingAlgorithmUriByConfig = null;
     digestAlgorithmUriByConfig = null;
+
     $.ajax({
         url: "/dashboard/serviceproviders/custom/controllers/custom/samlSSOConfigClient.jag",
         type: "GET",
         data: "&cookie=" + cookie + "&user=" + userName,
         success: function (data) {
-            var tableTitle = "New Service Provider";
+            samlClient = $.parseJSON(data);
+            var tableTitle = "Configurations For " + samlsp.friendlyName;
             var isEditSP = false;
-            var issuer = "";
-            if (appdata != null && appdata.inboundAuthenticationConfig != null
-                && appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs != null) {
-                if(appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs.constructor !== Array){
-                    var tempArr = [];
-                    tempArr[0] = appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs;
-                    appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs = tempArr;
-                }
-                for (var i in appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs) {
-                    var inboundConfig = appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs[i];
-                    if (inboundConfig.inboundAuthType == "samlsso" && inboundConfig.inboundAuthKey.length > 0) {
-                        tableTitle = "Edit Service Provider (" + inboundConfig.inboundAuthKey + ")";
-                        issuer = inboundConfig.inboundAuthKey;
-                        isEditSP = true;
-                        $('#issuersaml').val(issuer);
-                    }
-                }
+            var issuer = samlsp.inboundAuthKey;
+            if(samlsp.inboundAuthKey != null && samlsp.inboundAuthKey.length > 0){
+                isEditSP = true;
             }
-            if(isEditSP){
-                $('#samlAttrIndexForm').show();
-                $('#samlConfigBtn').hide();
-                $('#samlRgsterBtn').hide();
-                $('#samlUpdtBtn').show();
-            } else {
-                $('#samlAttrIndexForm').hide();
-                $('#samlConfigBtn').show();
-                $('#samlRgsterBtn').show();
-                $('#samlUpdtBtn').hide();
-            }
+            //have to set
+            $('#issuersaml').val(issuer);
             $('#isEditSp').val(isEditSP);
-            samlClient = $.parseJSON(data);
-            serviceProviders = samlClient.serviceProviders.serviceProviders;
-            if(serviceProviders!=null) {
-                if (serviceProviders.constructor !== Array) {
-                    var spArr = [];
-                    spArr[0] = serviceProviders;
-                    serviceProviders = spArr;
-                }
-                for (var i in serviceProviders) {
-                    var sp = serviceProviders[i];
-                    if (sp.issuer == issuer) {
-                        provider = sp;
-                        $('#acsindex').val(provider.attributeConsumingServiceIndex);
-                    }
-                }
-            }
+            //$('#acsindex').val(provider.attributeConsumingServiceIndex);
             spConfigClaimUris = samlClient.claimURIs;
             spConfigCertificateAlias = samlClient.certAliases;
             spConfigSigningAlgos = samlClient.signingAlgos;
             spConfigDigestAlgos = samlClient.digestAlgos;
             signingAlgorithmUriByConfig = samlClient.signingAlgo;
             digestAlgorithmUriByConfig = samlClient.digestAlgo;
-            drawSAMLConfigPage(issuer, isEditSP, tableTitle);
+            drawSAMLConfigPage(issuer, isEditSP, tableTitle, samlsp);
         },
         error: function (e) {
             message({
@@ -517,58 +451,6 @@ function preDrawSAMLConfigPage() {
             });
         }
     });
-}
-
-function preDrawSalesForce(){
-    spConfigClaimUris = null;
-    spConfigCertificateAlias = null;
-    spConfigSigningAlgos = null;
-    spConfigDigestAlgos = null;
-    signingAlgorithmUriByConfig = null;
-    digestAlgorithmUriByConfig = null;
-    $.ajax({
-        url: "/dashboard/serviceproviders/custom/controllers/custom/samlSSOConfigClient.jag",
-        type: "GET",
-        data: "&cookie=" + cookie + "&user=" + userName +"&spType=salesforce",
-        success: function (data) {
-            samlClient = $.parseJSON(data);
-            spConfigClaimUris = samlClient.claimURIs;
-            spConfigCertificateAlias = samlClient.certAliases;
-            spConfigSigningAlgos = samlClient.signingAlgos;
-            spConfigDigestAlgos = samlClient.digestAlgos;
-            signingAlgorithmUriByConfig = samlClient.signingAlgo;
-            digestAlgorithmUriByConfig = samlClient.digestAlgo;
-            var inboundConfig = null;
-            if (appdata != null && appdata.inboundAuthenticationConfig != null
-                && appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs != null) {
-                if(appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs.constructor !== Array){
-                    var tempArr = [];
-                    tempArr[0] = appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs;
-                    appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs = tempArr;
-                }
-                debugger;
-                for (var i in appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs) {
-                    inboundConfig = appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs[i];
-                    if (inboundConfig.inboundAuthType == "samlsso" && inboundConfig.friendlyName == "salesforce") {
-                        drawSalesForce(inboundConfig);
-                        break;
-                    }
-                }
-
-            }
-
-        },
-        error: function (e) {
-            message({
-                content: 'Error occurred while getting the service provider configuration.',
-                type: 'error',
-                cbk: function () {
-                }
-            });
-        }
-    });
-
-
 }
 
 function drawSalesForce(salesforceConfig){
@@ -637,7 +519,7 @@ function drawSalesForce(salesforceConfig){
     var defaultAssertionConsumerURLRow = "<option value=\"\">---Select---</option>\n";
     if (acsurls != null) {
         var assertionConsumerURLTblRow =
-            "<table id=\"assertionConsumerURLsTable\" style=\"width: 40%; margin-bottom: 3px;\" class=\"styledInner\">" +
+            "<table id=\"assertionConsumerURLsTable\" style=\"margin-bottom: 3px;\" class=\"styledInner table table-bordered col-sm-offset-1\">" +
             "<tbody id=\"assertionConsumerURLsTableBody\">";
 
         var assertionConsumerURLsBuilder = "";
@@ -762,6 +644,7 @@ function drawSalesForce(salesforceConfig){
 
 
 }
+
 function onClickAddACRUrl() {
     //var isValidated = doValidateInputToConfirm(document.getElementById('assertionConsumerURLTxt'), "<fmt:message key='sp.not.https.endpoint.address'/>",
     //    addAssertionConsumerURL, null, null);
@@ -781,6 +664,7 @@ function disableAttributeProfile(chkbx) {
         $('#enableAttributeProfile').val(false);
     }
 }
+
 function disableDefaultAttributeProfile(chkbx) {
     if (chkbx.checked) {
         $('#enableDefaultAttributeProfileHidden').val("true");
@@ -799,6 +683,23 @@ function disableResponseSignature(chkbx) {
         $('#enableResponseSignature').val(false);
     }
 }
+
+function disableSignatureValidation(chkbx) {
+    if (chkbx.checked) {
+        $('#enableSigValidation').val(true);
+    } else {
+        $('#enableSigValidation').val(false);
+    }
+}
+
+function disableEncAssertion(chkbx) {
+    if (chkbx.checked) {
+        $('#enableEncAssertion').val(true);
+    } else {
+        $('#enableEncAssertion').val(false);
+    }
+}
+
 
 function disableLogoutUrl(chkbx) {
     if ($(chkbx).is(':checked')) {
@@ -883,7 +784,7 @@ function addAssertionConsumerURL() {
 
     if ($("#assertionConsumerURLsTable").length == 0) {
         var row =
-            '        <table id="assertionConsumerURLsTable" style="width: 40%; margin-bottom: 3px;" class="styledInner">' +
+            '        <table id="assertionConsumerURLsTable" style="margin-bottom: 3px;" class="styledInner table table-bordered col-sm-offset-1">' +
             '            <tbody id="assertionConsumerURLsTableBody">' +
             '            </tbody>' +
             '        </table>' ;
@@ -972,35 +873,48 @@ function removeAssertionConsumerURL(assertionConsumerURL, columnId) {
 }
 
 function addAudienceFunc() {
+    var audience = document.getElementById('audience').value;
+    var audienceUrls = $("#audienceURLs").val();
+    if (audienceUrls == null || audienceUrls.length == 0) {
+        $("#audienceURLs").val(audience);
+    } else {
+        var isExist = false;
+        $.each(audienceUrls.split(","), function (index, value) {
+            if (value === audience) {
+                isExist = true;
+                //CARBON.showWarningDialog("<fmt:message key='sp.endpoint.address.already.exists'/>", null, null);
+                return false;
+            }
+        });
+        if (isExist) {
+            return false;
+        }
+        $("#audienceURLs").val(audienceUrls + "," + audience);
+    }
     var propertyCount = document.getElementById("audiencePropertyCounter");
-
     var i = propertyCount.value;
     var currentCount = parseInt(i);
-
     currentCount = currentCount + 1;
     propertyCount.value = currentCount;
-
     document.getElementById('audienceTableId').style.display = '';
     var audienceTableTBody = document.getElementById('audienceTableTbody');
-
     var audienceRow = document.createElement('tr');
     audienceRow.setAttribute('id', 'audienceRow' + i);
-
-    var audience = document.getElementById('audience').value;
     var audiencePropertyTD = document.createElement('td');
-    audiencePropertyTD.setAttribute('style', 'padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;');
+    audiencePropertyTD.setAttribute('style', 'padding-left: 15px ! important; color: rgb(119, 119, 119); font-style: italic;');
     audiencePropertyTD.innerHTML = "" + audience + "<input type='hidden' name='audiencePropertyName" + i + "' id='audiencePropertyName" + i + "'  value='" + audience + "'/> ";
-
     var audienceRemoveTD = document.createElement('td');
     audienceRemoveTD.innerHTML = "<a href='#' class='icon-link' style='background-image: url(../admin/images/delete.gif)' onclick='removeAudience(" + i + ");return false;'>" + "Delete" + "</a>";
-
     audienceRow.appendChild(audiencePropertyTD);
     audienceRow.appendChild(audienceRemoveTD);
-
     audienceTableTBody.appendChild(audienceRow);
+    $('#audience').val("");
 }
 
 function removeAudience(i) {
+    var newAudienceUrls = "";
+    var audienceUrls = $("#audienceURLs").val();
+    var audience = $("#audiencePropertyName"+i).val();
     var propRow = document.getElementById("audienceRow" + i);
     if (propRow != undefined && propRow != null) {
         var parentTBody = propRow.parentNode;
@@ -1012,38 +926,68 @@ function removeAudience(i) {
             }
         }
     }
+    if(audienceUrls != null && audienceUrls.trim().length > 0){
+        $.each(audienceUrls.split(","), function (index, value) {
+            if (value === audience) {
+                return true;
+            }
+
+            if (newAudienceUrls.length > 0) {
+                newAudienceUrls = newAudienceUrls + "," + value;
+            } else {
+                newAudienceUrls = value;
+            }
+        });
+    }
+    $("#audienceURLs").val(newAudienceUrls);
+    if(newAudienceUrls.length == 0){
+        $('#audiencePropertyCounter').val("0");
+    }
 }
 
 function addRecipientFunc() {
+    var recipient = document.getElementById('recipient').value;
+    var recipientUrls = $("#receipientURLs").val();
+    if (recipientUrls == null || recipientUrls.length == 0) {
+        $("#receipientURLs").val(recipient);
+    } else {
+        var isExist = false;
+        $.each(recipientUrls.split(","), function (index, value) {
+            if (value === recipient) {
+                isExist = true;
+                //CARBON.showWarningDialog("<fmt:message key='sp.endpoint.address.already.exists'/>", null, null);
+                return false;
+            }
+        });
+        if (isExist) {
+            return false;
+        }
+        $("#receipientURLs").val(recipientUrls + "," + recipient);
+    }
     var propertyCount = document.getElementById("recipientPropertyCounter");
-
     var i = propertyCount.value;
     var currentCount = parseInt(i);
-
     currentCount = currentCount + 1;
     propertyCount.value = currentCount;
-
     document.getElementById('recipientTableId').style.display = '';
     var recipientTableTBody = document.getElementById('recipientTableTbody');
-
     var recipientRow = document.createElement('tr');
     recipientRow.setAttribute('id', 'recipientRow' + i);
-
-    var recipient = document.getElementById('recipient').value;
     var recipientPropertyTD = document.createElement('td');
-    recipientPropertyTD.setAttribute('style', 'padding-left: 40px ! important; color: rgb(119, 119, 119); font-style: italic;');
+    recipientPropertyTD.setAttribute('style', 'padding-left: 15px ! important; color: rgb(119, 119, 119); font-style: italic;');
     recipientPropertyTD.innerHTML = "" + recipient + "<input type='hidden' name='recipientPropertyName" + i + "' id='recipientPropertyName" + i + "'  value='" + recipient + "'/> ";
-
     var recipientRemoveTD = document.createElement('td');
     recipientRemoveTD.innerHTML = "<a href='#' class='icon-link' style='background-image: url(../admin/images/delete.gif)' onclick='removeRecipient(" + i + ");return false;'>" + "Delete" + "</a>";
-
     recipientRow.appendChild(recipientPropertyTD);
     recipientRow.appendChild(recipientRemoveTD);
-
     recipientTableTBody.appendChild(recipientRow);
+    $('#recipient').val("");
 }
 
 function removeRecipient(i) {
+    var newReceipientUrls = "";
+    var receipientUrls = $("#receipientURLs").val();
+    var receipient = $("#recipientPropertyName"+i).val();
     var propRow = document.getElementById("recipientRow" + i);
     if (propRow != undefined && propRow != null) {
         var parentTBody = propRow.parentNode;
@@ -1055,11 +999,28 @@ function removeRecipient(i) {
             }
         }
     }
+    if(receipientUrls != null && receipientUrls.trim().length > 0){
+        $.each(receipientUrls.split(","), function (index, value) {
+            if (value === receipient) {
+                return true;
+            }
+
+            if (newReceipientUrls.length > 0) {
+                newReceipientUrls = newReceipientUrls + "," + value;
+            } else {
+                newReceipientUrls = value;
+            }
+        });
+    }
+    $("#receipientURLs").val(newReceipientUrls);
+    if(newReceipientUrls.length == 0){
+        $('#recipientPropertyCounter').val("0");
+    }
 }
 
 function removeSloReturnToURL(returnToURL, columnId) {
 
-    var idpInitSLOReturnToURLs = $("#idpInitSLOReturnToURLs").val();
+    var idpInitSLOReturnToURLs = $("#idpSLOURLs").val();
     var newIdpInitSLOReturnToURLs = "";
 
     if (idpInitSLOReturnToURLs != null && idpInitSLOReturnToURLs.trim().length > 0) {
@@ -1077,7 +1038,7 @@ function removeSloReturnToURL(returnToURL, columnId) {
     }
 
     $('#' + columnId).remove();
-    $("#idpInitSLOReturnToURLs").val(newIdpInitSLOReturnToURLs);
+    $("#idpSLOURLs").val(newIdpInitSLOReturnToURLs);
 
     if (newIdpInitSLOReturnToURLs.length == 0) {
         $('#idpSLOReturnToURLsTbl').remove();
@@ -1102,17 +1063,18 @@ function addSloReturnToURL() {
 
     if ($("#idpSLOReturnToURLsTbl").length==0) {
         var row =
-            '        <table id="idpSLOReturnToURLsTbl" style="width: 40%; margin-bottom: 3px;" class="styledInner">' +
+            '        <table id="idpSLOReturnToURLsTbl" style="margin-bottom: 3px;" class="styledInner table table-bordered col-sm-offset-1">' +
             '            <tbody id="idpSLOReturnToURLsTblBody">' +
             '            </tbody>' +
             '        </table>' ;
         $('#idpSLOReturnToURLInputRow').append(row);
+        $('#currentReturnToColumnId').val("0");
     }
 
-    var idpInitSLOReturnToURLs = $("#idpInitSLOReturnToURLs").val();
+    var idpInitSLOReturnToURLs = $("#idpSLOURLs").val();
     var currentColumnId = $("#currentReturnToColumnId").val();
     if (idpInitSLOReturnToURLs == null || idpInitSLOReturnToURLs.trim().length == 0) {
-        $("#idpInitSLOReturnToURLs").val(returnToURL);
+        $("#idpSLOURLs").val(returnToURL);
         var row =
             '<tr id="returnToUrl_' + parseInt(currentColumnId) + '">' +
             '</td><td style="padding-left: 15px !important; color: rgb(119, 119, 119);font-style: italic;">' + returnToURL +
@@ -1134,7 +1096,7 @@ function addSloReturnToURL() {
             return false;
         }
 
-        $("#idpInitSLOReturnToURLs").val(idpInitSLOReturnToURLs + "," + returnToURL);
+        $("#idpSLOURLs").val(idpInitSLOReturnToURLs + "," + returnToURL);
         var row =
             '<tr id="returnToUrl_' + parseInt(currentColumnId) + '">' +
             '</td><td style="padding-left: 15px !important; color: rgb(119, 119, 119);font-style: italic;">' +

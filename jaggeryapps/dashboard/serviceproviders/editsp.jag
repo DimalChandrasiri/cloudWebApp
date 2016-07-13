@@ -78,7 +78,7 @@ include("../templates/leftpane.jag");
                     <div class="form-group">
                         <label for="service-provider-description" >Description: </label>
                         <textarea id="sp-description" name="service-provider-description" class="form-control" rows="3" ></textarea>
-                        <input type="hidden" value="custom]" id="spType" name="spType" />
+                        <input type="hidden" value="custom" id="spType" name="spType" />
                     </div>
 
                     <div class="form-group">
@@ -242,27 +242,18 @@ include("../templates/leftpane.jag");
                                                         Delete
                                                 </button>
                                             </div>
-
-
                                         </form>
-                                        <div class="form-group" id = "samlConfigBtn" hidden>
-                                                <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" style = "margin-left: 2%;" onclick="showSamlForm();return false;">
-                                                    <span class="fw-stack fw-lg btn-action-ico">
-                                                        <i class="fw fw-ring fw-stack-2x"></i>
-                                                        <i class="fw fw-edit fw-stack-1x"></i>
-                                                    </span>
-                                                        Configure
-                                                </button>
-                                        </div>
+
                                         <form id="addServiceProvider" class="form-horizontal" role="form" style="color: black;" hidden>
                                         <h4>New Service Provider</h4>
+                                            <input type="hidden" id="hiddenFields" name="hiddenFields" value="">
                                             <!--Issuer-->
                                             <div class="form-group" id="issuerRow">
                                                 <label for="issuer" class="col-sm-2 control-label">Issuer
                                                     <span class="required">*</span>
                                                 </label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="issuer" name="issuer" placeholder="Issuer" disabled="disabled">
+                                                    <input type="text" class="form-control" id="issuer" name="issuer" placeholder="Issuer" readonly>
                                                     <input id="hiddenIssuer" type="hidden" value="" name="hiddenIssuer">
                                                     <label id="issuer-error" class="error" for="issuer" hidden>This field is required.</label>
                                                 </div>
@@ -360,24 +351,24 @@ include("../templates/leftpane.jag");
                                             </div>
                                             <!--  Enable Response Signing -->
                                             <div class="form-group" id="enableResponseSignatureRow">
-                                            <input type="checkbox" onclick="disableResponseSignature(this);" value="true" id="enableResponseSignature" name="enableResponseSignature">
+                                            <input type="checkbox" onclick="disableResponseSignature(this);" value="false" id="enableResponseSignature" name="enableResponseSignature">
     Enable Response Signing
                                             </div>
                                             <input type="hidden" value="true" name="enableAssertionSignature">
                                             <!--  Enable Signature Validation -->
                                             <div class="form-group" id="enableSigValidationRow">
-                                            <input id="enableSigValidation" type="checkbox" value="true" name="enableSigValidation">
+                                            <input id="enableSigValidation" type="checkbox" value="false" name="enableSigValidation" onclick="disableSignatureValidation(this);">
     Enable Signature Validation in Authentication Requests and Logout Requests
                                             </div>
                                             <!--  Enable Assertion Encryption -->
                                             <div class="form-group" id="enableEncAssertionRow">
-                                            <input id="enableEncAssertion" type="checkbox" value="true" name="enableEncAssertion">
+                                            <input id="enableEncAssertion" type="checkbox" value="false" name="enableEncAssertion" onclick="disableEncAssertion(this);">
     Enable Assertion Encryption
                                             </div>
                                             <!--  Enable Single  Logout -->
                                             <div id="singleLogoutRow">
                                                 <div class="form-group">
-                                                <input type="checkbox" onclick="disableLogoutUrl(this);" value="true" id="enableSingleLogout" name="enableSingleLogout">
+                                                <input type="checkbox" onclick="disableLogoutUrl(this);" value="false" id="enableSingleLogout" name="enableSingleLogout">
         Enable Single Logout
                                                 </div>
                                                         <!--SLO Response URL-->
@@ -402,8 +393,9 @@ include("../templates/leftpane.jag");
                                              <!--  Enable Attribute Profile -->
                                             <div id="attributeRow">
                                                 <div class="form-group">
-                                                <input id="enableAttributeProfile" type="checkbox" onclick="disableAttributeProfile(this);" name="enableAttributeProfile">
+                                                <input id="enableAttributeProfile" type="checkbox" onclick="disableAttributeProfile(this);" name="enableAttributeProfile" value="false">
         Enable Attribute Profile
+        <input type="hidden" id="attributeIndex" name="attributeIndex" value="">
                                                 </div>
                                                         <!--Include Attributes in the response always-->
                                                          <div class="form-group">
@@ -416,7 +408,7 @@ include("../templates/leftpane.jag");
                                             <!--  Enable Audience Restriction-->
                                             <div id="audienceRestrictionRow">
                                                 <div class="form-group">
-                                                <input id="enableAudienceRestriction" type="checkbox" onclick="disableAudienceRestriction(this);" value="true" name="enableAudienceRestriction">
+                                                <input id="enableAudienceRestriction" type="checkbox" onclick="disableAudienceRestriction(this);" value="false" name="enableAudienceRestriction">
         Enable Audience Restriction
                                                 </div>
 
@@ -436,13 +428,14 @@ include("../templates/leftpane.jag");
                                                             <div class="col-sm-10" style="margin-left: 10%;" id="audienceTblRow">
                                                             </div>
                                                             <input type="hidden" name="audiencePropertyCounter" id="audiencePropertyCounter" value="0"/>
+                                                            <input type="hidden" id="audienceURLs" name="audienceURLs" value="">
                                                         </div>
                                             </div>
 
                                             <!--  Enable Recipient Validation-->
                                             <div id="receipientRow">
                                                 <div class="form-group">
-                                                <input id="enableRecipients" type="checkbox" onclick="disableRecipients(this);" value="true" name="enableRecipients">
+                                                <input id="enableRecipients" type="checkbox" onclick="disableRecipients(this);" value="false" name="enableRecipients">
         Enable Recipient Validation
                                                 </div>
 
@@ -462,18 +455,19 @@ include("../templates/leftpane.jag");
                                                             <div class="col-sm-10" style="margin-left: 10%;" id="recptTblRow">
                                                             </div>
                                                             <input type="hidden" name="recipientPropertyCounter" id="recipientPropertyCounter"  value="0"/>
+                                                            <input type="hidden" name="receipientURLs" id="receipientURLs"  value="0"/>
                                                         </div>
                                             </div>
 
                                             <!--   Enable IdP Initiated SSO-->
                                             <div class="form-group" id="idpInitSSORow">
-                                            <input type="checkbox" onclick="disableIdPInitSSO(this);" value="true" id ="enableIdPInitSSO" name="enableIdPInitSSO"> Enable IdP Initiated SSO
+                                            <input type="checkbox" onclick="disableIdPInitSSO(this);" value="false" id ="enableIdPInitSSO" name="enableIdPInitSSO"> Enable IdP Initiated SSO
                                             </div>
 
                                             <!--  Enable IdP Initiated SLO -->
                                             <div id="idpInitSLORow">
                                                 <div class="form-group">
-                                                <input type="checkbox" onclick="disableIdPInitSLO(this);" value="true" id ="enableIdPInitSLO" name="enableIdPInitSLO">
+                                                <input type="checkbox" onclick="disableIdPInitSLO(this);" value="false" id ="enableIdPInitSLO" name="enableIdPInitSLO">
         Enable IdP Initiated SLO
                                                 </div>
 
@@ -492,36 +486,11 @@ include("../templates/leftpane.jag");
                                                         <!--fill the tabel with Audience URL-->
                                                         <div class="col-sm-10" style="margin-left: 10%;" id="idpSLOReturnToURLInputRow">
                                                         </div>
-                                                        <input type="hidden" id="idpInitSLOReturnToURLs" name="idpInitSLOReturnToURLs" value="">
+                                                        <input type="hidden" id="idpSLOURLs" name="idpSLOURLs" value="">
                                                         <input type="hidden" id="currentReturnToColumnId" value="0">
                                                     </div>
                                             </div>
-    <input type="hidden" id="attributeConsumingServiceIndex" name="attributeConsumingServiceIndex"/>
-                                             <div class="form-group">
-                                                <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" id="samlRgsterBtn" style = "margin-left: 2%;" onclick="saveSAMLConfig();return false;">
-                                                    <span class="fw-stack fw-lg btn-action-ico">
-                                                        <i class="fw fw-ring fw-stack-2x"></i>
-                                                        <i class="fw fw-save fw-stack-1x"></i>
-                                                    </span>
-                                                        Register
-                                                </button>
-                                                 <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" id="samlUpdtBtn" style = "margin-left: 2%;" onclick="saveSAMLConfig();return false;">
-                                                    <span class="fw-stack fw-lg btn-action-ico">
-                                                        <i class="fw fw-ring fw-stack-2x"></i>
-                                                        <i class="fw fw-save fw-stack-1x"></i>
-                                                    </span>
-                                                        Update
-                                                </button>
-                                                <button class="cu-btn cu-btn-sm cu-btn-blue cu-btn-position" id="samlCanclBtn" style = "margin-left: 2%;" onclick="cancelSamlForm();return false;">
-                                                    <span class="fw-stack fw-lg btn-action-ico">
-                                                        <i class="fw fw-ring fw-stack-2x"></i>
-                                                        <i class="fw fw-delete fw-stack-1x"></i>
-                                                    </span>
-                                                        Cancel
-                                                </button>
-                                            </div>
-
-
+                                            <input type="hidden" id="attributeConsumingServiceIndex" name="attributeConsumingServiceIndex"/>
                                         </form>
                                     </div>
 

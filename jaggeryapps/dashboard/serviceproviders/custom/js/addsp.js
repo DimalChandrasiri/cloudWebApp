@@ -1,6 +1,6 @@
 function drawAddSP(sptype) {
     var output = "";
-output = '<div class="row">'+
+    output = '<div class="row">'+
         '<div class="col-md-5 forms">'+
             '<div class="form-group">'+
                 '<label for="spName">Service Provider Name: </label>'+
@@ -29,7 +29,6 @@ output = '<div class="row">'+
 
 function validateSPName(sptype) {
     var spName = $("input[id='spName']").val();
-    var description = $("input[id='spDesc']").val();
     if (spName.length == 0) {
         message({
             labelId: 'spName-error', content: 'Service Provider name can\'t be empty', type: 'error'
@@ -42,7 +41,6 @@ function validateSPName(sptype) {
 }
 
 function registerCustomSP(sptype) {
-    debugger;
     var str = PROXY_CONTEXT_PATH + "/dashboard/serviceproviders/custom/controllers/custom/add_finish.jag";
     $.ajax({
         url: str,
@@ -58,7 +56,6 @@ function registerCustomSP(sptype) {
         .always(function () {
             console.log('completed');
         });
-
 }
 
 function cancel() {
