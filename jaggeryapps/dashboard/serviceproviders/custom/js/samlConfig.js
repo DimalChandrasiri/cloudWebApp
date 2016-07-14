@@ -1,5 +1,4 @@
 function drawSAMLConfigPage(issuer, isEditSP, tableTitle, samlsp) {
-    debugger;
     var providerProps = {};
     for (var i in samlsp.properties) {
         var prop = samlsp.properties[i];
