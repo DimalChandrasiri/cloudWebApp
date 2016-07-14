@@ -23,6 +23,7 @@ function drawUpdatePage() {
         $('#spType').val(sptype);
         preDrawClaimConfig();
         var samlsp;
+        debugger;
         if (appdata != null && appdata.inboundAuthenticationConfig != null
             && appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs != null) {
             if (appdata.inboundAuthenticationConfig.inboundAuthenticationRequestConfigs.constructor !== Array) {
@@ -54,6 +55,7 @@ function drawUpdatePage() {
 }
 
 function preDrawUpdatePage() {
+    debugger;
     var applicationName = getRequestParameter('applicationName');
     var sptype = getRequestParameter('sptype');
     $.ajax({
@@ -75,6 +77,7 @@ function preDrawUpdatePage() {
 }
 
 function updateSP() {
+    debugger;
     $('#number_of_claimmappings').val(document.getElementById("claimMappingAddTable").rows.length);
     var element = "<div class=\"modal fade\" id=\"messageModal\">\n" +
         "  <div class=\"modal-dialog\">\n" +
@@ -102,6 +105,7 @@ function updateCustomSP() {
         parameters = parameters + "&consumerID=" + $('#consumerID').val() + "&consumerSecret=" + $('#consumerSecret').val();
     }
     parameters = parameters + "&passiveSTSRealm=" + $('#passiveSTSRealm').val() + "&passiveSTSWReply=" + $('#passiveSTSWReply').val();
+    debugger;
     $.ajax({
         url: str,
         type: "POST",
