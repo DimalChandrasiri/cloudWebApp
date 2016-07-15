@@ -783,7 +783,7 @@ function addAssertionConsumerURL() {
 
     if ($("#assertionConsumerURLsTable").length == 0) {
         var row =
-            '        <table id="assertionConsumerURLsTable" style="margin-bottom: 3px;" class="styledInner table table-bordered col-sm-offset-1">' +
+            '        <table id="assertionConsumerURLsTable" style="margin-bottom: 3px;" class="styledInner table table-bordered">' +
             '            <tbody id="assertionConsumerURLsTableBody">' +
             '            </tbody>' +
             '        </table>' ;
