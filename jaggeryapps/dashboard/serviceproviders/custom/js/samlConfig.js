@@ -1,16 +1,65 @@
+function preDrawSAMLConfigPage(samlsp) {
+    serviceProviders = null;
+    spConfigClaimUris = null;
+    spConfigCertificateAlias = null;
+    spConfigSigningAlgos = null;
+    spConfigDigestAlgos = null;
+    signingAlgorithmUriByConfig = null;
+    digestAlgorithmUriByConfig = null;
+
+    $.ajax({
+        url: "/dashboard/serviceproviders/custom/controllers/custom/samlSSOConfigClient.jag",
+        type: "GET",
+        data: "&cookie=" + cookie + "&user=" + userName,
+        success: function (data) {
+            samlClient = $.parseJSON(data);
+            var tableTitle = "Configurations For " + samlsp.friendlyName;
+            var isEditSP = false;
+            var issuer = samlsp.inboundAuthKey;
+            if(samlsp.inboundAuthKey != null && samlsp.inboundAuthKey.length > 0){
+                isEditSP = true;
+            }
+            //have to set
+            $('#issuersaml').val(issuer);
+            $('#isEditSp').val(isEditSP);
+            //$('#acsindex').val(provider.attributeConsumingServiceIndex);
+            spConfigClaimUris = samlClient.claimURIs;
+            spConfigCertificateAlias = samlClient.certAliases;
+            spConfigSigningAlgos = samlClient.signingAlgos;
+            spConfigDigestAlgos = samlClient.digestAlgos;
+            signingAlgorithmUriByConfig = samlClient.signingAlgo;
+            digestAlgorithmUriByConfig = samlClient.digestAlgo;
+            drawSAMLConfigPage(issuer, isEditSP, tableTitle, samlsp);
+        },
+        error: function (e) {
+            message({
+                content: 'Error occurred while getting the service provider configuration.',
+                type: 'error',
+                cbk: function () {
+                }
+            });
+        }
+    });
+}
+
 function drawSAMLConfigPage(issuer, isEditSP, tableTitle, samlsp) {
+    debugger;
     var providerProps = {};
+    var hiddenFields = [];
     for (var i in samlsp.properties) {
         var prop = samlsp.properties[i];
         providerProps[prop.name] = prop;
     }
     $('#addServiceProvider h4').html(tableTitle);
-    $('#issuer').val(providerProps["issuer"].value);
-    $('#hiddenIssuer').val(issuer);
 
     if(providerProps["hiddenFields"] != null && providerProps["hiddenFields"].value.length > 0){
         $('#hiddenFields').val(providerProps["hiddenFields"].value)
+        hiddenFields = providerProps["hiddenFields"].value.split(',');
     }
+
+    $('#issuer').val(providerProps["issuer"].value);
+    $('#hiddenIssuer').val(issuer);
+
     if (isEditSP && providerProps["assertionConsumerURLs"] != null && providerProps["assertionConsumerURLs"].value.length > 0) {
         var assertionConsumerURLTblRow =
             "<table id=\"assertionConsumerURLsTable\" style=\"margin-bottom: 3px;\" class=\"styledInner table table-bordered col-sm-offset-1\">" +
@@ -406,50 +455,6 @@ function drawSAMLConfigPage(issuer, isEditSP, tableTitle, samlsp) {
         $('#acsindex').val(providerProps["acsindex"].value);
     }
     $('#samlAttrIndexForm').show();
-}
-
-function preDrawSAMLConfigPage(samlsp) {
-    serviceProviders = null;
-    spConfigClaimUris = null;
-    spConfigCertificateAlias = null;
-    spConfigSigningAlgos = null;
-    spConfigDigestAlgos = null;
-    signingAlgorithmUriByConfig = null;
-    digestAlgorithmUriByConfig = null;
-
-    $.ajax({
-        url: "/dashboard/serviceproviders/custom/controllers/custom/samlSSOConfigClient.jag",
-        type: "GET",
-        data: "&cookie=" + cookie + "&user=" + userName,
-        success: function (data) {
-            samlClient = $.parseJSON(data);
-            var tableTitle = "Configurations For " + samlsp.friendlyName;
-            var isEditSP = false;
-            var issuer = samlsp.inboundAuthKey;
-            if(samlsp.inboundAuthKey != null && samlsp.inboundAuthKey.length > 0){
-                isEditSP = true;
-            }
-            //have to set
-            $('#issuersaml').val(issuer);
-            $('#isEditSp').val(isEditSP);
-            //$('#acsindex').val(provider.attributeConsumingServiceIndex);
-            spConfigClaimUris = samlClient.claimURIs;
-            spConfigCertificateAlias = samlClient.certAliases;
-            spConfigSigningAlgos = samlClient.signingAlgos;
-            spConfigDigestAlgos = samlClient.digestAlgos;
-            signingAlgorithmUriByConfig = samlClient.signingAlgo;
-            digestAlgorithmUriByConfig = samlClient.digestAlgo;
-            drawSAMLConfigPage(issuer, isEditSP, tableTitle, samlsp);
-        },
-        error: function (e) {
-            message({
-                content: 'Error occurred while getting the service provider configuration.',
-                type: 'error',
-                cbk: function () {
-                }
-            });
-        }
-    });
 }
 
 function drawSalesForce(salesforceConfig){

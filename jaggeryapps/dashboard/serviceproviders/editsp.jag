@@ -725,7 +725,7 @@
                     $(this).find('i').removeClass('fa-reorder').addClass('fa-arrow-left');
                 }
             });
-            
+
         </script>
         <script>
             var cookie = null;
@@ -734,10 +734,10 @@
             var serverUrl = window.location.host + PROXY_CONTEXT_PATH;
             var applicationName = "";
                 $(function WindowLoad(event) {
-            
+
                     url = 'wss://' + serverUrl + '/dashboard/session_manager.jag';
                     ws = new WebSocket(url);
-            
+
                     ws.onopen = function () {
                         console.log("web Socket onopen. ");
                         ws.send("First Message open");
