@@ -62,6 +62,173 @@ function updateSP(){
             claimMappings.push(claim);
         }
 
+        var spName = applicationName;
+        var status = false;
+        var attributeConsumingServiceIndex = null;
+        var serviceProviderDTO = {};
+
+        var isEditingSP = false;
+        if (request.getParameter('isEditSP') == 'true') {
+            isEditingSP = true;
+        }
+
+        serviceProviderDTO["issuer"] = request.getParameter("hiddenIssuer");
+        serviceProviderDTO["assertionConsumerURLs"] = request.getParameter("assertionConsumerURLs").split(",");
+        serviceProviderDTO["defaultAssertionConsumerURL"] = request.getParameter("defaultAssertionConsumerURL");
+        serviceProviderDTO["signingAlgorithm"] = request.getParameter("signingAlgorithm");
+        serviceProviderDTO["digestAlgorithm"] = request.getParameter("digestAlgorithm");
+        serviceProviderDTO["enableSingleLogout"] = false;
+        serviceProviderDTO["sloResponseURL"] = "";
+        serviceProviderDTO["sloRequestURL"] = "";
+        serviceProviderDTO["enableResponseSignature"] = false;
+        serviceProviderDTO["enableAssertionSignature"] = false;
+        serviceProviderDTO["enableAttributeProfile"] = false;
+        serviceProviderDTO["enableDefaultAttributeProfileHidden"] = false;
+        serviceProviderDTO["nameIdClaim"] = "";
+        serviceProviderDTO["loginPageURL"] = "";
+        serviceProviderDTO["requestedClaims"] = [];
+        serviceProviderDTO["requestedAudiences"] = [];
+        serviceProviderDTO["requestedRecipients"] = [];
+        serviceProviderDTO["attributeConsumingServiceIndex"] = "";
+        serviceProviderDTO["enableIdPInitSSO"] = false;
+        serviceProviderDTO["enableIdPInitSLO"] = false;
+        serviceProviderDTO["idpSLOURLs"] = [];
+        serviceProviderDTO["enableEncAssertion"] = false;
+        serviceProviderDTO["enableSigValidation"] = false;
+        serviceProviderDTO["alias"] = "";
+
+
+        if (request.getParameter("enableSingleLogout") == 'true') {
+            serviceProviderDTO["enableSingleLogout"] = true;
+            if (request.getParameter("sloResponseURL") != null && request.getParameter("sloResponseURL").length > 0) {
+                serviceProviderDTO["sloResponseURL"] = request.getParameter("sloResponseURL");
+            }
+            if (request.getParameter("sloRequestURL") != null && request.getParameter("sloRequestURL").length > 0) {
+                serviceProviderDTO["sloRequestURL"] = request.getParameter("sloRequestURL");
+            }
+        }
+
+        if (request.getParameter("enableResponseSignature") == 'true') {
+            serviceProviderDTO["enableResponseSignature"] = true;
+        }
+
+
+        if (request.getParameter("enableAssertionSignature") == 'true') {
+            serviceProviderDTO["enableAssertionSignature"] = true;
+        }
+
+        serviceProviderDTO["nameIdFormat"] = request.getParameter("nameIdFormat");
+
+        if (serviceProviderDTO["nameIdFormat"] != null && serviceProviderDTO["nameIdFormat"].length > 0) {
+            serviceProviderDTO["nameIdFormat"] = serviceProviderDTO["nameIdFormat"].replace(":", "/");
+        }
+
+        if (request.getParameter("enableAttributeProfile") != null && request.getParameter("enableAttributeProfile") == 'true') {
+            //TODO : Do the following
+            //serviceProviderDTO.setRequestedClaims(samlSsoServuceProviderConfigBean.getSelectedClaimsAttay());
+            serviceProviderDTO["enableAttributeProfile"] = true;
+
+            if (request.getParameter("enableDefaultAttributeProfileHidden") == 'true') {
+                serviceProviderDTO["enableDefaultAttributeProfileHidden"] = true;
+            }
+        }
+
+        if (request.getParameter("enableNameIdClaimUriHidden") == 'true') {
+            serviceProviderDTO["nameIdClaim"] = request.getParameter("nameIdClaim");
+        }
+
+        //TODO Check Whether these are needed
+        /*
+         if (Boolean.parseBoolean(request.getParameter(SAMLSSOUIConstants.ENABLE_AUDIENCE_RESTRICTION))) {
+         serviceProviderDTO.setRequestedAudiences(samlSsoServuceProviderConfigBean.getSelectedAudiencesArray());
+         }
+
+         if (Boolean.parseBoolean(request.getParameter(SAMLSSOUIConstants.ENABLE_RECIPIENTS))) {
+         serviceProviderDTO.setRequestedRecipients(samlSsoServuceProviderConfigBean.getSelectedRecipientsArray());
+         }*/
+
+        if (request.getParameter("loginPageURL") != null && "null" != request.getParameter("loginPageURL")) {
+            serviceProviderDTO["loginPageURL"] = request.getParameter("loginPageURL");
+        }
+
+        if (request.getParameter("enableAudienceRestriction") == 'true') {
+            var audienceUrls = request.getParameter("audienceURLs");
+            if (audienceUrls != null && audienceUrls.length > 0) {
+                audienceUrls = audienceUrls.split(",");
+                for (var i in audienceUrls) {
+                    var audience = audienceUrls[i];
+                    if (audience != null && audience.length > 0) {
+                        var currentAudiences = serviceProviderDTO["requestedAudiences"];
+                        var isAudienceAlreadyAdded = false;
+                        for (var cntr in currentAudiences) {
+                            var currentAudience = currentAudiences[cntr];
+                            if (audience == currentAudience) {
+                                isAudienceAlreadyAdded = true;
+                                break;
+                            }
+                        }
+                        if (!isAudienceAlreadyAdded) {
+                            serviceProviderDTO["requestedAudiences"].push(audience);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (request.getParameter("enableRecipients") == 'true') {
+            var receipientURLs = request.getParameter("receipientURLs");
+            if (receipientURLs != null && receipientURLs.length > 0) {
+                receipientURLs = receipientURLs.split(",");
+                for (var i in receipientURLs) {
+                    var recipient = receipientURLs[i];
+                    if (recipient != null && recipient.length > 0) {
+                        var currentRecipients = serviceProviderDTO["requestedRecipients"];
+                        var isRecipientAlreadyAdded = false;
+                        for (var cntr in currentRecipients) {
+                            var currentRecipient = currentRecipients[cntr];
+                            if (recipient == currentRecipient) {
+                                isRecipientAlreadyAdded = true;
+                                break;
+                            }
+                        }
+                        if (!isRecipientAlreadyAdded) {
+                            serviceProviderDTO["requestedRecipients"].push(recipient);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (isEditingSP && request.getParameter("attributeConsumingServiceIndex") != null && request.getParameter("attributeConsumingServiceIndex").length > 0) {
+            serviceProviderDTO["attributeConsumingServiceIndex"] = request.getParameter("attributeConsumingServiceIndex");
+        }
+
+        //For editing purposes
+        if( serviceProviderDTO["enableAttributeProfile"] == false){
+            serviceProviderDTO["attributeConsumingServiceIndex"] = "";
+        }
+
+        if (request.getParameter("enableIdPInitSSO") == 'true') {
+            serviceProviderDTO["enableIdPInitSSO"] = true;
+        }
+
+        if (request.getParameter("enableIdPInitSLO") == 'true') {
+            serviceProviderDTO["enableIdPInitSLO"] = true;
+            var returnToUrls = request.getParameter("idpSLOURLs");
+            if (returnToUrls != null && returnToUrls.length > 0) {
+                serviceProviderDTO["idpSLOURLs"] = returnToUrls.split(",");
+            }
+        }
+
+        if (request.getParameter("enableEncAssertion") == 'true') {
+            serviceProviderDTO["enableEncAssertion"] = true;
+            serviceProviderDTO["alias"] = request.getParameter("alias");
+        }
+
+        if (request.getParameter("enableSigValidation") == 'true') {
+            serviceProviderDTO["enableSigValidation"] = true;
+            serviceProviderDTO["alias"] = request.getParameter("alias");
+        }
 
         var spAdminClient = require('spAdminClient.jag');
         var serviceProvider = spAdminClient.getApplication(oldSPName).return;
