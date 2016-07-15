@@ -1,314 +1,84 @@
-<xsd:updateApplication xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://org.apache.axis2/xsd"
-                       xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">
-    <xsd:serviceProvider>
-        <xsd1:applicationID>122</xsd1:applicationID>
-        <xsd1:applicationName>listing.com</xsd1:applicationName>
-        <xsd1:claimConfig>
-            <xsd1:alwaysSendMappedLocalSubjectId>false</xsd1:alwaysSendMappedLocalSubjectId>
-            <xsd1:localClaimDialect>true</xsd1:localClaimDialect>
-            <xsd1:roleClaimURI></xsd1:roleClaimURI>
-            <xsd1:userClaimURI></xsd1:userClaimURI>
-        </xsd1:claimConfig>
-        <xsd1:description>custom]</xsd1:description>
-        <xsd1:inboundAuthenticationConfig>
-            <xsd1:inboundAuthenticationRequestConfigs>
-                <xsd1:friendlyName></xsd1:friendlyName>
-                <xsd1:inboundAuthKey>iLXPJ1oTnD1JUHr5QU8ngBRyElQa</xsd1:inboundAuthKey>
-                <xsd1:inboundAuthType>oauth2</xsd1:inboundAuthType>
-                <xsd1:properties>
-                    <xsd1:confidential>false</xsd1:confidential>
-                    <xsd1:defaultValue></xsd1:defaultValue>
-                    <xsd1:description></xsd1:description>
-                    <xsd1:displayName></xsd1:displayName>
-                    <xsd1:displayOrder>0</xsd1:displayOrder>
-                    <xsd1:name>oauthConsumerSecret</xsd1:name>
-                    <xsd1:required>false</xsd1:required>
-                    <xsd1:type></xsd1:type>
-                    <xsd1:value>nW08xa06nDvSFWcGTx8IB8t2jawa</xsd1:value>
-                </xsd1:properties>
-            </xsd1:inboundAuthenticationRequestConfigs>
-        </xsd1:inboundAuthenticationConfig>
-        <xsd1:inboundProvisioningConfig>
-            <xsd1:dumbMode>false</xsd1:dumbMode>
-            <xsd1:provisioningEnabled>false</xsd1:provisioningEnabled>
-            <xsd1:provisioningUserStore></xsd1:provisioningUserStore>
-        </xsd1:inboundProvisioningConfig>
-        <xsd1:outboundProvisioningConfig>
-            <xsd1:provisionByRoleList></xsd1:provisionByRoleList>
-        </xsd1:outboundProvisioningConfig>
-        <xsd1:permissionAndRoleConfig></xsd1:permissionAndRoleConfig>
-    </xsd:serviceProvider>
-</xsd:updateApplication>
-
-
-'<xsd:updateApplication xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://org.apache.axis2/xsd"
-                       xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">'+
-'<xsd:serviceProvider>'+
-'<xsd1:applicationID>?</xsd1:applicationID>'+
-'<xsd1:applicationName>?</xsd1:applicationName>'+
-'<xsd1:claimConfig>'+
-'<xsd1:alwaysSendMappedLocalSubjectId>?</xsd1:alwaysSendMappedLocalSubjectId>'+
-'<xsd1:claimMappings>'+
-'<xsd1:defaultValue>?</xsd1:defaultValue>'+
-'<xsd1:localClaim>'+
-'<xsd1:claimId>?</xsd1:claimId>'+
-'<xsd1:claimUri>?</xsd1:claimUri>'+
-'</xsd1:localClaim>'+
-'<xsd1:remoteClaim>'+
-'<xsd1:claimId>?</xsd1:claimId>'+
-'<xsd1:claimUri>?</xsd1:claimUri>'+
-'</xsd1:remoteClaim>'+
-'<xsd1:requested>?</xsd1:requested>'+
-'</xsd1:claimMappings>'+
-'<xsd1:idpClaims>'+
-'<xsd1:claimId>?</xsd1:claimId>'+
-'<xsd1:claimUri>?</xsd1:claimUri>'+
-'</xsd1:idpClaims>'+
-'<xsd1:localClaimDialect>?</xsd1:localClaimDialect>'+
-'<xsd1:roleClaimURI>?</xsd1:roleClaimURI>'+
-'<xsd1:userClaimURI>?</xsd1:userClaimURI>'+
-'</xsd1:claimConfig>'+
-'<xsd1:description>?</xsd1:description>'+
-'<xsd1:inboundAuthenticationConfig>'+
-'<xsd1:inboundAuthenticationRequestConfigs>'+
-'<xsd1:friendlyName>?</xsd1:friendlyName>'+
-'<xsd1:inboundAuthKey>?</xsd1:inboundAuthKey>'+
-'<xsd1:inboundAuthType>?</xsd1:inboundAuthType>'+
-'<xsd1:properties>'+
-'<xsd1:confidential>?</xsd1:confidential>'+
-'<xsd1:defaultValue>?</xsd1:defaultValue>'+
-'<xsd1:description>?</xsd1:description>'+
-'<xsd1:displayName>?</xsd1:displayName>'+
-'<xsd1:displayOrder>?</xsd1:displayOrder>'+
-'<xsd1:name>?</xsd1:name>'+
-'<xsd1:required>?</xsd1:required>'+
-'<xsd1:type>?</xsd1:type>'+
-'<xsd1:value>?</xsd1:value>'+
-'</xsd1:properties>'+
-'</xsd1:inboundAuthenticationRequestConfigs>'+
-'</xsd1:inboundAuthenticationConfig>'+
-'<xsd1:inboundProvisioningConfig>'+
-'<xsd1:dumbMode>?</xsd1:dumbMode>'+
-'<xsd1:provisioningEnabled>?</xsd1:provisioningEnabled>'+
-'<xsd1:provisioningUserStore>?</xsd1:provisioningUserStore>'+
-'</xsd1:inboundProvisioningConfig>'+
-
-'<xsd1:outboundProvisioningConfig>'+
-'<xsd1:provisionByRoleList>?</xsd1:provisionByRoleList>'+
-'</xsd1:outboundProvisioningConfig>'+
-
-'<xsd1:permissionAndRoleConfig></xsd1:permissionAndRoleConfig>'+
-'</xsd:serviceProvider>'+
-'</xsd:updateApplication>
-
-
-<xsd:updateApplication xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://org.apache.axis2/xsd"
-                       xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">
-<xsd:serviceProvider>
-    <xsd1:applicationID>134</xsd1:applicationID>
-    <xsd1:applicationName>updateNew.com</xsd1:applicationName>
-    <xsd1:claimConfig>
-        <xsd1:alwaysSendMappedLocalSubjectId>false</xsd1:alwaysSendMappedLocalSubjectId>
-        <xsd1:claimMappings>
-            <xsd1:defaultValue></xsd1:defaultValue>
-            <xsd1:localClaim>
-                <xsd1:claimId>0</xsd1:claimId>
-                <xsd1:claimUri>http://wso2.org/claims/emailaddress</xsd1:claimUri>
-            </xsd1:localClaim>
-            <xsd1:remoteClaim>
-                <xsd1:claimId>0</xsd1:claimId>
-                <xsd1:claimUri>http://wso2.org/claims/emailaddress</xsd1:claimUri>
-            </xsd1:remoteClaim>
-            <xsd1:requested>true</xsd1:requested>
-        </xsd1:claimMappings>
-        <xsd1:claimMappings>
-            <xsd1:defaultValue></xsd1:defaultValue>
-            <xsd1:localClaim>
-                <xsd1:claimId>0</xsd1:claimId>
-                <xsd1:claimUri>http://wso2.org/claims/primaryChallengeQuestion</xsd1:claimUri>
-            </xsd1:localClaim>
-            <xsd1:remoteClaim>
-                <xsd1:claimId>0</xsd1:claimId>
-                <xsd1:claimUri>http://wso2.org/claims/primaryChallengeQuestion</xsd1:claimUri>
-            </xsd1:remoteClaim>
-            <xsd1:requested>true</xsd1:requested>
-        </xsd1:claimMappings>
-        <xsd1:localClaimDialect>true</xsd1:localClaimDialect>
-        <xsd1:roleClaimURI></xsd1:roleClaimURI>
-        <xsd1:userClaimURI></xsd1:userClaimURI>
-    </xsd1:claimConfig>
-    <xsd1:description>custom]Newly Updated</xsd1:description>
-    <xsd1:inboundAuthenticationConfig></xsd1:inboundAuthenticationConfig>
-    <xsd1:localAndOutBoundAuthenticationConfig>
-        <xsd1:alwaysSendBackAuthenticatedListOfIdPs>false</xsd1:alwaysSendBackAuthenticatedListOfIdPs>
-        <xsd1:authenticationType>default</xsd1:authenticationType>
-        <xsd1:subjectClaimUri>http://wso2.org/claims/identity/unlockTime</xsd1:subjectClaimUri>
-        <xsd1:useTenantDomainInLocalSubjectIdentifier>false</xsd1:useTenantDomainInLocalSubjectIdentifier>
-        <xsd1:useUserstoreDomainInLocalSubjectIdentifier>false</xsd1:useUserstoreDomainInLocalSubjectIdentifier>
-    </xsd1:localAndOutBoundAuthenticationConfig>
-    <xsd1:inboundProvisioningConfig>
-        <xsd1:dumbMode>false</xsd1:dumbMode>
-        <xsd1:provisioningEnabled>false</xsd1:provisioningEnabled>
-        <xsd1:provisioningUserStore></xsd1:provisioningUserStore>
-    </xsd1:inboundProvisioningConfig>
-    <xsd1:outboundProvisioningConfig>
-        <xsd1:provisionByRoleList></xsd1:provisionByRoleList>
-    </xsd1:outboundProvisioningConfig>
-    <xsd1:permissionAndRoleConfig></xsd1:permissionAndRoleConfig>
-</xsd:serviceProvider>
-</xsd:updateApplication>
-<xsd1:inboundAuthenticationRequestConfigs>
-<xsd1:friendlyName></xsd1:friendlyName>
-<xsd1:inboundAuthKey>iLXPJ1oTnD1JUHr5QU8ngBRyElQa</xsd1:inboundAuthKey>
-<xsd1:inboundAuthType>oauth2</xsd1:inboundAuthType>
-<xsd1:properties>
-    <xsd1:confidential>false</xsd1:confidential>
-    <xsd1:defaultValue></xsd1:defaultValue>
-    <xsd1:description></xsd1:description>
-    <xsd1:displayName></xsd1:displayName>
-    <xsd1:displayOrder>0</xsd1:displayOrder>
-    <xsd1:name>oauthConsumerSecret</xsd1:name>
-    <xsd1:required>false</xsd1:required>
-    <xsd1:type></xsd1:type>
-    <xsd1:value>nW08xa06nDvSFWcGTx8IB8t2jawa</xsd1:value>
-</xsd1:properties>
-</xsd1:inboundAuthenticationRequestConfigs>
-
-'<xsdl:inboundAuthenticationRequestConfigs xsi:type="xsdl:InboundAuthenticationRequestConfig">'+
-'<xsdl:friendlyName>Salesforce Properties</xsdl:friendlyName>'+
-'<xsdl:inboundAuthKey>Salesforce</xsdl:inboundAuthKey>'+
-'<xsdl:inboundAuthType>Salesforce</xsdl:inboundAuthType>'+
-'<xsdl:properties xsi:type="xsdl:Property">'+
-    '<xsdl:confidential>false</xsdl:confidential>'+
-    '<xsdl:defaultValue xsi:nil="true"/>'+
-    '<xsdl:description xsi:nil="true"/>'+
-    '<xsdl:displayName>Certificate Alias</xsdl:displayName>'+
-    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
-    '<xsdl:name>alias</xsdl:name>'+
-    '<xsdl:required>false</xsdl:required>'+
-    '<xsdl:type xsi:nil="true"/>'+
-    '<xsdl:value>salesforce.cert</xsdl:value>'+
-'</xsdl:properties>'+
-'<xsdl:properties xsi:type="xsdl:Property">'+
-    '<xsdl:confidential>false</xsdl:confidential>'+
-    '<xsdl:defaultValue xsi:nil="true"/>'+
-    '<xsdl:description xsi:nil="true"/>'+
-    '<xsdl:displayName>Response Signing Algorithm</xsdl:displayName>'+
-    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
-    '<xsdl:name>signingAlgorithm</xsdl:name>'+
-    '<xsdl:required>false</xsdl:required>'+
-    '<xsdl:type xsi:nil="true"/>'+
-    '<xsdl:value>http://www.w3.org/2000/09/xmldsig#dsa-sha1</xsdl:value>'+
-'</xsdl:properties>'+
-'<xsdl:properties xsi:type="xsdl:Property">'+
-    '<xsdl:confidential>false</xsdl:confidential>'+
-    '<xsdl:defaultValue xsi:nil="true"/>'+
-    '<xsdl:description>The url where you should redirected after authenticated.</xsdl:description>'+
-    '<xsdl:displayName>Assertion Consumer URLs</xsdl:displayName>'+
-    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
-    '<xsdl:name>assertionConsumerURLs</xsdl:name>'+
-    '<xsdl:required>false</xsdl:required>'+
-    '<xsdl:type xsi:nil="true"/>'+
-    '<xsdl:value>acsurl1.com,acsurl2.com</xsdl:value>'+
-'</xsdl:properties>'+
-'<xsdl:properties xsi:type="xsdl:Property">'+
-    '<xsdl:confidential>false</xsdl:confidential>'+
-    '<xsdl:defaultValue xsi:nil="true"/>'+
-    '<xsdl:description xsi:nil="true"/>'+
-    '<xsdl:displayName>Enable Assertion Encryption</xsdl:displayName>'+
-    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
-    '<xsdl:name>enableEncAssertion</xsdl:name>'+
-    '<xsdl:required>false</xsdl:required>'+
-    '<xsdl:type xsi:nil="true"/>'+
-    '<xsdl:value>true</xsdl:value>'+
-'</xsdl:properties>'+
-'<xsdl:properties xsi:type="xsdl:Property">'+
-    '<xsdl:confidential>false</xsdl:confidential>'+
-    '<xsdl:defaultValue xsi:nil="true"/>'+
-    '<xsdl:description xsi:nil="true"/>'+
-    '<xsdl:displayName>Default Assertion Consumer URL</xsdl:displayName>'+
-    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
-    '<xsdl:name>defaultAssertionConsumerURL</xsdl:name>'+
-    '<xsdl:required>false</xsdl:required>'+
-    '<xsdl:type xsi:nil="true"/>'+
-    '<xsdl:value>acsurl1.com</xsdl:value>'+
-'</xsdl:properties>'+
-'<xsdl:properties xsi:type="xsdl:Property">'+
-    '<xsdl:confidential>false</xsdl:confidential>'+
-    '<xsdl:defaultValue xsi:nil="true"/>'+
-    '<xsdl:description xsi:nil="true"/>'+
-    '<xsdl:displayName>Enable Signature Validation in Authentication Requests and Logout Requests</xsdl:displayName>'+
-    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
-    '<xsdl:name>enableSigValidation</xsdl:name>'+
-    '<xsdl:required>false</xsdl:required>'+
-    '<xsdl:type xsi:nil="true"/>'+
-    '<xsdl:value>true</xsdl:value>'+
-'</xsdl:properties>'+
-'<xsdl:properties xsi:type="xsdl:Property">'+
-    '<xsdl:confidential>false</xsdl:confidential>'+
-    '<xsdl:defaultValue xsi:nil="true"/>'+
-    '<xsdl:description xsi:nil="true"/>'+
-    '<xsdl:displayName>Enable Response Signing</xsdl:displayName>'+
-    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
-    '<xsdl:name>enableResponseSignature</xsdl:name>'+
-    '<xsdl:required>false</xsdl:required>'+
-    '<xsdl:type xsi:nil="true"/>'+
-    '<xsdl:value>true</xsdl:value>'+
-'</xsdl:properties>'+
-'<xsdl:properties xsi:type="xsdl:Property">'+
-    '<xsdl:confidential>false</xsdl:confidential>'+
-    '<xsdl:defaultValue xsi:nil="true"/>'+
-    '<xsdl:description xsi:nil="true"/>'+
-    '<xsdl:displayName>Response Digest Algorithm</xsdl:displayName>'+
-    '<xsdl:displayOrder>0</xsdl:displayOrder>'+
-    '<xsdl:name>digestAlgorithm</xsdl:name>'+
-    '<xsdl:required>false</xsdl:required>'+
-    '<xsdl:type xsi:nil="true"/>'+
-    '<xsdl:value>http://www.w3.org/2001/04/xmldsig-more#md5</xsdl:value>'+
-'</xsdl:properties>'+
-'</xsdl:inboundAuthenticationRequestConfigs>'
-
-
-<xsd:createApplication xmlns:xsd="http://org.apache.axis2/xsd"
-                       xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">
-<xsd:serviceProvider xmlns:xsd="http://org.apache.axis2/xsd"
-                     xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">
-    <xsd1:applicationName>salesnew2.com</xsd1:applicationName>
-    <xsd1:description>salesforce]ckajdpaisjnvfpsifrpsifjfd;slkfdmlskfmsdv</xsd1:description>
-    <xsd1:spProperties>
-        <xsd1:displayName>WellKnown Application Type</xsd1:displayName>
-        <xsd1:name>appType</xsd1:name>
-        <xsd1:value>salesforce</xsd1:value>
-    </xsd1:spProperties>
-</xsd:serviceProvider>
-</xsd:createApplication>
-
-<xsd:updateApplication xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://org.apache.axis2/xsd"
-                       xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">
-<xsd:serviceProvider>
-    <xsd1:applicationID>2</xsd1:applicationID>
-    <xsd1:applicationName>salesforce.com</xsd1:applicationName>
-    <xsd1:claimConfig>
-        <xsd1:alwaysSendMappedLocalSubjectId>false</xsd1:alwaysSendMappedLocalSubjectId>
-        <xsd1:localClaimDialect>true</xsd1:localClaimDialect>
-        <xsd1:roleClaimURI></xsd1:roleClaimURI>
-        <xsd1:userClaimURI></xsd1:userClaimURI>
-    </xsd1:claimConfig>
-    <xsd1:description>salesforce]</xsd1:description>
-    <xsd1:inboundAuthenticationConfig></xsd1:inboundAuthenticationRequestConfigs>
-</xsd1:inboundAuthenticationConfig>
-<xsd1:inboundProvisioningConfig>
-    <xsd1:dumbMode>false</xsd1:dumbMode>
-    <xsd1:provisioningEnabled>false</xsd1:provisioningEnabled>
-    <xsd1:provisioningUserStore></xsd1:provisioningUserStore>
-</xsd1:inboundProvisioningConfig>
-<xsd1:outboundProvisioningConfig>
-    <xsd1:provisionByRoleList></xsd1:provisionByRoleList>
-</xsd1:outboundProvisioningConfig>
-<xsd1:permissionAndRoleConfig></xsd1:permissionAndRoleConfig>
-<xsd1:spProperties>
-    <xsd1:displayName>WellKnown Application Type</xsd1:displayName>
-    <xsd1:name>appType</xsd1:name>
-    <xsd1:value>salesforce</xsd1:value>
-</xsd1:spProperties>
-</xsd:serviceProvider></xsd:updateApplication>
+<?xml version="1.0" encoding="UTF-8"?>
+<saml2p:Response Destination="https://localhost:9443/dashboard/acs" ID="_4c8590e9d9cdfe4fd84ff2668b495854"
+                 InResponseTo="lmgjmbeghgplnfkaioinnanilpmmifnccfepajlo" IssueInstant="2016-07-15T06:12:54.153Z"
+                 Version="2.0" xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol">
+    <saml2:Issuer Format="urn:oasis:names:tc:SAML:2.0:nameid-format:entity"
+                  xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">localhost
+    </saml2:Issuer>
+    <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:SignedInfo>
+            <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+            <ds:Reference URI="#_4c8590e9d9cdfe4fd84ff2668b495854">
+                <ds:Transforms>
+                    <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                    <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                </ds:Transforms>
+                <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                <ds:DigestValue>YqhFZtHakpxVV98JDMHtOH1OuWo=</ds:DigestValue>
+            </ds:Reference>
+        </ds:SignedInfo>
+        <ds:SignatureValue>
+            cuPyZ4JizjHDN5AO2T3oWu+/Fd4qwtf1ph6wUfSpAcuikp6fu8D6SvyefPbftonKMs9ces672TlX89ogbnqkoEWe5ZUdr4Aptv+MKZJXsz003zhJeZpZHB5l1wD3BDl1PFzEEujUzVKgUxJSfywP00Ipks/XYh/nLHP1JXXEwBw=
+        </ds:SignatureValue>
+        <ds:KeyInfo>
+            <ds:X509Data>
+                <ds:X509Certificate>
+                    MIICNTCCAZ6gAwIBAgIES343gjANBgkqhkiG9w0BAQUFADBVMQswCQYDVQQGEwJVUzELMAkGA1UECAwCQ0ExFjAUBgNVBAcMDU1vdW50YWluIFZpZXcxDTALBgNVBAoMBFdTTzIxEjAQBgNVBAMMCWxvY2FsaG9zdDAeFw0xMDAyMTkwNzAyMjZaFw0zNTAyMTMwNzAyMjZaMFUxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTEWMBQGA1UEBwwNTW91bnRhaW4gVmlldzENMAsGA1UECgwEV1NPMjESMBAGA1UEAwwJbG9jYWxob3N0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUp/oV1vWc8/TkQSiAvTousMzOM4asB2iltr2QKozni5aVFu818MpOLZIr8LMnTzWllJvvaA5RAAdpbECb+48FjbBe0hseUdN5HpwvnH/DW8ZccGvk53I6Orq7hLCv1ZHtuOCokghz/ATrhyPq+QktMfXnRS4HrKGJTzxaCcU7OQIDAQABoxIwEDAOBgNVHQ8BAf8EBAMCBPAwDQYJKoZIhvcNAQEFBQADgYEAW5wPR7cr1LAdq+IrR44iQlRG5ITCZXY9hI0PygLP2rHANh+PYfTmxbuOnykNGyhM6FjFLbW2uZHQTY1jMrPprjOrmyK5sjJRO4d1DeGHT/YnIjs9JogRKv4XHECwLtIVdAbIdWHEtVZJyMSktcyysFcvuhPQK8Qc/E/Wq8uHSCo=
+                </ds:X509Certificate>
+            </ds:X509Data>
+        </ds:KeyInfo>
+    </ds:Signature>
+    <saml2p:Status>
+        <saml2p:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
+    </saml2p:Status>
+    <saml2:Assertion ID="_83c7d0f1abe3b8f69a5a3d3284cbf4c9" IssueInstant="2016-07-15T06:12:54.153Z" Version="2.0"
+                     xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
+        <saml2:Issuer Format="urn:oasis:names:tc:SAML:2.0:nameid-format:entity">localhost</saml2:Issuer>
+        <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <ds:SignedInfo>
+                <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                <ds:Reference URI="#_83c7d0f1abe3b8f69a5a3d3284cbf4c9">
+                    <ds:Transforms>
+                        <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                        <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                    </ds:Transforms>
+                    <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                    <ds:DigestValue>EK+LIjlOVAQ29ktsLcqbhQ1wmI0=</ds:DigestValue>
+                </ds:Reference>
+            </ds:SignedInfo>
+            <ds:SignatureValue>
+                edNM/bhcUoXKIageTvPyR/81G7lPueQjg1RDfjAB1gnncQkbZjDtSQKKXB5aEQ83I8EC9Oy3Nxd6z70SLbj3EsspKemlZX+qoEgtDgpm+TV/5plxvz7e4FCQNV4dwpX4WJEGKc4ZWQnVBbTEXDM/WaE1gq0Cck7TFopI5DEjE1o=
+            </ds:SignatureValue>
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        MIICNTCCAZ6gAwIBAgIES343gjANBgkqhkiG9w0BAQUFADBVMQswCQYDVQQGEwJVUzELMAkGA1UECAwCQ0ExFjAUBgNVBAcMDU1vdW50YWluIFZpZXcxDTALBgNVBAoMBFdTTzIxEjAQBgNVBAMMCWxvY2FsaG9zdDAeFw0xMDAyMTkwNzAyMjZaFw0zNTAyMTMwNzAyMjZaMFUxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTEWMBQGA1UEBwwNTW91bnRhaW4gVmlldzENMAsGA1UECgwEV1NPMjESMBAGA1UEAwwJbG9jYWxob3N0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUp/oV1vWc8/TkQSiAvTousMzOM4asB2iltr2QKozni5aVFu818MpOLZIr8LMnTzWllJvvaA5RAAdpbECb+48FjbBe0hseUdN5HpwvnH/DW8ZccGvk53I6Orq7hLCv1ZHtuOCokghz/ATrhyPq+QktMfXnRS4HrKGJTzxaCcU7OQIDAQABoxIwEDAOBgNVHQ8BAf8EBAMCBPAwDQYJKoZIhvcNAQEFBQADgYEAW5wPR7cr1LAdq+IrR44iQlRG5ITCZXY9hI0PygLP2rHANh+PYfTmxbuOnykNGyhM6FjFLbW2uZHQTY1jMrPprjOrmyK5sjJRO4d1DeGHT/YnIjs9JogRKv4XHECwLtIVdAbIdWHEtVZJyMSktcyysFcvuhPQK8Qc/E/Wq8uHSCo=
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </ds:Signature>
+        <saml2:Subject>
+            <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress">admin@carbon.super
+            </saml2:NameID>
+            <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+                <saml2:SubjectConfirmationData InResponseTo="lmgjmbeghgplnfkaioinnanilpmmifnccfepajlo"
+                                               NotOnOrAfter="2016-07-15T06:17:54.153Z"
+                                               Recipient="https://localhost:9443/dashboard/acs"/>
+            </saml2:SubjectConfirmation>
+        </saml2:Subject>
+        <saml2:Conditions NotBefore="2016-07-15T06:12:54.153Z" NotOnOrAfter="2016-07-15T06:17:54.153Z">
+            <saml2:AudienceRestriction>
+                <saml2:Audience>wso2.my.dashboard</saml2:Audience>
+                <saml2:Audience>carbonServer</saml2:Audience>
+            </saml2:AudienceRestriction>
+        </saml2:Conditions>
+        <saml2:AuthnStatement AuthnInstant="2016-07-15T06:12:54.154Z"
+                              SessionIndex="8b54e3ed-b40e-4c5d-8da3-b6b396b0675e">
+            <saml2:AuthnContext>
+                <saml2:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:Password</saml2:AuthnContextClassRef>
+            </saml2:AuthnContext>
+        </saml2:AuthnStatement>
+    </saml2:Assertion>
+</saml2p:Response>
